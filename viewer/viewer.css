@@ -1,0 +1,328 @@
+/* MathematicsWeb viewer CSS — 跨学科数学可视化平台
+ * v0.1.0: 暗色主题(沿用 three.jsWeb tokens 体系)· 强调色 #6ee7b7(数学/算法感)
+ * 字段前缀 mathw- 避免跟引用项目冲突
+ */
+:root {
+  --mathw-bg: #0e1116;
+  --mathw-panel: rgba(20, 24, 32, 0.78);
+  --mathw-panel-solid: #14181f;
+  --mathw-panel-border: rgba(255, 255, 255, 0.08);
+  --mathw-text: #e6e8ec;
+  --mathw-muted: #8a93a6;
+  --mathw-accent: #6ee7b7;        /* 主强调色:薄荷绿(数学味) */
+  --mathw-accent-2: #4ea1ff;      /* 辅强调色:蓝(物理/工程) */
+  --mathw-accent-3: #f0c040;      /* 辅强调色:金(建筑/几何) */
+  --mathw-danger: #ff6b6b;
+  --mathw-warm: #f0c040;
+  --mathw-hot: #6ee7b7;
+  --mathw-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  --mathw-radius: 10px;
+  --mathw-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Roboto, sans-serif;
+}
+
+.mathw-root { position: relative; width: 100%; height: 100%; background: var(--mathw-bg); color: var(--mathw-text); overflow: hidden; font-family: var(--mathw-font); }
+.mathw-root canvas { display: block; }
+.mathw-root * { box-sizing: border-box; }
+
+/* ============================================================
+ * 顶部状态栏 · 项目名 + 场景名 + 状态点
+ * ============================================================ */
+.mathw-statusbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 48px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 16px;
+  background: linear-gradient(180deg, rgba(14,17,22,0.92) 0%, rgba(14,17,22,0.75) 100%);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--mathw-panel-border);
+  z-index: 30;
+  user-select: none;
+  font-size: 12px;
+}
+.mathw-statusbar-left  { display: flex; align-items: center; gap: 12px; }
+.mathw-statusbar-center {
+  font-weight: 600; color: var(--mathw-text);
+  font-size: 13px; letter-spacing: 0.2px;
+  max-width: 50ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  justify-self: center;
+}
+.mathw-statusbar-right { display: flex; align-items: center; gap: 8px; justify-self: end; }
+
+.mathw-statusbar-logo {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: linear-gradient(135deg, var(--mathw-accent), #2c9a6a);
+  color: #0e1116; font-weight: 700; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(110, 231, 183, 0.35);
+}
+.mathw-statusbar-v { font-size: 10px; opacity: 0.65; margin-left: 4px; }
+
+.mathw-statusbar-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--mathw-accent);
+  box-shadow: 0 0 6px var(--mathw-accent);
+  transition: background .2s, box-shadow .2s;
+}
+.mathw-statusbar-dot[data-state="busy"]  { background: var(--mathw-warm);  box-shadow: 0 0 6px var(--mathw-warm);  animation: mathw-pulse 1.2s ease-in-out infinite; }
+.mathw-statusbar-dot[data-state="error"] { background: var(--mathw-danger); box-shadow: 0 0 6px var(--mathw-danger); }
+.mathw-statusbar-dot[data-state="off"]   { background: var(--mathw-muted);   box-shadow: none; }
+@keyframes mathw-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* ============================================================
+ * 场景切换器(左侧抽屉式) — 6 个跨学科场景
+ * ============================================================ */
+.mathw-scene-list {
+  position: absolute;
+  top: 60px; left: 12px;
+  width: 220px;
+  background: var(--mathw-panel);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--mathw-panel-border);
+  border-radius: var(--mathw-radius);
+  padding: 8px;
+  z-index: 20;
+  box-shadow: var(--mathw-shadow);
+  user-select: none;
+}
+.mathw-scene-list-header {
+  font-size: 11px; color: var(--mathw-muted);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  padding: 4px 8px 8px; font-weight: 600;
+}
+.mathw-scene-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: 7px;
+  cursor: pointer; transition: background .12s, color .12s;
+  font-size: 13px; color: var(--mathw-text);
+}
+.mathw-scene-item:hover { background: rgba(255,255,255,0.05); }
+.mathw-scene-item.active {
+  background: rgba(110, 231, 183, 0.12);
+  color: var(--mathw-accent);
+  font-weight: 600;
+}
+.mathw-scene-icon { font-size: 16px; line-height: 1; }
+.mathw-scene-meta { display: flex; flex-direction: column; gap: 1px; flex: 1; min-width: 0; }
+.mathw-scene-title { font-size: 13px; font-weight: 500; }
+.mathw-scene-domain { font-size: 10px; color: var(--mathw-muted); font-weight: 400; }
+.mathw-scene-item.active .mathw-scene-domain { color: var(--mathw-accent); opacity: 0.75; }
+
+/* ============================================================
+ * 画布容器
+ * ============================================================ */
+.mathw-canvas-host {
+  position: absolute;
+  top: 60px; left: 244px; right: 380px; bottom: 12px;
+  background: var(--mathw-panel-solid);
+  border: 1px solid var(--mathw-panel-border);
+  border-radius: var(--mathw-radius);
+  overflow: hidden;
+  box-shadow: var(--mathw-shadow);
+}
+@media (max-width: 1100px) {
+  .mathw-canvas-host { left: 12px; right: 12px; bottom: 50%; }
+  .mathw-scene-list { width: calc(100% - 24px); top: 60px; }
+}
+
+/* ============================================================
+ * 场景标题 + 公式展示(顶部条)
+ * ============================================================ */
+.mathw-scene-header {
+  position: absolute;
+  top: 12px; left: 12px; right: 12px;
+  background: var(--mathw-panel);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--mathw-panel-border);
+  border-radius: var(--mathw-radius);
+  padding: 12px 16px;
+  z-index: 25;
+  display: none;       /* 默认隐藏,场景内可选启用 */
+}
+.mathw-scene-header.show { display: block; }
+.mathw-scene-header-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.mathw-scene-header-formula { font-size: 12px; color: var(--mathw-accent); font-family: 'Cambria Math', 'STIX Two Math', Cambria, Georgia, serif; }
+
+/* ============================================================
+ * 控件条(右下,场景内控件) — 滑块 / 按钮
+ * ============================================================ */
+.mathw-controls {
+  position: absolute;
+  bottom: 24px; right: 24px;
+  background: var(--mathw-panel);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--mathw-panel-border);
+  border-radius: var(--mathw-radius);
+  padding: 14px 16px;
+  min-width: 220px; max-width: 320px;
+  z-index: 15;
+  box-shadow: var(--mathw-shadow);
+  font-size: 12px;
+}
+.mathw-controls-title { font-size: 11px; color: var(--mathw-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; font-weight: 600; }
+.mathw-control-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.mathw-control-row:last-child { margin-bottom: 0; }
+.mathw-control-label { flex: 0 0 auto; min-width: 60px; color: var(--mathw-muted); }
+.mathw-control-row input[type="range"] { flex: 1; accent-color: var(--mathw-accent); }
+.mathw-control-row input[type="number"], .mathw-control-row select {
+  background: rgba(255,255,255,0.06); color: var(--mathw-text);
+  border: 1px solid var(--mathw-panel-border); border-radius: 5px;
+  padding: 3px 6px; font-size: 12px; font-family: var(--mathw-font);
+  min-width: 0;
+}
+.mathw-control-value { flex: 0 0 auto; min-width: 40px; text-align: right; color: var(--mathw-accent); font-variant-numeric: tabular-nums; }
+.mathw-control-row button {
+  background: rgba(110, 231, 183, 0.12); color: var(--mathw-accent);
+  border: 1px solid rgba(110, 231, 183, 0.3); border-radius: 5px;
+  padding: 4px 10px; font-size: 12px; cursor: pointer;
+  font-weight: 500; transition: background .12s;
+}
+.mathw-control-row button:hover { background: rgba(110, 231, 183, 0.2); }
+.mathw-control-row button.active { background: var(--mathw-accent); color: #0e1116; }
+.mathw-control-row button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ============================================================
+ * 教学卡片(右下,场景内) — 公式 + 解释
+ * ============================================================ */
+.mathw-lesson {
+  position: absolute;
+  bottom: 24px; left: 24px;
+  background: var(--mathw-panel);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--mathw-panel-border);
+  border-radius: var(--mathw-radius);
+  padding: 16px;
+  max-width: 380px;
+  z-index: 15;
+  box-shadow: var(--mathw-shadow);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.mathw-lesson-title {
+  font-size: 11px; color: var(--mathw-accent);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  font-weight: 600; margin-bottom: 6px;
+}
+.mathw-lesson-headline {
+  font-size: 15px; font-weight: 600; color: var(--mathw-text);
+  margin-bottom: 8px; line-height: 1.4;
+}
+.mathw-lesson-formula {
+  background: rgba(110, 231, 183, 0.08);
+  border-left: 2px solid var(--mathw-accent);
+  padding: 8px 12px;
+  font-family: 'Cambria Math', 'STIX Two Math', Cambria, Georgia, serif;
+  font-size: 14px;
+  color: var(--mathw-accent);
+  margin: 8px 0;
+  border-radius: 0 5px 5px 0;
+  overflow-x: auto;
+}
+.mathw-lesson-text { color: var(--mathw-muted); font-size: 12px; line-height: 1.7; }
+.mathw-lesson-text strong { color: var(--mathw-text); font-weight: 600; }
+.mathw-lesson-toggle {
+  position: absolute; top: 8px; right: 8px;
+  background: transparent; border: 0; color: var(--mathw-muted);
+  cursor: pointer; padding: 4px; font-size: 14px;
+}
+.mathw-lesson-toggle:hover { color: var(--mathw-text); }
+.mathw-lesson.collapsed .mathw-lesson-content { display: none; }
+.mathw-lesson.collapsed { padding: 8px 12px; }
+
+/* ============================================================
+ * AI 面板(右侧,大模型对话)
+ * ============================================================ */
+.mathw-ai-panel {
+  position: absolute;
+  top: 60px; right: 12px; bottom: 12px;
+  width: 360px;
+  background: var(--mathw-panel-solid);
+  border: 1px solid var(--mathw-panel-border);
+  border-radius: var(--mathw-radius);
+  display: flex; flex-direction: column;
+  z-index: 20;
+  box-shadow: var(--mathw-shadow);
+  overflow: hidden;
+  font-family: var(--mathw-font);
+}
+@media (max-width: 1100px) {
+  .mathw-ai-panel { top: 50%; left: 12px; right: 12px; bottom: 12px; width: auto; }
+}
+.mathw-ai-header {
+  padding: 10px 12px; border-bottom: 1px solid var(--mathw-panel-border);
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.02);
+}
+.mathw-ai-title { display: flex; align-items: center; gap: 8px; flex: 1; }
+.mathw-ai-mark {
+  width: 24px; height: 24px; border-radius: 6px;
+  background: linear-gradient(135deg, var(--mathw-accent), #2c9a6a);
+  color: #0e1116; font-weight: 700; font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+}
+.mathw-ai-title-text { display: flex; flex-direction: column; gap: 1px; }
+.mathw-ai-title-main { font-size: 13px; font-weight: 600; }
+.mathw-ai-title-sub { font-size: 10px; color: var(--mathw-muted); display: flex; align-items: center; gap: 4px; }
+.mathw-ai-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mathw-muted); display: inline-block; }
+.mathw-ai-dot[data-status="mock"]    { background: var(--mathw-warm); }
+.mathw-ai-dot[data-status="real"]    { background: var(--mathw-accent); box-shadow: 0 0 4px var(--mathw-accent); }
+.mathw-ai-dot[data-status="connecting"] { background: var(--mathw-accent-2); animation: mathw-pulse 1.2s ease-in-out infinite; }
+.mathw-ai-dot[data-status="error"]   { background: var(--mathw-danger); }
+.mathw-ai-tools { display: flex; gap: 4px; }
+.mathw-ai-tools button {
+  background: transparent; color: var(--mathw-muted);
+  border: 0; cursor: pointer; padding: 4px 6px; border-radius: 4px;
+  font-size: 14px; transition: color .12s, background .12s;
+}
+.mathw-ai-tools button:hover { color: var(--mathw-text); background: rgba(255,255,255,0.05); }
+
+.mathw-ai-list { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.mathw-ai-list::-webkit-scrollbar { width: 6px; }
+.mathw-ai-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+.mathw-ai-msg { padding: 8px 12px; border-radius: 8px; font-size: 13px; line-height: 1.6; max-width: 92%; }
+.mathw-ai-msg-user { align-self: flex-end; background: rgba(110, 231, 183, 0.12); color: var(--mathw-text); border: 1px solid rgba(110, 231, 183, 0.25); }
+.mathw-ai-msg-assistant { align-self: flex-start; background: rgba(255,255,255,0.04); color: var(--mathw-text); border: 1px solid var(--mathw-panel-border); }
+.mathw-ai-msg-system { align-self: center; background: transparent; color: var(--mathw-muted); font-size: 11px; padding: 4px 0; }
+.mathw-ai-msg-formula { font-family: 'Cambria Math', 'STIX Two Math', Cambria, Georgia, serif; color: var(--mathw-accent); padding: 4px 8px; background: rgba(110, 231, 183, 0.06); border-radius: 4px; margin: 4px 0; }
+.mathw-ai-welcome { text-align: center; padding: 30px 16px; color: var(--mathw-muted); }
+.mathw-ai-welcome-title { font-size: 18px; font-weight: 600; color: var(--mathw-text); margin-bottom: 8px; }
+.mathw-ai-welcome-sub { font-size: 12px; margin-bottom: 16px; }
+.mathw-ai-suggest { display: flex; flex-direction: column; gap: 6px; }
+.mathw-ai-suggest button {
+  background: rgba(255,255,255,0.04); color: var(--mathw-text);
+  border: 1px solid var(--mathw-panel-border); border-radius: 6px;
+  padding: 8px 12px; font-size: 12px; cursor: pointer;
+  text-align: left; transition: background .12s;
+}
+.mathw-ai-suggest button:hover { background: rgba(110, 231, 183, 0.1); border-color: rgba(110, 231, 183, 0.3); }
+.mathw-ai-thinking { color: var(--mathw-muted); font-style: italic; font-size: 12px; }
+.mathw-ai-thinking::after { content: '▍'; animation: mathw-blink 1s steps(2) infinite; }
+@keyframes mathw-blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+
+.mathw-ai-input { padding: 10px 12px; border-top: 1px solid var(--mathw-panel-border); display: flex; gap: 6px; }
+.mathw-ai-input input {
+  flex: 1; background: rgba(255,255,255,0.04); color: var(--mathw-text);
+  border: 1px solid var(--mathw-panel-border); border-radius: 6px;
+  padding: 8px 10px; font-size: 13px; font-family: var(--mathw-font);
+  outline: none;
+}
+.mathw-ai-input input:focus { border-color: rgba(110, 231, 183, 0.4); }
+.mathw-ai-input button {
+  background: var(--mathw-accent); color: #0e1116;
+  border: 0; border-radius: 6px; padding: 8px 14px;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: opacity .12s;
+}
+.mathw-ai-input button:hover { opacity: 0.85; }
+.mathw-ai-input button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ============================================================
+ * 场景切换淡入
+ * ============================================================ */
+@keyframes mathw-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.mathw-canvas-host > * { animation: mathw-fade-in 0.3s ease-out; }

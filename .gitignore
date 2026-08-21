@@ -1,0 +1,22 @@
+# MathematicsWeb · v0.2.0 · Git Ignore
+
+# LLM 配置(包含 api_key,不进 git)
+_llm_config.json
+
+# Output(本地截图,不入仓)
+Output/
+
+# 运行时日志 / 缓存
+*.log
+*.out
+*.err
+node_modules/
+.DS_Store
+Thumbs.db
+
+# 临时
+*.tmp
+*.bak
+
+# vendor/three 走 git(断网能跑,需要 1.2MB)
+# vendor/three/ 不在 .gitignore

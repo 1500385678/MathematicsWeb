@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MathematicsWeb · 跨学科数学可视化</title>
+  <!-- v0.1.0: MathematicsWeb 入口,沿用 three.jsWeb 范式(动态 import + 顶层 await + window version) -->
+  <link rel="stylesheet" href="./viewer/viewer.css" />
+  <style>
+    html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: #0e1116; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Roboto, sans-serif; }
+    #app { width: 100vw; height: 100vh; position: relative; }
+    /* v0.1.0: 启动水印(版本 + 构建) 5s 后淡出 */
+    #mathw-version-mark {
+      position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+      background: rgba(110, 231, 183, 0.92); color: #0e1116;
+      padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 600;
+      z-index: 9999; pointer-events: none;
+      animation: mathw-fade 0.6s ease-in 5s forwards;
+    }
+    @keyframes mathw-fade { to { opacity: 0; visibility: hidden; } }
+    #mathw-err { max-height: 30vh; overflow: auto; }
+  </style>
+  <script>
+    window.MATHW_V = "0.2.0";
+    window.MATHW_BUILD = "2026-08-21";
+    window.MATHW_CHANGELOG = [
+      "v0.2.0 (2026-08-21): 扩到 10 个场景(双摆混沌/黄金螺旋/蒙特卡洛/梯度下降) · 行星轨道 4 星体版 · 简谐振动加阻尼+强迫振动+共振",
+      "v0.1.0 (2026-08-21): MVP 启动 · 6 个跨学科场景(悬链拱顶/行星轨道/傅里叶/种群/曼德尔布罗/简谐振动) · 2D+3D 双模 · AI 助手本地 mock"
+    ];
+  </script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three/build/three.module.js",
+      "three/addons/": "./vendor/three/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="mathw-version-mark">MathematicsWeb v<span data-mathw-v></span> · build <span data-mathw-build></span></div>
+
+  <script>
+    (function () {
+      const v = document.querySelector('[data-mathw-v]');
+      const b = document.querySelector('[data-mathw-build]');
+      if (v) v.textContent = window.MATHW_V;
+      if (b) b.textContent = window.MATHW_BUILD;
+    })();
+  </script>
+
+  <script type="module">
+    // v0.1.0: 全局错误捕获(同 three.jsWeb 模式,createOrReplace 防 banner 雪崩)
+    const _errLast = {};
+    function reportErr(id, kind, msg) {
+      const now = Date.now();
+      if (_errLast[id] && now - _errLast[id] < 100) {
+        const ex = document.getElementById(id);
+        if (ex) ex.textContent = msg;
+        _errLast[id] = now;
+        return;
+      }
+      _errLast[id] = now;
+      let d = document.getElementById(id);
+      const colors = { error: '#ff3030', rejection: '#ff8800' };
+      if (!d) {
+        d = document.createElement('div');
+        d.id = id;
+        d.style.cssText = `position:fixed;${kind==='error'?'top:0':'top:60px'};left:0;right:0;background:${colors[kind]};color:#fff;padding:8px 12px;font:12px monospace;z-index:99999;white-space:pre-wrap;max-height:30vh;overflow:auto;`;
+        document.body && document.body.appendChild(d);
+      }
+      d.textContent = msg;
+    }
+    window.addEventListener('error', (e) => {
+      reportErr('mathw-err', 'error', '❌ JS Error: ' + (e.error?.stack || e.message || e));
+    });
+    window.addEventListener('unhandledrejection', (e) => {
+      reportErr('mathw-err-rej', 'rejection', '⚠️ Unhandled Rejection: ' + (e.reason?.stack || e.reason || e));
+    });
+
+    const V = window.MATHW_V;
+    // v0.1.0: 顶层 await 集中动态 import(改 MATHW_V 一处全员生效)
+    const [
+      { initViewer, SCENES },
+      { LLMClient, loadLLMConfig },
+      { LLMMock },
+    ] = await Promise.all([
+      import(`./viewer/viewer.js?v=${V}`),
+      import(`./kernel/03_llm-client.js?v=${V}`),
+      import(`./mock/01_llm-mock.js?v=${V}`),
+    ]);
+
+    const params = new URLSearchParams(location.search);
+    // ?scene=<id>  初始场景
+    // ?noai=1      关闭 AI 面板
+    // ?force=mock  强制 mock
+
+    const viewer = initViewer(document.getElementById('app'), {
+      initialScene: params.get('scene') || 'catenary-arch',
+      callbacks: {
+        onSceneChange: (id) => console.log('[mathw] scene ->', id),
+        onError:       (e) => console.error('[mathw] scene error', e),
+      },
+    });
+    window.viewer = viewer;
+
+    // ---------- AI 助手面板 ----------
+    if (!params.has('noai')) {
+      // 异步 LLM 决策
+      let activeLlm = new LLMMock();
+      let activeSource = 'mock';
+      if (!params.has('force')) {
+        try {
+          const cfg = await loadLLMConfig();
+          if (cfg.enabled && cfg.api_key) {
+            viewer.aiPanel.setLLMStatus('connecting', cfg.model);
+            viewer.aiPanel.appendSystem(`尝试连 LLM: ${cfg.model} @ ${cfg.base_url}`);
+            const real = new LLMClient(cfg);
+            const ping = await real.ping();
+            if (ping.ok) {
+              activeLlm = real;
+              activeSource = cfg.model;
+              viewer.aiPanel.llm = real;
+              viewer.aiPanel.setLLMStatus('real', cfg.model);
+              viewer.aiPanel.appendSystem(`✅ ${ping.msg} · ${ping.latency_ms}ms · 已切到真 LLM`);
+            } else {
+              viewer.aiPanel.setLLMStatus('error', '未连通');
+              viewer.aiPanel.appendSystem(`⚠️ LLM 未连通, 继续用 mock: ${ping.msg}`);
+            }
+          } else {
+            viewer.aiPanel.setLLMStatus('no-key');
+            viewer.aiPanel.appendSystem('ℹ️ _llm_config.json 没 key, 走 mock 模式. 复制 _llm_config.example.json → _llm_config.json 填 api_key.');
+          }
+        } catch (e) {
+          viewer.aiPanel.setLLMStatus('error', '加载失败');
+          viewer.aiPanel.appendSystem(`⚠️ 配置加载失败: ${e.message}`);
+        }
+      } else {
+        viewer.aiPanel.appendSystem('ℹ️ ?force=mock 强制 mock 模式');
+      }
+      viewer.aiPanel._setHint(`${activeSource} · 准备就绪`);
+      window.ai = { panel: viewer.aiPanel, llm: activeLlm, mock: new LLMMock(), LLMClient, SCENES };
+    }
+  </script>
+</body>
+</html>
