@@ -173,6 +173,8 @@ export function initViewer(container, config = {}) {
   // ---------- Workspace(v0.5) ----------
   const ws = cfg.workspace;
   let currentFilter = 'all';
+  let currentScene = null;
+  let currentSceneId = null;   // 提到 renderSceneList 之前,避免 let 暂时性死区
 
   function renderSceneList() {
     const list = sceneList.querySelector('[data-list]');
@@ -256,8 +258,6 @@ export function initViewer(container, config = {}) {
   });
 
   // ---------- 场景切换 ----------
-  let currentScene = null;
-  let currentSceneId = null;
 
   async function switchScene(sceneId) {
     const scene = SCENES.find(s => s.id === sceneId);
