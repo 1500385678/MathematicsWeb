@@ -13,7 +13,7 @@
 
 import { AIPanel } from './02_ai-panel.js';
 
-// v0.5.0: 场景清单 — 10 个跨学科应用(2D + 3D 混排)
+// v0.6.0: 场景清单 — 20 个跨学科应用(2D + 3D 混排)
 export const SCENES = [
   {
     id: 'catenary-arch',
@@ -104,6 +104,97 @@ export const SCENES = [
     renderer: '3D',
     description: 'θ ← θ − η·∇f(θ)。3D 损失曲面 + 优化路径。学习率太大震荡,太小慢。',
     loader: () => import('./scenes/10_gradient-descent.js'),
+  },
+  // v0.6.0: 新增 10 个场景
+  {
+    id: 'lissajous',
+    title: 'Lissajous 曲线',
+    domain: '数学 × 音乐',
+    icon: '🎼',
+    renderer: '2D',
+    description: '两个相互垂直的简谐运动叠加。频率比 a:b + 相位决定图形。示波器 X-Y 模式。',
+    loader: () => import('./scenes/11_lissajous.js'),
+  },
+  {
+    id: 'clt',
+    title: '中心极限定理',
+    domain: '数学 × 概率',
+    icon: '🎯',
+    renderer: '2D',
+    description: '扔 N 个骰子,N 越大越像正态。独立同分布随机变量之和 → 正态分布(统计学第一定理)。',
+    loader: () => import('./scenes/12_clt.js'),
+  },
+  {
+    id: 'riemann-sum',
+    title: '黎曼和',
+    domain: '数学 × 工程',
+    icon: '📐',
+    renderer: '2D',
+    description: '∫ 算不出来?用矩形/梯形/Simpson 抛物线堆。Simpson O(1/N⁴) 精度爆炸。',
+    loader: () => import('./scenes/13_riemann-sum.js'),
+  },
+  {
+    id: 'bayesian',
+    title: '贝叶斯推断',
+    domain: '数学 × 概率',
+    icon: '🎲',
+    renderer: '2D',
+    description: '先验 Beta(α,β) + 似然 → 后验 Beta(α+k, β+N-k)。边观测边更新信念。',
+    loader: () => import('./scenes/14_bayesian.js'),
+  },
+  {
+    id: 'lsystem',
+    title: 'L-系统植物',
+    domain: '数学 × 生物',
+    icon: '🌿',
+    renderer: '2D',
+    description: '字符串重写 + Turtle 解释。F → F[+F]F[-F]F → 树。Lindenmayer 1968 植物建模。',
+    loader: () => import('./scenes/15_lsystem.js'),
+  },
+  {
+    id: 'wave-interference',
+    title: '波叠加/干涉',
+    domain: '数学 × 物理',
+    icon: '🌊',
+    renderer: '2D',
+    description: '两列波相遇 → 建设性(亮)+ 破坏性(暗)干涉条纹。移动源/改频率看图样。',
+    loader: () => import('./scenes/16_wave-interference.js'),
+  },
+  {
+    id: 'julia',
+    title: '朱利亚集',
+    domain: '数学 × 艺术',
+    icon: '🌀',
+    renderer: '2D',
+    description: '跟曼德尔布罗同公式 z=z²+c,固定 c 扫 z₀。每个 c 生成独特分形。',
+    loader: () => import('./scenes/17_julia.js'),
+  },
+  {
+    id: 'lagrange',
+    title: '拉格朗日乘子法',
+    domain: '数学 × 优化',
+    icon: '🎯',
+    renderer: '2D',
+    description: '约束优化:∇f = λ·∇g 切点处。固定周长围最大面积 → 圆(等周不等式)。',
+    loader: () => import('./scenes/18_lagrange.js'),
+  },
+  {
+    id: 'electric-field',
+    title: '电场可视化',
+    domain: '数学 × 物理',
+    icon: '⚡',
+    renderer: '2D',
+    description: 'V = Σ qᵢ/rᵢ, E = -∇V。点电荷,看电场线 + 等势面。偶极子 / 四极子。',
+    loader: () => import('./scenes/19_electric-field.js'),
+  },
+  {
+    id: 'neural-net',
+    title: '神经网络 2D 分类',
+    domain: '数学 × 机器学习',
+    icon: '🧠',
+    renderer: '2D',
+    description: '2 层 NN(2 → 8 → 2)做 2D 分类。反向传播 + SGD,看决策边界如何学出来。',
+    loader: () => import('./scenes/20_neural-net.js'),
   },
 ];
 
