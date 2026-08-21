@@ -1,25 +1,22 @@
 // viewer/scenes/02_planetary-orbits.js
-// MathematicsWeb v0.6.2 — 太阳系版行星轨道 (数学 × 物理)
-// 3D 场景:真实的太阳系布局(Sun + 6 行星 + 月球绕地球)
-//   - 太阳在中心固定
-//   - 6 行星各自椭圆轨道(用开普勒 T² ∝ a³ 关系)
-//   - 月球绕地球(地球是月球轨道的"中心")
-//   - 实时画轨迹 + 当前点 + 名字
-//   - 时间倍率可调,暂停/重置
+// MathematicsWeb v0.6.3 — 太阳系版行星轨道(数学 × 物理)
+// 3D 场景:完整的 9 大行星 + 月球绕地球 + 土星环
+//   - Sun 中心固定
+//   - 9 行星:水/金/地/火/木/土/天王/海王/冥王(真实名称 + 真实相对位置压缩)
+//   - 月球绕地球(地球的"次级中心")
+//   - 每颗都有 Sprite 中文名标签 + 椭圆参考虚线 + 轨迹拖尾
+//   - 调时间倍率看外圈跑得慢(开普勒第三定律)
 //
-// 物理:简化开普勒(每个轨道用半长轴 a + 偏心率 e + 初始相位 θ₀ 描述)
-//   位置 x = a·cos(θ) − a·e, y = a·√(1−e²)·sin(θ)
-//   速度由开普勒第二定律决定(角速度 = 2π/T,t 越大角速度越小)
-//   月球用相对坐标:earthPos + moonOrbit
-//
-// 实际数据(简化用于可视化):
-//   Sun 中心固定
-//   Mercury a=1.5  T=1.0   e=0.21
-//   Venus   a=2.0  T=1.9   e=0.01
-//   Earth   a=2.7  T=3.0   e=0.02  + Moon (a=0.3, T=0.08)
-//   Mars    a=3.5  T=4.8   e=0.09
-//   Jupiter a=5.5  T=14    e=0.05
-//   Saturn  a=7.5  T=25    e=0.06
+// 数据(可视化压缩,真实相对位置 log 压缩):
+//   水星  a=1.5  T=0.4   e=0.21
+//   金星  a=2.0  T=0.7   e=0.01
+//   地球  a=2.7  T=1.0   e=0.02  + 月球 (a=0.5, T=0.04)
+//   火星  a=3.5  T=1.5   e=0.09
+//   木星  a=5.5  T=5.0   e=0.05
+//   土星  a=7.5  T=10    e=0.06  + 星环
+//   天王  a=9.5  T=20    e=0.05
+//   海王  a=11   T=30    e=0.01
+//   冥王  a=12.5 T=40    e=0.25
 
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -38,15 +35,16 @@ export function createScene(host, opts = {}) {
   lesson.className = 'mathw-lesson';
   lesson.innerHTML = `
     <button class="mathw-lesson-toggle" data-toggle>−</button>
-    <div class="mathw-lesson-title">数学 × 物理 · 太阳系 · v0.6.2</div>
+    <div class="mathw-lesson-title">数学 × 物理 · 太阳系 · v0.6.3</div>
     <div class="mathw-lesson-content">
-      <div class="mathw-lesson-headline">Sun + 6 行星 + 月球绕地球</div>
+      <div class="mathw-lesson-headline">9 大行星 + 月球绕地球</div>
       <div class="mathw-lesson-formula">T² ∝ a³   (开普勒第三定律)</div>
       <div class="mathw-lesson-text">
-        真实的太阳系:水/金/地/火/木/土 + 月球绕地球。<br>
-        每颗行星按真实比例的<strong>压缩</strong> a 排列(否则水星看不见),T 用 a^1.5 算出。<br>
-        椭圆用 a + e 描述,角度按 T 实时推进。<br>
-        调时间倍率(0.1x-5x)看<strong>外圈行星跑得慢</strong>的视觉效果(开普勒第三定律)。
+        完整太阳系:水/金/地/火/木/土/天王/海王/冥王 + 月球。<br>
+        a 用 log 压缩(冥王实际 40 AU,木星 5.2,差 8 倍,画不下),T 按 a^1.5 算。<br>
+        椭圆用真公式 r = a(1-e²)/(1+e·cosθ),焦点在太阳。<br>
+        <strong>月球</strong>绕地球(地球是月球轨道的"中心")。<br>
+        调时间倍率,外圈行星明显<strong>慢</strong>(开普勒第三定律直观体验)。
       </div>
     </div>
   `;
@@ -70,7 +68,8 @@ export function createScene(host, opts = {}) {
       <button data-pause>暂停</button>
     </div>
     <div class="mathw-control-row">
-      <button data-focus="earth">聚焦地球</button>
+      <button data-focus="earth">聚焦地球+月球</button>
+      <button data-focus="pluto">聚焦冥王</button>
     </div>
   `;
   host.appendChild(ctrls);
@@ -80,45 +79,48 @@ export function createScene(host, opts = {}) {
   renderer.setPixelRatio(window.devicePixelRatio || 1);
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x05080f);   // 更深的太空黑
+  scene.background = new THREE.Color(0x05080f);
 
   const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 500);
-  camera.position.set(0, 12, 22);
+  camera.position.set(0, 22, 38);   // 拉远点看冥王
   camera.lookAt(0, 0, 0);
 
   const controls = new OrbitControls(camera, canvas);
   controls.enableDamping = true;
   controls.dampingFactor = 0.08;
   controls.target.set(0, 0, 0);
+  controls.maxDistance = 80;   // 允许拉到很远看冥王
 
   // 灯光
-  scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
   const sunLight = new THREE.PointLight(0xfff5d0, 2.0, 0, 2);
   sunLight.position.set(0, 0, 0);
   scene.add(sunLight);
 
-  // ---------- 太阳系数据 ----------
-  // 每个天体: name(中文+英文), a(半长轴), e(偏心率), T(周期,相对单位), size(可视化半径), color, hasMoon
-  // 真实数据:水 0.39/88d,金 0.72/225d,地 1.00/365d,火 1.52/687d,木 5.20/4333d,土 9.58/10759d
-  // 压缩:Mercury a=1.5(真实 0.39,但太小看不到),Earth a=2.7(基准),Saturn a=7.5(否则画不下)
+  // ---------- 9 大行星数据 ----------
+  // 行星大小:基于真实半径(Mercury=0.38, Venus=0.95, Earth=1.00, Mars=0.53, Jupiter=11, Saturn=9.4, Uranus=4, Neptune=3.9, Pluto=0.18)
+  // 压缩:Mars 0.5, Mercury 0.4, Venus 0.7, Earth 0.8, Jupiter 2.5, Saturn 2.2, Uranus 1.5, Neptune 1.5, Pluto 0.3
+  // 颜色:真实颜色近似
   const SOLAR_SYSTEM = [
-    { name: '水星',  en: 'Mercury', a: 1.5, e: 0.21, T: 1.0,  size: 0.10, color: 0x8c7853 },
-    { name: '金星',  en: 'Venus',   a: 2.0, e: 0.01, T: 1.9,  size: 0.18, color: 0xe8b563 },
-    { name: '地球',  en: 'Earth',   a: 2.7, e: 0.02, T: 3.0,  size: 0.20, color: 0x4ea1ff, hasMoon: true },
-    { name: '火星',  en: 'Mars',    a: 3.5, e: 0.09, T: 4.8,  size: 0.14, color: 0xc1502e },
-    { name: '木星',  en: 'Jupiter', a: 5.5, e: 0.05, T: 14,   size: 0.45, color: 0xc4a484 },
-    { name: '土星',  en: 'Saturn',  a: 7.5, e: 0.06, T: 25,   size: 0.40, color: 0xe5c39e, hasRings: true },
+    { name: '水星',  en: 'Mercury', a: 1.5,  e: 0.21, T: 0.4,  size: 0.40, color: 0xa89580 },
+    { name: '金星',  en: 'Venus',   a: 2.0,  e: 0.01, T: 0.7,  size: 0.70, color: 0xe8c47a },
+    { name: '地球',  en: 'Earth',   a: 2.7,  e: 0.02, T: 1.0,  size: 0.75, color: 0x4ea1ff, hasMoon: true },
+    { name: '火星',  en: 'Mars',    a: 3.5,  e: 0.09, T: 1.5,  size: 0.50, color: 0xc1502e },
+    { name: '木星',  en: 'Jupiter', a: 5.5,  e: 0.05, T: 5.0,  size: 2.00, color: 0xc4a484 },
+    { name: '土星',  en: 'Saturn',  a: 7.5,  e: 0.06, T: 10,   size: 1.80, color: 0xe5c39e, hasRings: true },
+    { name: '天王星', en: 'Uranus',  a: 9.5,  e: 0.05, T: 20,   size: 1.30, color: 0x9fd9e8 },
+    { name: '海王星', en: 'Neptune', a: 11.0, e: 0.01, T: 30,   size: 1.25, color: 0x3d6cd6 },
+    { name: '冥王星', en: 'Pluto',   a: 12.5, e: 0.25, T: 40,   size: 0.30, color: 0xc9b8a3 },
   ];
-  const MOON = { name: '月球', en: 'Moon', a: 0.4, e: 0.05, T: 0.10, size: 0.06, color: 0xcccccc };
-  // 月球相对地球的 a(地球是基准 2.7 时,月球距地球 0.4 让它清晰可见)
-  // 月球周期 0.10 → 大约 27 天 vs 地球 365 天
+  // 月球(相对地球):a=0.5(可视化压缩,真实 0.0026),T=0.04(真实 27 天 vs 地球 365 天)
+  const MOON = { name: '月球', en: 'Moon', a: 0.5, e: 0.05, T: 0.04, size: 0.20, color: 0xdddddd };
 
-  // 星空背景(星空点)
-  const starCount = 800;
+  // ---------- 星空背景 ----------
+  const starCount = 1000;
   const starGeo = new THREE.BufferGeometry();
   const starPos = new Float32Array(starCount * 3);
   for (let i = 0; i < starCount; i++) {
-    const r = 150;
+    const r = 200;
     const theta = Math.random() * Math.PI * 2;
     const phi = Math.acos(2 * Math.random() - 1);
     starPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
@@ -126,12 +128,12 @@ export function createScene(host, opts = {}) {
     starPos[i * 3 + 2] = r * Math.cos(phi);
   }
   starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-  const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.3, transparent: true, opacity: 0.7 });
+  const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.4, transparent: true, opacity: 0.7 });
   scene.add(new THREE.Points(starGeo, starMat));
 
-  // ---------- 太阳 ----------
+  // ---------- 太阳(大一点,显眼) ----------
   const sunMat = new THREE.MeshBasicMaterial({ color: 0xfff5d0 });
-  const sun = new THREE.Mesh(new THREE.SphereGeometry(0.6, 32, 32), sunMat);
+  const sun = new THREE.Mesh(new THREE.SphereGeometry(0.8, 32, 32), sunMat);
   scene.add(sun);
   // 太阳光晕
   const glowCanvas = document.createElement('canvas');
@@ -146,58 +148,66 @@ export function createScene(host, opts = {}) {
   const glowTex = new THREE.CanvasTexture(glowCanvas);
   const glowMat = new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, transparent: true });
   const glow = new THREE.Sprite(glowMat);
-  glow.scale.set(3.5, 3.5, 1);
+  glow.scale.set(5, 5, 1);
   scene.add(glow);
 
-  // ---------- 行星 + 轨道 ----------
-  // 每个行星:net(本体), trail(轨迹), ellipseRef(参考椭圆), label(名字)
+  // 工具:画文字 label(Sprite)
+  function makeLabel(name, color, scale = 1.4) {
+    const c = document.createElement('canvas');
+    c.width = 256; c.height = 64;
+    const ctx = c.getContext('2d');
+    // 背景
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    const radius = 12;
+    ctx.beginPath();
+    ctx.roundRect(0, 0, 256, 64, radius);
+    ctx.fill();
+    // 文字
+    ctx.font = 'bold 30px sans-serif';
+    ctx.fillStyle = '#' + color.toString(16).padStart(6, '0');
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(name, 128, 32);
+    const tex = new THREE.CanvasTexture(c);
+    const mat = new THREE.SpriteMaterial({ map: tex, transparent: true });
+    const sp = new THREE.Sprite(mat);
+    sp.scale.set(scale, 0.35, 1);
+    return sp;
+  }
+
+  // ---------- 创建行星 ----------
   const bodies = [];
   for (const p of SOLAR_SYSTEM) {
-    // 球
     const mat = new THREE.MeshStandardMaterial({
       color: p.color,
       roughness: 0.5,
       metalness: 0.2,
       emissive: p.color,
-      emissiveIntensity: 0.05,
+      emissiveIntensity: 0.15,  // 提高一点,暗背景下看得见
     });
-    const mesh = new THREE.Mesh(new THREE.SphereGeometry(p.size, 24, 24), mat);
+    const mesh = new THREE.Mesh(new THREE.SphereGeometry(p.size, 32, 32), mat);
     scene.add(mesh);
 
     // 轨迹
-    const tmat = new THREE.LineBasicMaterial({ color: p.color, transparent: true, opacity: 0.5 });
+    const tmat = new THREE.LineBasicMaterial({ color: p.color, transparent: true, opacity: 0.6 });
     const tgeom = new THREE.BufferGeometry();
     const tline = new THREE.Line(tgeom, tmat);
     scene.add(tline);
 
-    // 参考椭圆(虚线)
-    const emat = new THREE.LineDashedMaterial({ color: p.color, dashSize: 0.3, gapSize: 0.2, transparent: true, opacity: 0.3 });
+    // 参考椭圆(空 geom,等后面 fill 再 computeLineDistances)
+    const emat = new THREE.LineDashedMaterial({ color: p.color, dashSize: 0.3, gapSize: 0.2, transparent: true, opacity: 0.35 });
     const egeom = new THREE.BufferGeometry();
     const eline = new THREE.Line(egeom, emat);
-    eline.computeLineDistances();
     scene.add(eline);
 
-    // 名字标签(Sprite)
-    const labelCanvas = document.createElement('canvas');
-    labelCanvas.width = 256; labelCanvas.height = 64;
-    const lctx = labelCanvas.getContext('2d');
-    lctx.fillStyle = 'rgba(0,0,0,0.6)';
-    lctx.fillRect(0, 0, 256, 64);
-    lctx.font = 'bold 32px sans-serif';
-    lctx.fillStyle = '#' + p.color.toString(16).padStart(6, '0');
-    lctx.textAlign = 'center';
-    lctx.textBaseline = 'middle';
-    lctx.fillText(p.name, 128, 32);
-    const labelTex = new THREE.CanvasTexture(labelCanvas);
-    const labelMat = new THREE.SpriteMaterial({ map: labelTex, transparent: true });
-    const label = new THREE.Sprite(labelMat);
-    label.scale.set(1.4, 0.35, 1);
+    // 名字(背景半透明黑底,行星颜色字)
+    const label = makeLabel(p.name, p.color, p.size > 1 ? 1.8 : 1.3);
     scene.add(label);
 
     // 土星环
     let rings = null;
     if (p.hasRings) {
-      const ringGeo = new THREE.RingGeometry(p.size * 1.3, p.size * 1.9, 64);
+      const ringGeo = new THREE.RingGeometry(p.size * 1.4, p.size * 2.0, 64);
       const ringMat = new THREE.MeshBasicMaterial({ color: 0xc9a87c, side: THREE.DoubleSide, transparent: true, opacity: 0.7 });
       rings = new THREE.Mesh(ringGeo, ringMat);
       rings.rotation.x = Math.PI / 2 - 0.3;
@@ -210,8 +220,8 @@ export function createScene(host, opts = {}) {
       ellipse: { line: eline, geom: egeom, mat: emat },
       label,
       rings,
-      moon: null,    // 后面填(地球有)
-      angle: Math.random() * Math.PI * 2,  // 随机起始相位
+      moon: null,
+      angle: Math.random() * Math.PI * 2,
     });
   }
 
@@ -223,33 +233,19 @@ export function createScene(host, opts = {}) {
       color: MOON.color,
       roughness: 0.6,
       metalness: 0.1,
-      emissive: 0x444444,
-      emissiveIntensity: 0.05,
+      emissive: 0x666666,
+      emissiveIntensity: 0.2,
     });
-    const moonMesh = new THREE.Mesh(new THREE.SphereGeometry(MOON.size, 16, 16), moonMat);
+    const moonMesh = new THREE.Mesh(new THREE.SphereGeometry(MOON.size, 20, 20), moonMat);
     scene.add(moonMesh);
 
-    // 月球轨道(相对地球)
-    const moonTrailMat = new THREE.LineBasicMaterial({ color: 0xaaaaaa, transparent: true, opacity: 0.6 });
+    // 月球轨道
+    const moonTrailMat = new THREE.LineBasicMaterial({ color: 0xaaaaaa, transparent: true, opacity: 0.7 });
     const moonTrailGeom = new THREE.BufferGeometry();
     const moonTrailLine = new THREE.Line(moonTrailGeom, moonTrailMat);
     scene.add(moonTrailLine);
 
-    // 月球名字
-    const moonLabelCanvas = document.createElement('canvas');
-    moonLabelCanvas.width = 128; moonLabelCanvas.height = 32;
-    const mlctx = moonLabelCanvas.getContext('2d');
-    mlctx.fillStyle = 'rgba(0,0,0,0.6)';
-    mlctx.fillRect(0, 0, 128, 32);
-    mlctx.font = 'bold 16px sans-serif';
-    mlctx.fillStyle = '#cccccc';
-    mlctx.textAlign = 'center';
-    mlctx.textBaseline = 'middle';
-    mlctx.fillText('月球', 64, 16);
-    const moonLabelTex = new THREE.CanvasTexture(moonLabelCanvas);
-    const moonLabelMat = new THREE.SpriteMaterial({ map: moonLabelTex, transparent: true });
-    const moonLabel = new THREE.Sprite(moonLabelMat);
-    moonLabel.scale.set(0.7, 0.18, 1);
+    const moonLabel = makeLabel(MOON.name, MOON.color, 0.7);
     scene.add(moonLabel);
 
     moon = {
@@ -265,7 +261,7 @@ export function createScene(host, opts = {}) {
   // ---------- 状态 ----------
   let params = { speed: 1.0, paused: false };
   let simT = 0;
-  const MAX_TRAIL = 500;
+  const MAX_TRAIL = 600;
 
   function reset() {
     simT = 0;
@@ -277,17 +273,12 @@ export function createScene(host, opts = {}) {
   }
 
   // ---------- 物理 ----------
-  // 给定 a, e, θ(真近点角),位置
   function orbitPos(a, e, theta) {
-    // 椭圆极坐标:r = a(1-e²)/(1+e·cosθ)
-    // 简化:用 a(1-e·cosθ) ... 不,标准是 r = a(1-e²)/(1+e·cosθ)
+    // 真近点角版本:r = a(1-e²)/(1+e·cosθ)
     const r = a * (1 - e * e) / (1 + e * Math.cos(theta));
-    const x = r * Math.cos(theta);
-    const z = r * Math.sin(theta);
-    return new THREE.Vector3(x, 0, z);
+    return new THREE.Vector3(r * Math.cos(theta), 0, r * Math.sin(theta));
   }
 
-  // 给定 a, e 画参考椭圆(200 点)
   function makeEllipsePoints(a, e) {
     const pts = [];
     for (let i = 0; i <= 200; i++) {
@@ -299,15 +290,12 @@ export function createScene(host, opts = {}) {
 
   // 初始化参考椭圆
   for (const b of bodies) {
-    const ref = b.ellipse;
     const pts = makeEllipsePoints(b.data.a, b.data.e);
-    ref.geom.dispose();
-    ref.geom = new THREE.BufferGeometry().setFromPoints(pts);
-    ref.line.geometry = ref.geom;
-    ref.line.computeLineDistances();
+    b.ellipse.geom.dispose();
+    b.ellipse.geom = new THREE.BufferGeometry().setFromPoints(pts);
+    b.ellipse.line.geometry = b.ellipse.geom;
+    b.ellipse.line.computeLineDistances();
   }
-  // 月球参考轨道(在 earthBody 的 mesh 里,跟着地球走)
-  // 但参考轨道是相对地球的,我们在 tick 里重新算
 
   // ---------- 交互 ----------
   const sInput = ctrls.querySelector('[data-speed]');
@@ -323,12 +311,19 @@ export function createScene(host, opts = {}) {
     pauseBtn.textContent = params.paused ? '继续' : '暂停';
     pauseBtn.classList.toggle('active', params.paused);
   });
-  ctrls.querySelector('[data-focus]').addEventListener('click', () => {
-    // 聚焦地球
+  ctrls.querySelector('[data-focus="earth"]').addEventListener('click', () => {
     if (earthBody) {
       const p = earthBody.mesh.position;
       controls.target.set(p.x, p.y, p.z);
       camera.position.set(p.x + 3, p.y + 2, p.z + 3);
+    }
+  });
+  ctrls.querySelector('[data-focus="pluto"]').addEventListener('click', () => {
+    const pluto = bodies.find(b => b.data.en === 'Pluto');
+    if (pluto) {
+      const p = pluto.mesh.position;
+      controls.target.set(p.x, p.y, p.z);
+      camera.position.set(p.x + 5, p.y + 3, p.z + 5);
     }
   });
 
@@ -350,18 +345,16 @@ export function createScene(host, opts = {}) {
     lastTs = ts;
     if (!params.paused) simT += dt;
 
-    // 更新每个行星
     for (const b of bodies) {
       if (!params.paused) {
-        // 按开普勒第三定律:T 越大角速度越小
         const omega = (2 * Math.PI) / b.data.T;
         b.angle = (b.angle + omega * dt) % (2 * Math.PI);
       }
       const pos = orbitPos(b.data.a, b.data.e, b.angle);
       b.mesh.position.copy(pos);
-      b.label.position.set(pos.x, pos.y + b.data.size + 0.3, pos.z);
+      // label 跟着,贴在行星上方
+      b.label.position.set(pos.x, pos.y + b.data.size + 0.4, pos.z);
 
-      // 轨迹
       if (!params.paused) b.trail.points.push(pos.clone());
       if (b.trail.points.length > MAX_TRAIL) b.trail.points.shift();
       if (b.trail.points.length > 1) {
@@ -378,7 +371,7 @@ export function createScene(host, opts = {}) {
       }
     }
 
-    // 更新月球(绑在地球上)
+    // 月球(绑地球)
     if (moon && earthBody) {
       if (!params.paused) {
         const moonOmega = (2 * Math.PI) / moon.data.T;
@@ -392,8 +385,7 @@ export function createScene(host, opts = {}) {
         earthPos.z + moonOrbit.z
       );
       moon.mesh.position.copy(moonPos);
-      moon.label.position.set(moonPos.x, moonPos.y + moon.data.size + 0.2, moonPos.z);
-      // 月球轨迹(相对地球,跟着地球动)
+      moon.label.position.set(moonPos.x, moonPos.y + moon.data.size + 0.3, moonPos.z);
       if (!params.paused) moon.trail.points.push(moonPos.clone());
       if (moon.trail.points.length > 200) moon.trail.points.shift();
       if (moon.trail.points.length > 1) {
