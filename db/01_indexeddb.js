@@ -1,12 +1,12 @@
 // db/01_indexeddb.js
-// MathematicsWeb v0.1.0 — IndexedDB 简易封装
-// 用途:存 lastScene(刷新后恢复)、favorites(收藏场景)、paramOverrides(每场景参数)
+// MathematicsWeb v0.5.0 — IndexedDB 简易封装
+// 4 个 meta key + sceneParams 存储
 
 const DB_NAME = 'mathw';
 const DB_VERSION = 1;
 const STORES = {
-  meta: 'meta',           // { key: 'lastScene'|'favorites', value: any }
-  sceneParams: 'sceneParams',  // { sceneId: { paramName: value } }
+  meta: 'meta',                   // { key, value }
+  sceneParams: 'sceneParams',     // { sceneId, params }
 };
 
 function open() {
@@ -63,6 +63,15 @@ export const idb = {
   async setSceneParams(sceneId, params) {
     return withStore(STORES.sceneParams, 'readwrite', async (store) => {
       await asPromise(store.put({ sceneId, params }));
+    });
+  },
+  async getAllSceneParams() {
+    // 返回 { sceneId: params } map
+    return withStore(STORES.sceneParams, 'readonly', async (store) => {
+      const all = await asPromise(store.getAll());
+      const out = {};
+      all.forEach(r => { out[r.sceneId] = r.params; });
+      return out;
     });
   },
 };

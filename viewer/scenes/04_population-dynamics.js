@@ -302,9 +302,27 @@ export function createScene(host, opts = {}) {
   });
   ctrls.querySelector('[data-reset]').addEventListener('click', () => reset());
 
+  // 缓存控件引用给 setState 用
+  const _aInp = ctrls.querySelector('[data-alpha]');
+  const _aV = ctrls.querySelector('[data-alpha-v]');
+  const _bInp = ctrls.querySelector('[data-beta]');
+  const _bV = ctrls.querySelector('[data-beta-v]');
+  const _dInp = ctrls.querySelector('[data-delta]');
+  const _dV = ctrls.querySelector('[data-delta-v]');
+  const _gInp = ctrls.querySelector('[data-gamma]');
+  const _gV = ctrls.querySelector('[data-gamma-v]');
+
   return {
     sceneId: 'population-dynamics',
     getFormula() { return 'dx/dt = αx − βxy;  dy/dt = δxy − γy'; },
+    getState() { return { alpha: params.alpha, beta: params.beta, delta: params.delta, gamma: params.gamma }; },
+    setState(s) {
+      if (!s) return;
+      if (typeof s.alpha === 'number') { params.alpha = s.alpha; _aInp.value = s.alpha; _aV.textContent = s.alpha.toFixed(2); }
+      if (typeof s.beta === 'number') { params.beta = s.beta; _bInp.value = s.beta; _bV.textContent = s.beta.toFixed(2); }
+      if (typeof s.delta === 'number') { params.delta = s.delta; _dInp.value = s.delta; _dV.textContent = s.delta.toFixed(2); }
+      if (typeof s.gamma === 'number') { params.gamma = s.gamma; _gInp.value = s.gamma; _gV.textContent = s.gamma.toFixed(2); }
+    },
     destroy() {
       loop.stop();
       wrap.remove();

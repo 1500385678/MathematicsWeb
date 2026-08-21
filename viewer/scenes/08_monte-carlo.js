@@ -288,11 +288,14 @@ export function createScene(host, opts = {}) {
   const loop = makeLoop(draw, { maxFps: 30 });
 
   // ---------- 交互 ----------
-  ctrls.querySelector('[data-batch]').addEventListener('input', (e) => {
+  const _bInp = ctrls.querySelector('[data-batch]');
+  const _bV = ctrls.querySelector('[data-batch-v]');
+  const _mSel = ctrls.querySelector('[data-mode]');
+  _bInp.addEventListener('input', (e) => {
     params.batch = parseInt(e.target.value);
-    ctrls.querySelector('[data-batch-v]').textContent = params.batch;
+    _bV.textContent = params.batch;
   });
-  ctrls.querySelector('[data-mode]').addEventListener('change', (e) => {
+  _mSel.addEventListener('change', (e) => {
     params.mode = e.target.value;
     reset();
   });
@@ -301,6 +304,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'monte-carlo',
     getFormula() { return 'π ≈ 4N内/N总   ∫f ≈ (b-a)·<f>'; },
+    getState() { return { batch: params.batch, mode: params.mode }; },
+    setState(s) {
+      if (!s) return;
+      if (typeof s.batch === 'number') { params.batch = s.batch; _bInp.value = s.batch; _bV.textContent = s.batch; }
+      if (s.mode) { params.mode = s.mode; _mSel.value = s.mode; reset(); }
+    },
     destroy() {
       loop.stop();
       wrap.remove();

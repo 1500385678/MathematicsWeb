@@ -92,11 +92,29 @@
   text-transform: uppercase; letter-spacing: 0.5px;
   padding: 4px 8px 8px; font-weight: 600;
 }
+.mathw-scene-filter {
+  display: flex; gap: 4px; margin-bottom: 8px; padding: 0 4px;
+}
+.mathw-filter-btn {
+  background: rgba(255,255,255,0.04); color: var(--mathw-muted);
+  border: 1px solid var(--mathw-panel-border); border-radius: 5px;
+  padding: 3px 8px; font-size: 10px; cursor: pointer;
+  transition: background .12s, color .12s;
+}
+.mathw-filter-btn:hover { background: rgba(255,255,255,0.08); color: var(--mathw-text); }
+.mathw-filter-btn.active {
+  background: rgba(110, 231, 183, 0.15); color: var(--mathw-accent);
+  border-color: rgba(110, 231, 183, 0.3);
+}
+.mathw-scene-items { max-height: calc(100vh - 200px); overflow-y: auto; }
+.mathw-scene-items::-webkit-scrollbar { width: 4px; }
+.mathw-scene-items::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
 .mathw-scene-item {
   display: flex; align-items: center; gap: 8px;
   padding: 8px 10px; border-radius: 7px;
   cursor: pointer; transition: background .12s, color .12s;
   font-size: 13px; color: var(--mathw-text);
+  position: relative;
 }
 .mathw-scene-item:hover { background: rgba(255,255,255,0.05); }
 .mathw-scene-item.active {
@@ -109,6 +127,18 @@
 .mathw-scene-title { font-size: 13px; font-weight: 500; }
 .mathw-scene-domain { font-size: 10px; color: var(--mathw-muted); font-weight: 400; }
 .mathw-scene-item.active .mathw-scene-domain { color: var(--mathw-accent); opacity: 0.75; }
+.mathw-scene-fav {
+  font-size: 14px; cursor: pointer; padding: 2px 4px; border-radius: 3px;
+  color: var(--mathw-muted); transition: color .12s, transform .12s;
+  user-select: none;
+}
+.mathw-scene-fav:hover { transform: scale(1.2); }
+.mathw-scene-fav.active { color: #f0c040; }
+.mathw-scene-visited {
+  font-size: 9px; color: var(--mathw-accent);
+  background: rgba(110, 231, 183, 0.1); padding: 1px 4px;
+  border-radius: 3px; font-weight: 600;
+}
 
 /* ============================================================
  * 画布容器

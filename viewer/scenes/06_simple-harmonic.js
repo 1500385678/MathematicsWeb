@@ -412,16 +412,34 @@ export function createScene(host, opts = {}) {
   const loop = makeLoop(draw, { maxFps: 60 });
 
   // ---------- 交互 ----------
-  ctrls.querySelector('[data-w]').addEventListener('input', (e) => { params.w = parseFloat(e.target.value); ctrls.querySelector('[data-w-v]').textContent = params.w.toFixed(2); });
-  ctrls.querySelector('[data-gamma]').addEventListener('input', (e) => { params.gamma = parseFloat(e.target.value); ctrls.querySelector('[data-gamma-v]').textContent = params.gamma.toFixed(2); });
-  ctrls.querySelector('[data-F0]').addEventListener('input', (e) => { params.F0 = parseFloat(e.target.value); ctrls.querySelector('[data-F0-v]').textContent = params.F0.toFixed(2); });
-  ctrls.querySelector('[data-wF]').addEventListener('input', (e) => { params.wF = parseFloat(e.target.value); ctrls.querySelector('[data-wF-v]').textContent = params.wF.toFixed(2); });
-  ctrls.querySelector('[data-system]').addEventListener('change', (e) => { params.system = e.target.value; });
+  const wIn = ctrls.querySelector('[data-w]');
+  const wV = ctrls.querySelector('[data-w-v]');
+  const gIn = ctrls.querySelector('[data-gamma]');
+  const gV = ctrls.querySelector('[data-gamma-v]');
+  const fIn = ctrls.querySelector('[data-F0]');
+  const fV = ctrls.querySelector('[data-F0-v]');
+  const wfIn = ctrls.querySelector('[data-wF]');
+  const wfV = ctrls.querySelector('[data-wF-v]');
+  const sysSel = ctrls.querySelector('[data-system]');
+  wIn.addEventListener('input', (e) => { params.w = parseFloat(e.target.value); wV.textContent = params.w.toFixed(2); });
+  gIn.addEventListener('input', (e) => { params.gamma = parseFloat(e.target.value); gV.textContent = params.gamma.toFixed(2); });
+  fIn.addEventListener('input', (e) => { params.F0 = parseFloat(e.target.value); fV.textContent = params.F0.toFixed(2); });
+  wfIn.addEventListener('input', (e) => { params.wF = parseFloat(e.target.value); wfV.textContent = params.wF.toFixed(2); });
+  sysSel.addEventListener('change', (e) => { params.system = e.target.value; });
   ctrls.querySelector('[data-reset]').addEventListener('click', () => reset());
 
   return {
     sceneId: 'simple-harmonic',
     getFormula() { return 'x¨ + 2γx˙ + ω²x = F₀·cos(ωF·t)'; },
+    getState() { return { w: params.w, gamma: params.gamma, F0: params.F0, wF: params.wF, system: params.system }; },
+    setState(s) {
+      if (!s) return;
+      if (typeof s.w === 'number') { params.w = s.w; wIn.value = s.w; wV.textContent = s.w.toFixed(2); }
+      if (typeof s.gamma === 'number') { params.gamma = s.gamma; gIn.value = s.gamma; gV.textContent = s.gamma.toFixed(2); }
+      if (typeof s.F0 === 'number') { params.F0 = s.F0; fIn.value = s.F0; fV.textContent = s.F0.toFixed(2); }
+      if (typeof s.wF === 'number') { params.wF = s.wF; wfIn.value = s.wF; wfV.textContent = s.wF.toFixed(2); }
+      if (s.system) { params.system = s.system; sysSel.value = s.system; }
+    },
     destroy() {
       loop.stop();
       wrap.remove();

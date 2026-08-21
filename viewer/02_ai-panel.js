@@ -50,12 +50,13 @@ export class AIPanel {
             <div class="mathw-ai-title-main">数学老师 · 大模型</div>
             <div class="mathw-ai-title-sub">
               <span class="mathw-ai-dot" data-status="mock"></span>
-              <span data-sub>v0.2.0 · mock</span>
+              <span data-sub>v0.5.0 · mock</span>
             </div>
           </div>
         </div>
         <div class="mathw-ai-tools">
           <button data-act="ask" title="讲讲当前场景">💡 讲讲</button>
+          <button data-act="ping" title="测 LLM 连通">⚡</button>
           <button data-act="clear" title="清空对话">🗑</button>
         </div>
       </div>
@@ -88,6 +89,7 @@ export class AIPanel {
       this.appendUserMsg('讲讲当前场景的数学原理');
       this._callLLM('讲讲当前场景的数学原理');
     });
+    this._on(c.querySelector('[data-act="ping"]'), 'click', () => this._pingLLM());
     this._on(c.querySelector('[data-act="clear"]'), 'click', () => this._clear());
     c.querySelectorAll('[data-quick]').forEach(btn => {
       this._on(btn, 'click', () => {
@@ -164,6 +166,22 @@ export class AIPanel {
     this.listEl.innerHTML = '';
     this.messages = [];
     this.appendSystem('对话已清空');
+  }
+
+  async _pingLLM() {
+    this.appendSystem('⚡ 测 LLM 连通…');
+    try {
+      const t0 = performance.now();
+      const r = await this.llm.ping();
+      const dt = Math.round(performance.now() - t0);
+      if (r.ok) {
+        this.appendSystem(`✅ LLM 连通 · ${r.msg} · ${r.latency_ms || dt}ms`);
+      } else {
+        this.appendSystem(`❌ LLM 未连通: ${r.msg} · ${r.latency_ms || dt}ms`);
+      }
+    } catch (e) {
+      this.appendSystem(`❌ 测 LLM 失败: ${e.message || e}`);
+    }
   }
 
   async _handleSend() {

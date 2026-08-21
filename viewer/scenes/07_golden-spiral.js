@@ -284,9 +284,11 @@ export function createScene(host, opts = {}) {
   }
 
   // ---------- 交互 ----------
-  ctrls.querySelector('[data-n]').addEventListener('input', (e) => {
+  const _nInp = ctrls.querySelector('[data-n]');
+  const _nV = ctrls.querySelector('[data-n-v]');
+  _nInp.addEventListener('input', (e) => {
     params.n = parseInt(e.target.value);
-    ctrls.querySelector('[data-n-v]').textContent = params.n;
+    _nV.textContent = params.n;
   });
   ctrls.querySelector('[data-flip]').addEventListener('click', () => {
     params.flip = (params.flip + 1) % 4;
@@ -299,6 +301,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'golden-spiral',
     getFormula() { return 'φ = (1+√5)/2 ≈ 1.618'; },
+    getState() { return { n: params.n, flip: params.flip }; },
+    setState(s) {
+      if (!s) return;
+      if (typeof s.n === 'number') { params.n = s.n; _nInp.value = s.n; _nV.textContent = s.n; }
+      if (typeof s.flip === 'number') { params.flip = s.flip; }
+    },
     destroy() {
       loop.stop();
       wrap.remove();

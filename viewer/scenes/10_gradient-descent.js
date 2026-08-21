@@ -64,6 +64,14 @@ export function createScene(host, opts = {}) {
       </select>
     </div>
     <div class="mathw-control-row">
+      <span class="mathw-control-label">优化器</span>
+      <select data-opt>
+        <option value="gd" selected>GD 朴素</option>
+        <option value="momentum">Momentum</option>
+        <option value="adam">Adam</option>
+      </select>
+    </div>
+    <div class="mathw-control-row">
       <span class="mathw-control-label">学习率 η</span>
       <input type="range" min="0.001" max="0.5" step="0.001" value="0.05" data-lr />
       <span class="mathw-control-value" data-lr-v>0.050</span>
@@ -211,6 +219,7 @@ export function createScene(host, opts = {}) {
   function resetStart() {
     pos = { x: (Math.random() - 0.5) * 4, y: (Math.random() - 0.5) * 4 };
     pathPoints.length = 0;
+    velocity.set(0, 0); m.set(0, 0); v.set(0, 0); t = 0;
     if (historyLine) { scene.remove(historyLine); historyLine.geometry.dispose(); historyLine = null; }
     if (ballMesh) { scene.remove(ballMesh); ballMesh.geometry.dispose(); ballMesh.material.dispose(); }
     addPathPoint();
@@ -236,17 +245,31 @@ export function createScene(host, opts = {}) {
   }
 
   // ---------- 状态 ----------
-  let params = { lr: 0.05, paused: false };
+  let params = { lr: 0.05, paused: false, opt: 'gd' };
+  // 优化器状态(momentum / Adam)
+  let velocity = new THREE.Vector2(0, 0);     // momentum
+  let m = new THREE.Vector2(0, 0);            // Adam 一阶矩
+  let v = new THREE.Vector2(0, 0);            // Adam 二阶矩
+  let t = 0;                                  // Adam 时间步
+  const BETA1 = 0.9, BETA2 = 0.999, EPS = 1e-8;
 
   // ---------- 交互 ----------
-  ctrls.querySelector('[data-fn]').addEventListener('change', (e) => {
+  const _fnSel = ctrls.querySelector('[data-fn]');
+  const _optSel = ctrls.querySelector('[data-opt]');
+  const _lrInp = ctrls.querySelector('[data-lr]');
+  const _lrV = ctrls.querySelector('[data-lr-v]');
+  _fnSel.addEventListener('change', (e) => {
     fnKind = e.target.value;
     buildSurface();
     resetStart();
   });
-  ctrls.querySelector('[data-lr]').addEventListener('input', (e) => {
+  _optSel.addEventListener('change', (e) => {
+    params.opt = e.target.value;
+    velocity.set(0, 0); m.set(0, 0); v.set(0, 0); t = 0;  // 切优化器清状态
+  });
+  _lrInp.addEventListener('input', (e) => {
     params.lr = parseFloat(e.target.value);
-    ctrls.querySelector('[data-lr-v]').textContent = params.lr.toFixed(3);
+    _lrV.textContent = params.lr.toFixed(3);
   });
   ctrls.querySelector('[data-reset]').addEventListener('click', () => resetStart());
   const pauseBtn = ctrls.querySelector('[data-pause]');
@@ -269,10 +292,33 @@ export function createScene(host, opts = {}) {
 
   function tick() {
     if (!params.paused) {
-      // 梯度下降 1 步
       const { gx, gy } = grad(pos.x, pos.y);
-      pos.x -= params.lr * gx;
-      pos.y -= params.lr * gy;
+      if (params.opt === 'gd') {
+        pos.x -= params.lr * gx;
+        pos.y -= params.lr * gy;
+      } else if (params.opt === 'momentum') {
+        // v ← βv + g; θ ← θ − ηv
+        const β = 0.9;
+        velocity.x = β * velocity.x + gx;
+        velocity.y = β * velocity.y + gy;
+        pos.x -= params.lr * velocity.x;
+        pos.y -= params.lr * velocity.y;
+      } else if (params.opt === 'adam') {
+        // Adam:m ← β1 m + (1-β1) g; v ← β2 v + (1-β2) g²
+        //       m̂ = m/(1-β1^t); v̂ = v/(1-β2^t)
+        //       θ ← θ − η m̂/(√v̂ + ε)
+        t++;
+        m.x = BETA1 * m.x + (1 - BETA1) * gx;
+        m.y = BETA1 * m.y + (1 - BETA1) * gy;
+        v.x = BETA2 * v.x + (1 - BETA2) * gx * gx;
+        v.y = BETA2 * v.y + (1 - BETA2) * gy * gy;
+        const mh_x = m.x / (1 - Math.pow(BETA1, t));
+        const mh_y = m.y / (1 - Math.pow(BETA1, t));
+        const vh_x = v.x / (1 - Math.pow(BETA2, t));
+        const vh_y = v.y / (1 - Math.pow(BETA2, t));
+        pos.x -= params.lr * mh_x / (Math.sqrt(vh_x) + EPS);
+        pos.y -= params.lr * mh_y / (Math.sqrt(vh_y) + EPS);
+      }
       // 越界保护
       if (Math.abs(pos.x) > 5 || Math.abs(pos.y) > 5) resetStart();
       addPathPoint();
@@ -286,6 +332,13 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'gradient-descent',
     getFormula() { return 'θ ← θ − η·∇f(θ)'; },
+    getState() { return { lr: params.lr, opt: params.opt, fn: fnKind }; },
+    setState(s) {
+      if (!s) return;
+      if (typeof s.lr === 'number') { params.lr = s.lr; _lrInp.value = s.lr; _lrV.textContent = s.lr.toFixed(3); }
+      if (s.opt) { params.opt = s.opt; _optSel.value = s.opt; velocity.set(0, 0); m.set(0, 0); v.set(0, 0); t = 0; }
+      if (s.fn && s.fn !== fnKind) { fnKind = s.fn; _fnSel.value = s.fn; buildSurface(); resetStart(); }
+    },
     destroy() {
       ro.disconnect();
       controls.dispose();

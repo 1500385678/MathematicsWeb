@@ -81,6 +81,9 @@ export function createScene(host, opts = {}) {
 
   // 主双摆
   let main = { t1: params.theta1, w1: 0, t2: params.theta2, w2: 0 };
+  // 相空间轨迹(θ1, ω1)
+  const phaseTrail = [];      // 主摆
+  const ghostPhase = [];      // 8 个对照摆的相空间
   const mainTrail = [];
   const MAX_TRAIL = 400;
   // 8 个"对照"摆,初值差 0.001
@@ -91,16 +94,19 @@ export function createScene(host, opts = {}) {
     const eps = (i - N_GHOST / 2) * 0.001;
     ghosts.push({ t1: params.theta1 + eps, w1: 0, t2: params.theta2 + eps, w2: 0 });
     ghostTrails.push([]);
+    ghostPhase.push([]);
   }
   let simT = 0;
 
   function reset() {
     main = { t1: params.theta1, w1: 0, t2: params.theta2, w2: 0 };
     mainTrail.length = 0;
+    phaseTrail.length = 0;
     for (let i = 0; i < N_GHOST; i++) {
       const eps = (i - N_GHOST / 2) * 0.001;
       ghosts[i] = { t1: params.theta1 + eps, w1: 0, t2: params.theta2 + eps, w2: 0 };
       ghostTrails[i].length = 0;
+      ghostPhase[i].length = 0;
     }
     simT = 0;
   }
@@ -154,10 +160,14 @@ export function createScene(host, opts = {}) {
       main = stepRK4(main, dt);
       mainTrail.push(posOf(main));
       if (mainTrail.length > MAX_TRAIL) mainTrail.shift();
+      phaseTrail.push({ t1: main.t1, w1: main.w1 });
+      if (phaseTrail.length > MAX_TRAIL) phaseTrail.shift();
       for (let g = 0; g < N_GHOST; g++) {
         ghosts[g] = stepRK4(ghosts[g], dt);
         ghostTrails[g].push(posOf(ghosts[g]));
         if (ghostTrails[g].length > MAX_TRAIL) ghostTrails[g].shift();
+        ghostPhase[g].push({ t1: ghosts[g].t1, w1: ghosts[g].w1 });
+        if (ghostPhase[g].length > MAX_TRAIL) ghostPhase[g].shift();
       }
       simT += dt;
     }
@@ -169,9 +179,13 @@ export function createScene(host, opts = {}) {
     ctx.fillStyle = '#0e1116';
     ctx.fillRect(0, 0, W, H);
 
-    const upperH = H * 0.6;
+    const upperH = H * 0.55;
+    const lowerH = H - upperH;
+    const lowerLeftW = W * 0.65;
+    const lowerRightW = W - lowerLeftW;
     drawMainPendulum(ctx, 0, 0, W, upperH);
-    drawGhostTrails(ctx, 0, upperH, W, H - upperH);
+    drawGhostTrails(ctx, 0, upperH, lowerLeftW, lowerH);
+    drawPhaseSpace(ctx, lowerLeftW, upperH, lowerRightW, lowerH);
 
     ctx.restore();
   }
@@ -302,26 +316,122 @@ export function createScene(host, opts = {}) {
     });
   }
 
+  // 相空间图(θ1 vs ω1)— 直观展示混沌(分形-like 的相空间填充)
+  function drawPhaseSpace(c, x0, y0, W, H) {
+    // 标题
+    c.fillStyle = '#8a93a6';
+    c.font = '12px -apple-system, sans-serif';
+    c.textAlign = 'left';
+    c.fillText('相空间(θ₁ vs ω₁)', x0 + 20, y0 + 18);
+    c.fillText('主摆(粗) + 8 对照', x0 + 20, y0 + 36);
+
+    // 画框
+    const cTop = y0 + 50;
+    const cH = H - 70;
+    const cW = W - 40;
+    const cX = x0 + 20;
+    c.strokeStyle = '#1c2230';
+    c.lineWidth = 1;
+    c.strokeRect(cX, cTop, cW, cH);
+
+    // 0 度中线(竖直)
+    const midX = cX + cW * 0.5;  // θ1 = 0
+    const midY = cTop + cH * 0.5;  // ω1 = 0
+    c.strokeStyle = '#2a3140';
+    c.setLineDash([4, 4]);
+    c.beginPath();
+    c.moveTo(midX, cTop);
+    c.lineTo(midX, cTop + cH);
+    c.moveTo(cX, midY);
+    c.lineTo(cX + cW, midY);
+    c.stroke();
+    c.setLineDash([]);
+
+    // 坐标范围
+    const θRange = 3.14;  // -π ~ π
+    const ωRange = 8;     // 经验值
+    const xScale = (cW / 2) / θRange;
+    const yScale = (cH / 2) / ωRange;
+
+    const ghostColors = ['#ff6b6b', '#f0c040', '#6ee7b7', '#4ea1ff', '#a78bfa', '#fb7185', '#34d399', '#fbbf24'];
+    // 8 个对照摆
+    ghostPhase.forEach((tr, idx) => {
+      if (tr.length < 2) return;
+      c.strokeStyle = ghostColors[idx];
+      c.globalAlpha = 0.4;
+      c.lineWidth = 1;
+      c.beginPath();
+      for (let i = 0; i < tr.length; i++) {
+        const px = midX + tr[i].t1 * xScale;
+        const py = midY - tr[i].w1 * yScale;
+        if (i === 0) c.moveTo(px, py); else c.lineTo(px, py);
+      }
+      c.stroke();
+    });
+    c.globalAlpha = 1;
+    // 主摆(粗)
+    c.strokeStyle = '#6ee7b7';
+    c.lineWidth = 2;
+    c.beginPath();
+    for (let i = 0; i < phaseTrail.length; i++) {
+      const px = midX + phaseTrail[i].t1 * xScale;
+      const py = midY - phaseTrail[i].w1 * yScale;
+      if (i === 0) c.moveTo(px, py); else c.lineTo(px, py);
+    }
+    c.stroke();
+    // 主摆当前点
+    if (phaseTrail.length > 0) {
+      const last = phaseTrail[phaseTrail.length - 1];
+      const px = midX + last.t1 * xScale;
+      const py = midY - last.w1 * yScale;
+      c.fillStyle = '#f0c040';
+      c.beginPath();
+      c.arc(px, py, 4, 0, Math.PI * 2);
+      c.fill();
+    }
+
+    // 轴标签
+    c.fillStyle = '#8a93a6';
+    c.font = '10px monospace';
+    c.textAlign = 'right';
+    c.fillText('θ₁ →', cX + cW - 4, cTop + cH - 4);
+    c.textAlign = 'left';
+    c.fillText('ω₁ ↑', cX + 4, cTop + 12);
+  }
+
   const loop = makeLoop(draw, { maxFps: 60 });
 
   // ---------- 交互 ----------
-  ctrls.querySelector('[data-theta1]').addEventListener('input', (e) => {
+  const _t1Inp = ctrls.querySelector('[data-theta1]');
+  const _t1V = ctrls.querySelector('[data-theta1-v]');
+  const _t2Inp = ctrls.querySelector('[data-theta2]');
+  const _t2V = ctrls.querySelector('[data-theta2-v]');
+  const _sInp = ctrls.querySelector('[data-speed]');
+  const _sV = ctrls.querySelector('[data-speed-v]');
+  _t1Inp.addEventListener('input', (e) => {
     params.theta1 = parseFloat(e.target.value);
-    ctrls.querySelector('[data-theta1-v]').textContent = params.theta1.toFixed(2);
+    _t1V.textContent = params.theta1.toFixed(2);
   });
-  ctrls.querySelector('[data-theta2]').addEventListener('input', (e) => {
+  _t2Inp.addEventListener('input', (e) => {
     params.theta2 = parseFloat(e.target.value);
-    ctrls.querySelector('[data-theta2-v]').textContent = params.theta2.toFixed(2);
+    _t2V.textContent = params.theta2.toFixed(2);
   });
-  ctrls.querySelector('[data-speed]').addEventListener('input', (e) => {
+  _sInp.addEventListener('input', (e) => {
     params.speed = parseFloat(e.target.value);
-    ctrls.querySelector('[data-speed-v]').textContent = params.speed.toFixed(1) + '×';
+    _sV.textContent = params.speed.toFixed(1) + '×';
   });
   ctrls.querySelector('[data-reset]').addEventListener('click', () => reset());
 
   return {
     sceneId: 'double-pendulum',
     getFormula() { return 'θ¨ = f(θ₁, θ₂, ω₁, ω₂)  (无解析解)'; },
+    getState() { return { theta1: params.theta1, theta2: params.theta2, speed: params.speed }; },
+    setState(s) {
+      if (!s) return;
+      if (typeof s.theta1 === 'number') { params.theta1 = s.theta1; _t1Inp.value = s.theta1; _t1V.textContent = s.theta1.toFixed(2); }
+      if (typeof s.theta2 === 'number') { params.theta2 = s.theta2; _t2Inp.value = s.theta2; _t2V.textContent = s.theta2.toFixed(2); }
+      if (typeof s.speed === 'number') { params.speed = s.speed; _sInp.value = s.speed; _sV.textContent = s.speed.toFixed(1) + '×'; }
+    },
     destroy() {
       loop.stop();
       wrap.remove();

@@ -225,6 +225,19 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'catenary-arch',
     getFormula() { return 'y = a · cosh(x / a)'; },
+    getState() { return { a: params.a, span: params.span, flipped: params.flipped }; },
+    setState(s) {
+      if (!s) return;
+      if (typeof s.a === 'number') { params.a = s.a; aInput.value = s.a; aVal.textContent = s.a.toFixed(1); }
+      if (typeof s.span === 'number') { params.span = s.span; sInput.value = s.span; sVal.textContent = s.span.toFixed(1); }
+      if (typeof s.flipped === 'boolean') {
+        params.flipped = s.flipped;
+        const btn = ctrls.querySelector('[data-toggle-flip]');
+        btn.textContent = params.flipped ? '翻转(拱 / 垂链)' : '翻转(当前:垂链)';
+        btn.classList.toggle('active', !params.flipped);
+      }
+      rebuild();
+    },
     destroy() {
       ro.disconnect();
       if (rafId) cancelAnimationFrame(rafId);

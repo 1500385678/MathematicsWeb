@@ -290,6 +290,14 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'fourier-synth',
     getFormula() { return 'f(t) = Σ aₙ·sin(nωt + φₙ)'; },
+    getState() { return { wave: params.wave, n: params.n, freq: params.freq }; },
+    setState(s) {
+      if (!s) return;
+      if (s.wave) { params.wave = s.wave; wSelect.value = s.wave; }
+      if (typeof s.n === 'number') { params.n = s.n; nInput.value = s.n; nVal.textContent = s.n; }
+      if (typeof s.freq === 'number') { params.freq = s.freq; fInput.value = s.freq; fVal.textContent = s.freq.toFixed(1) + 'Hz'; }
+      coeffs = coefficients(params.wave, params.n);
+    },
     destroy() {
       loop.stop();
       wrap.remove();

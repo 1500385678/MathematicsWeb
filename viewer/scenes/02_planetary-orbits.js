@@ -271,6 +271,8 @@ export function createScene(host, opts = {}) {
     pauseBtn.classList.toggle('active', params.paused);
   });
 
+  // getState/setState(v0.5 参数持久化)
+
   // ---------- 渲染循环 ----------
   function resize() {
     const rect = host.getBoundingClientRect();
@@ -319,6 +321,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'planetary-orbits',
     getFormula() { return 'F = G·M·m/r²   T² ∝ a³'; },
+    getState() { return { speed: params.speed, paused: params.paused }; },
+    setState(s) {
+      if (!s) return;
+      if (typeof s.speed === 'number') { params.speed = s.speed; sInput.value = s.speed; sVal.textContent = s.speed.toFixed(1) + '×'; }
+      if (typeof s.paused === 'boolean') { params.paused = s.paused; pauseBtn.textContent = s.paused ? '继续' : '暂停'; pauseBtn.classList.toggle('active', s.paused); }
+    },
     destroy() {
       ro.disconnect();
       controls.dispose();

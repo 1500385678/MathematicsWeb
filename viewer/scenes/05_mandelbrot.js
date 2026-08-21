@@ -256,6 +256,9 @@ export function createScene(host, opts = {}) {
   ctrls.querySelector('[data-palette]').addEventListener('change', (e) => {
     params.palette = e.target.value;
   });
+  const _iInp = ctrls.querySelector('[data-iter]');
+  const _iV = ctrls.querySelector('[data-iter-v]');
+  const _pSel = ctrls.querySelector('[data-palette]');
   ctrls.querySelector('[data-reset]').addEventListener('click', () => {
     view = { cx: -0.5, cy: 0, scale: 3 };
   });
@@ -267,6 +270,13 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'mandelbrot',
     getFormula() { return 'z_{n+1} = z_n² + c,  z₀ = 0'; },
+    getState() { return { iter: params.iter, palette: params.palette, view: { ...view } }; },
+    setState(s) {
+      if (!s) return;
+      if (typeof s.iter === 'number') { params.iter = s.iter; _iInp.value = s.iter; _iV.textContent = s.iter; }
+      if (s.palette) { params.palette = s.palette; _pSel.value = s.palette; }
+      if (s.view && typeof s.view.cx === 'number') { view = { ...s.view }; }
+    },
     destroy() {
       loop.stop();
       ro.disconnect();

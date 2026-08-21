@@ -1,18 +1,19 @@
 // viewer/viewer.js
-// MathematicsWeb v0.2.0 — 主壳 + 场景切换器 + AI 面板宿主
+// MathematicsWeb v0.5.0 — 主壳 + 场景切换器 + AI 面板宿主 + Workspace
 // 暴露: import { initViewer, SCENES } from './viewer.js';
-// 用法: const v = initViewer(container, { initialScene: 'catenary-arch' });
+// 用法: const v = initViewer(container, { initialScene: 'catenary-arch', workspace });
 //       v.switchScene('fourier-synth'); v.destroy();
 //
-// 设计要点(沿用 three.jsWeb 范式):
+// 设计要点(沿用 three.jsWeb 范式 + v0.5 加 Workspace 持久化):
 //   - 0 构建(原生 ES Modules,改完即跑)
 //   - 断网能跑(three.js 走 vendor,LLM 默认 mock)
-//   - 场景独立模块,每个导出 init(el) + destroy() + getLesson()
+//   - 场景独立模块,导出 createScene(host, opts) → { sceneId, getFormula, getState?, setState?, destroy }
 //   - AI 面板原生支持,LLM 切换 mock/real
+//   - v0.5:收藏 / 访问进度 / 场景参数持久化 / 最后访问恢复
 
 import { AIPanel } from './02_ai-panel.js';
 
-// v0.2.0: 场景清单 — 10 个跨学科应用(2D + 3D 混排)
+// v0.5.0: 场景清单 — 10 个跨学科应用(2D + 3D 混排)
 export const SCENES = [
   {
     id: 'catenary-arch',
@@ -114,6 +115,7 @@ export function initViewer(container, config = {}) {
   if (!container) throw new Error('initViewer: container 必填');
   const cfg = {
     initialScene: 'catenary-arch',
+    workspace: null,             // 可选:外部传 Workspace
     callbacks: {},
     ...config,
   };
@@ -123,7 +125,7 @@ export function initViewer(container, config = {}) {
   root.className = 'mathw-root';
   container.appendChild(root);
 
-  // 顶部状态栏
+  // 顶部状态栏(v0.5 加进度)
   const statusBar = document.createElement('div');
   statusBar.className = 'mathw-statusbar';
   statusBar.innerHTML = `
@@ -131,31 +133,29 @@ export function initViewer(container, config = {}) {
       <div class="mathw-statusbar-logo">∑</div>
       <div>
         <div style="font-weight:600;font-size:13px">MathematicsWeb</div>
-        <div style="font-size:10px;color:var(--mathw-muted)">跨学科数学可视化</div>
+        <div style="font-size:10px;color:var(--mathw-muted)">跨学科数学可视化 · v0.5.0</div>
       </div>
     </div>
     <div class="mathw-statusbar-center" data-scene-name>加载中…</div>
     <div class="mathw-statusbar-right">
+      <span data-progress style="font-size:11px;color:var(--mathw-muted);margin-right:8px"></span>
       <div class="mathw-statusbar-dot" data-state="off" data-status-dot></div>
       <span style="font-size:11px;color:var(--mathw-muted)" data-status-text>未连接</span>
     </div>
   `;
   root.appendChild(statusBar);
 
-  // 左侧场景列表
+  // 左侧场景列表(v0.5 加收藏 / 进度 / 过滤)
   const sceneList = document.createElement('div');
   sceneList.className = 'mathw-scene-list';
   sceneList.innerHTML = `
-    <div class="mathw-scene-list-header">场景库 · 10 个跨学科</div>
-    ${SCENES.map(s => `
-      <div class="mathw-scene-item" data-scene-id="${s.id}">
-        <span class="mathw-scene-icon">${s.icon}</span>
-        <div class="mathw-scene-meta">
-          <span class="mathw-scene-title">${escapeHtml(s.title)}</span>
-          <span class="mathw-scene-domain">${escapeHtml(s.domain)} · ${s.renderer}</span>
-        </div>
-      </div>
-    `).join('')}
+    <div class="mathw-scene-list-header">场景库 · ${SCENES.length} 个跨学科</div>
+    <div class="mathw-scene-filter">
+      <button class="mathw-filter-btn active" data-filter="all">全部</button>
+      <button class="mathw-filter-btn" data-filter="fav">⭐ 收藏</button>
+      <button class="mathw-filter-btn" data-filter="unvisited">未访问</button>
+    </div>
+    <div class="mathw-scene-items" data-list></div>
   `;
   root.appendChild(sceneList);
 
@@ -168,7 +168,92 @@ export function initViewer(container, config = {}) {
   const aiPanel = new AIPanel({ root });
   aiPanel.mount();
   aiPanel.setLLMStatus('mock', 'mock');
-  aiPanel.appendSystem('MathematicsWeb v0.1.0 启动…');
+  aiPanel.appendSystem('MathematicsWeb v0.5.0 启动…');
+
+  // ---------- Workspace(v0.5) ----------
+  const ws = cfg.workspace;
+  let currentFilter = 'all';
+
+  function renderSceneList() {
+    const list = sceneList.querySelector('[data-list]');
+    const filtered = SCENES.filter(s => {
+      if (currentFilter === 'fav') return ws && ws.isFavorite(s.id);
+      if (currentFilter === 'unvisited') return !ws || !ws.isVisited(s.id);
+      return true;
+    });
+    if (filtered.length === 0) {
+      list.innerHTML = `<div style="padding:20px 12px;color:var(--mathw-muted);font-size:12px;text-align:center">${currentFilter === 'fav' ? '还没收藏场景' : '都访问过了 ✨'}</div>`;
+      return;
+    }
+    list.innerHTML = filtered.map(s => {
+      const isFav = ws && ws.isFavorite(s.id);
+      const isVisited = ws && ws.isVisited(s.id);
+      const isActive = s.id === currentSceneId;
+      return `
+        <div class="mathw-scene-item${isActive ? ' active' : ''}" data-scene-id="${s.id}">
+          <span class="mathw-scene-icon">${s.icon}</span>
+          <div class="mathw-scene-meta">
+            <span class="mathw-scene-title">${escapeHtml(s.title)}</span>
+            <span class="mathw-scene-domain">${escapeHtml(s.domain)} · ${s.renderer}</span>
+          </div>
+          <span class="mathw-scene-fav${isFav ? ' active' : ''}" data-fav="${s.id}" title="${isFav ? '取消收藏' : '收藏'}">${isFav ? '★' : '☆'}</span>
+          ${isVisited ? '<span class="mathw-scene-visited" title="已访问">✓</span>' : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  function updateProgress() {
+    const el = statusBar.querySelector('[data-progress]');
+    if (!el || !ws) return;
+    const total = SCENES.length;
+    const visited = ws.visited.length;
+    el.textContent = `进度 ${visited}/${total}`;
+    el.title = `已访问 ${visited} / 总 ${total} 个场景`;
+  }
+
+  if (ws) {
+    ws.onChange(() => {
+      renderSceneList();
+      updateProgress();
+    });
+    renderSceneList();
+    updateProgress();
+  } else {
+    // 没有 workspace(向后兼容),降级渲染
+    sceneList.querySelector('[data-list]').innerHTML = SCENES.map(s => `
+      <div class="mathw-scene-item" data-scene-id="${s.id}">
+        <span class="mathw-scene-icon">${s.icon}</span>
+        <div class="mathw-scene-meta">
+          <span class="mathw-scene-title">${escapeHtml(s.title)}</span>
+          <span class="mathw-scene-domain">${escapeHtml(s.domain)} · ${s.renderer}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // 过滤器
+  sceneList.querySelectorAll('[data-filter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sceneList.querySelectorAll('[data-filter]').forEach(b => b.classList.toggle('active', b === btn));
+      currentFilter = btn.dataset.filter;
+      renderSceneList();
+    });
+  });
+
+  // 收藏 + 场景项 点击
+  sceneList.addEventListener('click', (e) => {
+    const favBtn = e.target.closest('[data-fav]');
+    if (favBtn) {
+      e.stopPropagation();
+      if (ws) {
+        ws.toggleFavorite(favBtn.dataset.fav);
+      }
+      return;
+    }
+    const item = e.target.closest('.mathw-scene-item');
+    if (item) switchScene(item.dataset.sceneId);
+  });
 
   // ---------- 场景切换 ----------
   let currentScene = null;
@@ -179,14 +264,17 @@ export function initViewer(container, config = {}) {
     if (!scene) { console.warn('未知场景', sceneId); return; }
     if (currentSceneId === sceneId) return;
 
-    // 旧场景 destroy
+    // 旧场景:先 save state 再 destroy
     if (currentScene && typeof currentScene.destroy === 'function') {
+      if (ws && typeof currentScene.getState === 'function') {
+        try { await ws.saveSceneParams(currentSceneId, currentScene.getState()); } catch (_) {}
+      }
       try { currentScene.destroy(); } catch (e) { console.warn('destroy', e); }
     }
     currentScene = null;
     canvasHost.innerHTML = '';
 
-    // 高亮场景项
+    // 高亮 + 状态栏
     sceneList.querySelectorAll('.mathw-scene-item').forEach(el => {
       el.classList.toggle('active', el.dataset.sceneId === sceneId);
     });
@@ -202,6 +290,20 @@ export function initViewer(container, config = {}) {
       const instance = factory(canvasHost, { aiPanel });
       currentScene = instance;
       currentSceneId = sceneId;
+
+      // 恢复上次参数(如果有)
+      if (ws && typeof instance.setState === 'function') {
+        const saved = ws.getSceneParams(sceneId);
+        if (saved) {
+          try { instance.setState(saved); } catch (e) { console.warn('setState', e); }
+        }
+      }
+
+      // 标记访问
+      if (ws) ws.markVisited(sceneId);
+      // 记 last scene
+      if (ws) ws.setLastScene(sceneId);
+
       aiPanel.setActiveScene(scene, instance);
       aiPanel.appendSystem(`✅ 进入「${scene.title}」· ${scene.renderer}`);
       cfg.callbacks.onSceneChange && cfg.callbacks.onSceneChange(sceneId);
@@ -211,12 +313,6 @@ export function initViewer(container, config = {}) {
       cfg.callbacks.onError && cfg.callbacks.onError(e);
     }
   }
-
-  // 场景项点击
-  sceneList.addEventListener('click', (e) => {
-    const item = e.target.closest('.mathw-scene-item');
-    if (item) switchScene(item.dataset.sceneId);
-  });
 
   // 状态栏
   const statusDot = statusBar.querySelector('[data-status-dot]');
@@ -233,6 +329,7 @@ export function initViewer(container, config = {}) {
     root,
     canvasHost,
     aiPanel,
+    workspace: ws,
     switchScene,
     getCurrentSceneId: () => currentSceneId,
     getCurrentScene: () => currentScene,
@@ -246,8 +343,13 @@ export function initViewer(container, config = {}) {
     },
   };
 
-  // 启动初始场景
-  switchScene(cfg.initialScene);
+  // 启动:优先用 last scene(有 ws 时),否则用 initialScene
+  let startScene = cfg.initialScene;
+  if (ws && ws.lastScene && SCENES.find(s => s.id === ws.lastScene)) {
+    startScene = ws.lastScene;
+    aiPanel.appendSystem(`📂 恢复上次: 「${SCENES.find(s => s.id === ws.lastScene).title}」`);
+  }
+  switchScene(startScene);
 
   return viewer;
 }
