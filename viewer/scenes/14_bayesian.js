@@ -149,10 +149,10 @@ export function createScene(host, opts = {}) {
       ctx.moveTo(gx, chartY);
       ctx.lineTo(gx, chartY + chartH);
       ctx.stroke();
-      c.fillStyle = '#8a93a6';
-      c.font = '10px monospace';
-      c.textAlign = 'center';
-      c.fillText((i / 10).toFixed(1), gx, chartY + chartH + 14);
+      ctx.fillStyle = '#8a93a6';
+      ctx.font = '10px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText((i / 10).toFixed(1), gx, chartY + chartH + 14);
     }
 
     // 先验曲线
@@ -189,12 +189,12 @@ export function createScene(host, opts = {}) {
       ctx.fill();
     }
     const mean0 = betaMean(a0, b0);
-    c.strokeStyle = 'rgba(78, 161, 255, 0.6)';
-    c.lineWidth = 1;
-    c.beginPath();
-    c.moveTo(chartX + mean0 * chartW, chartY);
-    c.lineTo(chartX + mean0 * chartW, chartY + chartH);
-    c.stroke();
+    ctx.strokeStyle = 'rgba(78, 161, 255, 0.6)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(chartX + mean0 * chartW, chartY);
+    ctx.lineTo(chartX + mean0 * chartW, chartY + chartH);
+    ctx.stroke();
 
     // 后验 MAP / 均值
     if (a1 > 1 && b1 > 1) {
@@ -206,12 +206,12 @@ export function createScene(host, opts = {}) {
       ctx.fill();
     }
     const mean1 = betaMean(a1, b1);
-    c.strokeStyle = 'rgba(110, 231, 183, 0.6)';
-    c.lineWidth = 1;
-    c.beginPath();
-    c.moveTo(chartX + mean1 * chartW, chartY);
-    c.lineTo(chartX + mean1 * chartW, chartY + chartH);
-    c.stroke();
+    ctx.strokeStyle = 'rgba(110, 231, 183, 0.6)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(chartX + mean1 * chartW, chartY);
+    ctx.lineTo(chartX + mean1 * chartW, chartY + chartH);
+    ctx.stroke();
 
     // 标签
     ctx.fillStyle = '#8a93a6';
