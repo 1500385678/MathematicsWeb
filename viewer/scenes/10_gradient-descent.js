@@ -209,17 +209,24 @@ export function createScene(host, opts = {}) {
   grid.position.y = -0.02;
   scene.add(grid);
 
-  // ---------- 优化轨迹 ----------
+  // ---------- 优化轨迹 + 优化器状态 ----------
+  // 状态变量提前到 resetStart 之前,避免 TDZ
   const pathPoints = [];   // [{x, y, z}]
   const MAX_PATH = 200;
   let pos = { x: 2.5, y: 2.5 };  // 2D 坐标(在表面上的投影)
   let historyLine = null;
   let ballMesh = null;
+  let params = { lr: 0.05, paused: false, opt: 'gd' };
+  let velocity = new THREE.Vector2(0, 0);     // momentum
+  let adamM = new THREE.Vector2(0, 0);       // Adam 一阶矩(改名为 adamM 避 v0.5.0 同名)
+  let adamV = new THREE.Vector2(0, 0);       // Adam 二阶矩
+  let adamT = 0;                             // Adam 时间步
+  const BETA1 = 0.9, BETA2 = 0.999, EPS = 1e-8;
 
   function resetStart() {
     pos = { x: (Math.random() - 0.5) * 4, y: (Math.random() - 0.5) * 4 };
     pathPoints.length = 0;
-    velocity.set(0, 0); m.set(0, 0); v.set(0, 0); t = 0;
+    velocity.set(0, 0); adamM.set(0, 0); adamV.set(0, 0); adamT = 0;
     if (historyLine) { scene.remove(historyLine); historyLine.geometry.dispose(); historyLine = null; }
     if (ballMesh) { scene.remove(ballMesh); ballMesh.geometry.dispose(); ballMesh.material.dispose(); }
     addPathPoint();
@@ -244,15 +251,6 @@ export function createScene(host, opts = {}) {
     scene.add(ballMesh);
   }
 
-  // ---------- 状态 ----------
-  let params = { lr: 0.05, paused: false, opt: 'gd' };
-  // 优化器状态(momentum / Adam)
-  let velocity = new THREE.Vector2(0, 0);     // momentum
-  let m = new THREE.Vector2(0, 0);            // Adam 一阶矩
-  let v = new THREE.Vector2(0, 0);            // Adam 二阶矩
-  let t = 0;                                  // Adam 时间步
-  const BETA1 = 0.9, BETA2 = 0.999, EPS = 1e-8;
-
   // ---------- 交互 ----------
   const _fnSel = ctrls.querySelector('[data-fn]');
   const _optSel = ctrls.querySelector('[data-opt]');
@@ -265,7 +263,7 @@ export function createScene(host, opts = {}) {
   });
   _optSel.addEventListener('change', (e) => {
     params.opt = e.target.value;
-    velocity.set(0, 0); m.set(0, 0); v.set(0, 0); t = 0;  // 切优化器清状态
+    velocity.set(0, 0); adamM.set(0, 0); adamV.set(0, 0); adamT = 0;  // 切优化器清状态
   });
   _lrInp.addEventListener('input', (e) => {
     params.lr = parseFloat(e.target.value);
@@ -307,15 +305,15 @@ export function createScene(host, opts = {}) {
         // Adam:m ← β1 m + (1-β1) g; v ← β2 v + (1-β2) g²
         //       m̂ = m/(1-β1^t); v̂ = v/(1-β2^t)
         //       θ ← θ − η m̂/(√v̂ + ε)
-        t++;
-        m.x = BETA1 * m.x + (1 - BETA1) * gx;
-        m.y = BETA1 * m.y + (1 - BETA1) * gy;
-        v.x = BETA2 * v.x + (1 - BETA2) * gx * gx;
-        v.y = BETA2 * v.y + (1 - BETA2) * gy * gy;
-        const mh_x = m.x / (1 - Math.pow(BETA1, t));
-        const mh_y = m.y / (1 - Math.pow(BETA1, t));
-        const vh_x = v.x / (1 - Math.pow(BETA2, t));
-        const vh_y = v.y / (1 - Math.pow(BETA2, t));
+        adamT++;
+        adamM.x = BETA1 * adamM.x + (1 - BETA1) * gx;
+        adamM.y = BETA1 * adamM.y + (1 - BETA1) * gy;
+        adamV.x = BETA2 * adamV.x + (1 - BETA2) * gx * gx;
+        adamV.y = BETA2 * adamV.y + (1 - BETA2) * gy * gy;
+        const mh_x = adamM.x / (1 - Math.pow(BETA1, adamT));
+        const mh_y = adamM.y / (1 - Math.pow(BETA1, adamT));
+        const vh_x = adamV.x / (1 - Math.pow(BETA2, adamT));
+        const vh_y = adamV.y / (1 - Math.pow(BETA2, adamT));
         pos.x -= params.lr * mh_x / (Math.sqrt(vh_x) + EPS);
         pos.y -= params.lr * mh_y / (Math.sqrt(vh_y) + EPS);
       }
@@ -336,7 +334,7 @@ export function createScene(host, opts = {}) {
     setState(s) {
       if (!s) return;
       if (typeof s.lr === 'number') { params.lr = s.lr; _lrInp.value = s.lr; _lrV.textContent = s.lr.toFixed(3); }
-      if (s.opt) { params.opt = s.opt; _optSel.value = s.opt; velocity.set(0, 0); m.set(0, 0); v.set(0, 0); t = 0; }
+      if (s.opt) { params.opt = s.opt; _optSel.value = s.opt; velocity.set(0, 0); adamM.set(0, 0); adamV.set(0, 0); adamT = 0; }
       if (s.fn && s.fn !== fnKind) { fnKind = s.fn; _fnSel.value = s.fn; buildSurface(); resetStart(); }
     },
     destroy() {

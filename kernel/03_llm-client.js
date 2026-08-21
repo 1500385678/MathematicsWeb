@@ -8,9 +8,11 @@
 
 const DEFAULT_CONFIG = {
   enabled: false,
-  base_url: '',
+  provider: 'minimaxi',
+  base_url: 'https://api.minimaxi.com/v1',
   api_key: '',
-  model: 'gpt-4o-mini',
+  model: 'Minimax-M3',
+  system_prompt: '',
   timeout_ms: 30000,
 };
 
@@ -99,6 +101,8 @@ export class LLMClient {
   }
 
   _systemPrompt() {
+    // 优先用 cfg.system_prompt,没有则用默认
+    if (this.cfg && this.cfg.system_prompt) return this.cfg.system_prompt;
     return '你是一位擅长把数学讲活的老师。回答要短(100-200 字),用直觉,举生活例子。如果涉及公式,放在 ```formula ... ``` 块里。';
   }
 

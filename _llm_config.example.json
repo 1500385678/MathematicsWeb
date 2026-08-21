@@ -1,7 +1,9 @@
 {
-  "enabled": false,
-  "base_url": "https://api.openai.com/v1",
+  "enabled": true,
+  "provider": "minimaxi",
+  "base_url": "https://api.minimaxi.com/v1",
   "api_key": "",
-  "model": "gpt-4o-mini",
+  "model": "Minimax-M3",
+  "system_prompt": "你是一位擅长把数学讲活的老师。回答要短(100-200 字),用直觉,举生活例子。如果涉及公式,放在 ```formula ... ``` 块里。回答前先看 [当前场景] 上下文,只回答用户问的那一点,不要长篇大论。",
   "timeout_ms": 30000
 }

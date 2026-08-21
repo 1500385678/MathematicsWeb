@@ -1,5 +1,5 @@
 // viewer/02_ai-panel.js
-// MathematicsWeb v0.2.0 — AI 助手面板
+// MathematicsWeb v0.5.1 — AI 助手面板
 // 设计目标:
 //   - 跟 three.jsWeb 02_ai-panel.js 同结构(支持 mock/real LLM 切换)
 //   - 教学场景化:把"当前场景"作为上下文传给 LLM
@@ -50,7 +50,7 @@ export class AIPanel {
             <div class="mathw-ai-title-main">数学老师 · 大模型</div>
             <div class="mathw-ai-title-sub">
               <span class="mathw-ai-dot" data-status="mock"></span>
-              <span data-sub>v0.5.0 · mock</span>
+              <span data-sub>v0.5.1 · mock</span>
             </div>
           </div>
         </div>
@@ -110,7 +110,7 @@ export class AIPanel {
     const dot = this.container?.querySelector('.mathw-ai-dot');
     const sub = this.container?.querySelector('[data-sub]');
     if (dot) dot.dataset.status = status;
-    if (sub) sub.textContent = `v0.2.0 · ${label || status}`;
+    if (sub) sub.textContent = `v0.5.1 · ${label || status}`;
     this._status = status;
     this._statusLabel = label;
     this.onLLMStatusChange && this.onLLMStatusChange(status, label);
