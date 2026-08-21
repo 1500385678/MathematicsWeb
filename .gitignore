@@ -1,10 +1,15 @@
-# MathematicsWeb · v0.2.0 · Git Ignore
+# MathematicsWeb · v0.6.0 · Git Ignore
 
 # LLM 配置(包含 api_key,不进 git)
 _llm_config.json
 
 # Output(本地截图,不入仓)
 Output/
+
+# Python(server.py 的 __pycache__)
+__pycache__/
+*.pyc
+*.pyo
 
 # 运行时日志 / 缓存
 *.log
