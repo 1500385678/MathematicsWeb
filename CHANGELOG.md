@@ -1,5 +1,36 @@
 # CHANGELOG · MathematicsWeb
 
+## v0.6.3 · 2026-08-21 · 完整 9 大行星
+
+**行星轨道从 6 颗扩到完整 9 颗(水/金/地/火/木/土/天王/海王/冥王)+ 月球绕地球**
+
+### 改动
+
+- `viewer/scenes/02_planetary-orbits.js`
+  - 4 颗通用行星改为真实 9 大行星(中英文 + 真实相对距离 log 压缩)
+  - 木星 / 土星 / 天王星 / 海王星 / 冥王星 全部加入
+  - 月球绑地球(`earthPos + moonOrbit` 相对坐标)
+  - 镜头拉远:`camera.position.set(0, 22, 38)`,`controls.maxDistance = 80`
+  - 行星尺寸放大(0.4 ~ 2.0)
+  - 新增"聚焦地球+月球" / "聚焦冥王" 按钮
+  - 完整星空背景(1000 颗)+ 太阳光晕
+  - 土星环 + Sprite 中文名标签
+
+### 修复
+
+- `Line.computeLineDistances()` 在空 geometry 上调用导致 `TypeError: Cannot read properties of undefined (reading 'count')`
+  - 修法:从创建时移除,放到初始化椭圆循环里(那里 geometry 已填充)
+- index.html 加 inline SVG favicon,消除 favicon.ico 404
+
+### 新增
+
+- `_test/` 目录:CDP headless 验证脚本(用 Node 24 内置 WebSocket 跑 Edge 远程调试接口)
+
+### 验证
+
+- 20 场景 0 错误(CDP 抓 console + 截图)
+- planetary-orbits 截图确认 9 行星 + 月球 + 土星环 + 椭圆轨道 + 星空全部渲染
+
 ## v0.1.0 · 2026-08-21 · MVP 启动
 
 **首批 6 个跨学科场景 + 2D/3D 双模 + AI 助手本地 mock**
