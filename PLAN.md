@@ -26,7 +26,7 @@
   - 依赖: 网络通
   - 发现者: bootstrap
 
-- [ ] **MATH-002** · 清理 untracked 文件,决定归宿
+- [~] **MATH-002** · 清理 untracked 文件,决定归宿
   - 描述: `_test/` 5 个脚本 + `tools/` 目录 + `docs/knowledge_graph.json` + 2 个中文 .md 规划文件,未提交
   - 验收: 要么全部 commit,要么加入 .gitignore,要么说明留 untracked 的理由
   - 创建: 2026-08-24
