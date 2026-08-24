@@ -1,5 +1,34 @@
 # CHANGELOG · MathematicsWeb
 
+## v0.6.4 · 2026-08-24 · AI 上下文接 getLesson(教学要点通道)
+
+**关闭 CHANGELOG v0.1.0 已知问题 #3:`getLesson` 未用**
+
+### 改动
+
+- `viewer/02_ai-panel.js`
+  - `_buildSceneContext()` 读 `instance.getLesson()`(typeof 守卫,旧场景不实现就跳过)
+  - `_callLLM()` 拼 prompt 时新增 `[教学要点: ...]` 行(只有 lesson 非空才出现)
+- `mock/01_llm-mock.js`
+  - 6 场景 `SCENE_REPLIES` 各加 `lesson` 字段(教学卡片纯文本简化版)
+  - `chat()` 场景命中时多回 `lesson: reply.lesson || ''`
+- `viewer/scenes/06_simple-harmonic.js`
+  - 第一个实现 `getLesson()` 的场景样板:读 `.mathw-lesson-content` textContent
+  - 其他 19 个场景不动 — 留作后续按需补,接口已开通道
+
+### 验证
+
+- `node --check` 3 个文件语法全过
+- node 动态 import LLMMock,simple-harmonic prompt 返回 lesson 字段正确
+- `_cdp_test.js simple-harmonic` 0 错误,场景加载 + 教学卡片渲染正常
+
+### 已知问题清理
+
+- ✅ v0.1.0 #3 `AI 上下文未充分利用(getFormula 已实现,getLesson 未用)` — **本版本关闭**
+- ✅ v0.1.0 #1 `场景参数未序列化(刷新后参数重置,v0.5 修)` — **v0.5.0 已落地,本条确认**(Workspace + IDB + viewer 三层已正确 save/restore)
+
+---
+
 ## v0.6.3 · 2026-08-21 · 完整 9 大行星
 
 **行星轨道从 6 颗扩到完整 9 颗(水/金/地/火/木/土/天王/海王/冥王)+ 月球绕地球**

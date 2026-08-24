@@ -431,6 +431,13 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'simple-harmonic',
     getFormula() { return 'x¨ + 2γx˙ + ω²x = F₀·cos(ωF·t)'; },
+    // v0.6.4: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      // 去 HTML 标签、合并空白,得到干净的描述文字
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { w: params.w, gamma: params.gamma, F0: params.F0, wF: params.wF, system: params.system }; },
     setState(s) {
       if (!s) return;

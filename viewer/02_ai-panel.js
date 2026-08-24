@@ -199,15 +199,20 @@ export class AIPanel {
     this.inputEl.disabled = true;
     const el = this._appendAssistantMsg();
 
-    // 构造上下文:当前场景 + 公式(如果有)+ 状态
+    // 构造上下文:当前场景 + 公式(如果有)+ 教学要点(如果有)
     const sceneCtx = this._buildSceneContext();
-    const fullPrompt = sceneCtx
-      ? `[当前场景: ${sceneCtx.title} (${sceneCtx.domain})]\n[场景公式: ${sceneCtx.formula || '无'}]\n[用户问题] ${prompt}`
-      : prompt;
+    let fullPrompt = prompt;
+    if (sceneCtx) {
+      const lines = [`[当前场景: ${sceneCtx.title} (${sceneCtx.domain})]`];
+      if (sceneCtx.formula) lines.push(`[场景公式: ${sceneCtx.formula}]`);
+      if (sceneCtx.lesson) lines.push(`[教学要点: ${sceneCtx.lesson}]`);
+      lines.push(`[用户问题] ${prompt}`);
+      fullPrompt = lines.join('\n');
+    }
 
     try {
       const res = await this.llm.chat(fullPrompt, { messages: this.messages });
-      // mock 返回 {text, formula}
+      // mock 返回 {text, formula, lesson}
       // 渲染
       el.innerHTML = '';
       const textEl = document.createElement('div');
@@ -229,13 +234,21 @@ export class AIPanel {
   _buildSceneContext() {
     if (!this.activeScene) return null;
     let formula = '';
-    if (this.activeInstance && typeof this.activeInstance.getFormula === 'function') {
-      try { formula = this.activeInstance.getFormula() || ''; } catch (_) {}
+    let lesson = '';
+    if (this.activeInstance) {
+      if (typeof this.activeInstance.getFormula === 'function') {
+        try { formula = this.activeInstance.getFormula() || ''; } catch (_) {}
+      }
+      // v0.6.4: 读教学要点(getLesson 是可选接口,旧场景不实现就跳过)
+      if (typeof this.activeInstance.getLesson === 'function') {
+        try { lesson = this.activeInstance.getLesson() || ''; } catch (_) {}
+      }
     }
     return {
       title: this.activeScene.title,
       domain: this.activeScene.domain,
       formula,
+      lesson,
     };
   }
 
