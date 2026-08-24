@@ -26,6 +26,13 @@
   - 依赖: 网络通
   - 发现者: bootstrap
 
+- [~] **MATH-008** · 搭建 PLAN/AGENTS/MEMORY 自动化框架
+  - 描述: 基于 3 文件搭自动化项目更新框架 — 完成的任务从 PLAN 删除,功能 append 到 AGENTS"项目已具备的能力"段,审计留 CHANGELOG
+  - 验收: (1) AGENTS.md 有"项目已具备的能力"段 + 2 条 v0.1.0 已修 TODO 迁移过去 (2) cron `math-advisor-daily-wake` schedule 改 10:30 + prompt 加"完成归档 5 步" (3) PLAN.md 完成即删规则文档化
+  - 创建: 2026-08-24
+  - 依赖: 无
+  - 发现者: 用户指令
+
 - [x] **MATH-002** · 清理 untracked 文件,决定归宿
   - 描述: `_test/` 5 个脚本 + `tools/` 目录 + `docs/knowledge_graph.json` + 2 个中文 .md 规划文件,未提交
   - 验收: 要么全部 commit,要么加入 .gitignore,要么说明留 untracked 的理由
