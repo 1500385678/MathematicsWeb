@@ -1,5 +1,29 @@
 # CHANGELOG · MathematicsWeb
 
+## v0.6.6 · 2026-08-24 · 搭建 PLAN/AGENTS/MEMORY 自动化框架(MATH-008)
+
+**3 文件职责明确,任务完成自动归档,项目知识累积到 AGENTS**
+
+### 改动
+
+- `AGENTS.md`
+  - 新增段 **"项目已具备的能力(append-only)"**(放在"## 0. 项目是什么"之后,无数字编号免重排)
+  - 列出 5 条已具备能力:场景参数序列化(v0.5.0) · 收藏+进度 UI(v0.5.0) · getLesson AI 教学要点(v0.6.4) · 20 跨学科场景(v0.6.0) · 3 文件自动化框架(本版本 v0.6.6)
+  - "## 7. 已知 TODO" 段删 2 条已修:场景参数序列化(已迁能力段)+ 场景收藏/进度 UI(已迁能力段)
+- `PLAN.md`
+  - 顶部说明加 v0.6.6 框架规则:**完成的任务从 PLAN 删除**(不保留 [x]),功能 append 到 AGENTS 能力段,审计留 CHANGELOG
+  - 删除 MATH-008 条目(按新规则)
+- cron `math-advisor-daily-wake`
+  - schedule `0 9 * * *` → `30 10 * * *`(改到 10:30)
+  - prompt 加 5 步归档流程(改代码 → commit + push → CHANGELOG → AGENTS append → PLAN 删除 + MEMORY 简记)
+  - 优先级明确:PLAN.md P0 [~]/[ ] > feedback > PLAN P1/P2 > MEMORY 临时 TODO
+
+### 关闭
+
+- ✅ MATH-008 · 搭建 PLAN/AGENTS/MEMORY 自动化框架(本条按新规则从 PLAN 删除,功能描述已 append 到 AGENTS)
+
+---
+
 ## v0.6.5 · 2026-08-24 · 仓库清理(MATH-002)
 
 **关闭 8 个 untracked 文件的归宿问题**

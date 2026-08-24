@@ -23,6 +23,17 @@
 
 > 沿用 **three.jsWeb** 的范式:动态 import + 顶层 await + window version + ?v= 串号防缓存。沿用 **canvasweb** 的"AI 助手是标配"思想。两者都做到**断网能跑**(three.js 走 vendor,LLM 默认 mock)。
 
+## 项目已具备的能力(append-only)
+
+> 任务从 PLAN 完成 → append 到这里。CHANGELOG 是版本历史(改了什么),这里是"项目能干啥"(现状)。
+> 规则:append-only,只加不删改,每条标版本号 + 简短描述,让 agent 启动一读就懂。
+
+- **场景参数序列化**(v0.5.0):每个场景的 a/ω/N 等参数存 IndexedDB,刷新自动恢复。Workspace + IDB + viewer 三层 save/restore 链路已通
+- **场景收藏 + 访问进度 UI**(v0.5.0):场景列表加收藏星标 + 进度计数,过滤按钮(全部/收藏/未访问),状态栏显示 `进度 N/20`
+- **AI 教学要点通道 getLesson**(v0.6.4):每个场景可选实现 `getLesson()` 方法,AI 面板 `_buildSceneContext` 读后拼进 LLM prompt(`[教学要点: ...]`),提升 AI 助手质量。simple-harmonic 已示范
+- **20 跨学科场景(2D + 3D 双模)**(v0.6.0):建筑(悬链拱)/ 物理(行星轨道 · 双摆 · 简谐 · 波叠加 · 电场)/ 音乐(傅里叶 · Lissajous)/ 生物(种群 · L-系统)/ 艺术(曼德尔布罗 · 朱利亚 · 黄金螺旋)/ 概率(蒙特卡洛 · 中心极限定理 · 贝叶斯)/ 机器学习(梯度下降 · 神经网络)/ 工程(黎曼和 · 拉格朗日乘子)
+- **3 文件自动化框架 PLAN/AGENTS/MEMORY**(v0.6.6):任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 → CHANGELOG 留审计。`math-advisor-daily-wake` cron 每日 10:30 触发按此框架干活
+
 ## 1. 改前必读(顺序)
 
 1. **本文件** · 架构 + 约束 + 跟兄弟项目的关系
@@ -141,9 +152,7 @@ python3 -m http.server 8765
 
 - [ ] 3D 场景 WebGL 不可用时降级 2D 静态预览
 - [ ] 真 LLM 端到端测试(配 OpenAI 兼容 key)
-- [ ] 场景参数序列化(每场景调好的 a/ω/N 存 IndexedDB,刷新恢复)
-- [ ] 场景收藏 / 进度跟踪 UI
-- [ ] GitHub 仓库 + 自动化 release(沿用 canvasweb 范式)
+- [ ] GitHub 仓库 + 自动化 release(沿用 canvasweb 范式 — 仓库已开,缺 release 自动化)
 
 ## 8. 跟兄弟项目的关系
 

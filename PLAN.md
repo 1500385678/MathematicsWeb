@@ -2,6 +2,8 @@
 
 > 任务队列 + 路线图。agent 每天醒后先读这个,挑 ready 的最高优先级任务做。
 > 人工也可加任务(直接编辑 + commit)。状态: `[ ]` 待办 / `[~]` 进行中 / `[x]` 完成 / `[!]` 阻塞。
+>
+> **v0.6.6 框架规则**:完成的任务**从 PLAN 删除**(不保留 [x]),功能描述 append 到 AGENTS.md "项目已具备的能力" 段,审计留 CHANGELOG.md。PLANG 保持短小只管活跃任务。
 
 ---
 
@@ -25,25 +27,6 @@
   - 创建: 2026-08-24
   - 依赖: 网络通
   - 发现者: bootstrap
-
-- [~] **MATH-008** · 搭建 PLAN/AGENTS/MEMORY 自动化框架
-  - 描述: 基于 3 文件搭自动化项目更新框架 — 完成的任务从 PLAN 删除,功能 append 到 AGENTS"项目已具备的能力"段,审计留 CHANGELOG
-  - 验收: (1) AGENTS.md 有"项目已具备的能力"段 + 2 条 v0.1.0 已修 TODO 迁移过去 (2) cron `math-advisor-daily-wake` schedule 改 10:30 + prompt 加"完成归档 5 步" (3) PLAN.md 完成即删规则文档化
-  - 创建: 2026-08-24
-  - 依赖: 无
-  - 发现者: 用户指令
-
-- [x] **MATH-002** · 清理 untracked 文件,决定归宿
-  - 描述: `_test/` 5 个脚本 + `tools/` 目录 + `docs/knowledge_graph.json` + 2 个中文 .md 规划文件,未提交
-  - 验收: 要么全部 commit,要么加入 .gitignore,要么说明留 untracked 的理由
-  - 创建: 2026-08-24
-  - 依赖: 无
-  - 发现者: bootstrap
-  - **决策 (2026-08-24 完成)**:
-    - ✅ commit `tools/` 整个目录(`md_to_json.py` 知识图谱生成器 + `README.md` 工具说明)
-    - ✅ commit `.gitignore`:`/_cdp_test.js` `/_shot.js` `/_test_all.ps1` `/_test_one.ps1`(根目录 4 个文件是 `_test/` 副本,SHA256 完全相同);`/docs/knowledge_graph.json`(md_to_json.py 生成产物,可重跑不入仓)
-    - ⏸️ 留 untracked 2 个中文 .md 规划(`数学顾问开发架构与计划.md` / `项目开发计划.md`)—— 主题是上层"数学顾问"产品立项,跟 MathematicsWeb 项目概念不匹配;用户后续可移到 `_MathematicsLib/` 上层或 `Consultant/14-数学-Mathematics/`
-  - 完成 commit: 待本轮 commit(标 [x] + 决策 + 5 个改动)
 
 ### P1 · 重要
 
