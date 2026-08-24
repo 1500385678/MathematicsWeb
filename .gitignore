@@ -1,4 +1,4 @@
-# MathematicsWeb · v0.6.0 · Git Ignore
+# MathematicsWeb · v0.6.5 · Git Ignore
 
 # LLM 配置(包含 api_key,不进 git)
 _llm_config.json
@@ -22,6 +22,16 @@ Thumbs.db
 # 临时
 *.tmp
 *.bak
+
+# v0.6.5 根目录 4 个测试脚本副本(SHA256 跟 _test/ 内完全相同)—— 留作开发便利副本不入仓
+# 正式版在 _test/ 下,如需根目录版本请从 _test/ 复制
+/_cdp_test.js
+/_shot.js
+/_test_all.ps1
+/_test_one.ps1
+
+# v0.6.5 tools/md_to_json.py 的生成产物(可重跑,不入仓)
+/docs/knowledge_graph.json
 
 # vendor/three 走 git(断网能跑,需要 1.2MB)
 # vendor/three/ 不在 .gitignore

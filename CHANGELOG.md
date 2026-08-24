@@ -1,5 +1,34 @@
 # CHANGELOG · MathematicsWeb
 
+## v0.6.5 · 2026-08-24 · 仓库清理(MATH-002)
+
+**关闭 8 个 untracked 文件的归宿问题**
+
+### 改动
+
+- `.gitignore` 加 5 行 ignore 规则
+  - 根目录 4 个测试脚本副本(`_cdp_test.js`/`_shot.js`/`_test_all.ps1`/`_test_one.ps1`)—— 跟 `_test/` 内文件 SHA256 完全相同,作开发便利副本不入仓
+  - `/docs/knowledge_graph.json` —— `tools/md_to_json.py` 生成产物,可重跑不入仓
+- `tools/` 整个目录纳入 git 跟踪
+  - `md_to_json.py` · 10KB 知识图谱生成器(纯 Python 3 标准库,无依赖)
+  - `README.md` · 工具说明(含 frontmatter 约定 + 容错 + 后续 Phase 路线)
+
+### 未处理(留 untracked)
+
+- 2 个中文 .md 规划(`数学顾问开发架构与计划.md` / `项目开发计划.md`)—— 主题是上层"数学顾问"(MathAdvisor)产品立项方案,跟当前 MathematicsWeb 项目 scope 不匹配;用户后续决定是否移到 `_MathematicsLib/` 上层目录
+
+### 验证
+
+- `git status -s` 干净:只剩 `tools/`(M)+ 2 个 .md 留 untracked
+- `git check-ignore` 确认 4 个根目录文件 + `docs/knowledge_graph.json` 都被忽略
+- `_test/` 内 4 个 tracked 文件未受影响(`.gitignore` 不影响 tracked)
+
+### 关闭
+
+- ✅ MATH-002 · 清理 untracked 文件,决定归宿
+
+---
+
 ## v0.6.4 · 2026-08-24 · AI 上下文接 getLesson(教学要点通道)
 
 **关闭 CHANGELOG v0.1.0 已知问题 #3:`getLesson` 未用**

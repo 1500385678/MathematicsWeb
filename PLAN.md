@@ -26,12 +26,17 @@
   - 依赖: 网络通
   - 发现者: bootstrap
 
-- [~] **MATH-002** · 清理 untracked 文件,决定归宿
+- [x] **MATH-002** · 清理 untracked 文件,决定归宿
   - 描述: `_test/` 5 个脚本 + `tools/` 目录 + `docs/knowledge_graph.json` + 2 个中文 .md 规划文件,未提交
   - 验收: 要么全部 commit,要么加入 .gitignore,要么说明留 untracked 的理由
   - 创建: 2026-08-24
   - 依赖: 无
   - 发现者: bootstrap
+  - **决策 (2026-08-24 完成)**:
+    - ✅ commit `tools/` 整个目录(`md_to_json.py` 知识图谱生成器 + `README.md` 工具说明)
+    - ✅ commit `.gitignore`:`/_cdp_test.js` `/_shot.js` `/_test_all.ps1` `/_test_one.ps1`(根目录 4 个文件是 `_test/` 副本,SHA256 完全相同);`/docs/knowledge_graph.json`(md_to_json.py 生成产物,可重跑不入仓)
+    - ⏸️ 留 untracked 2 个中文 .md 规划(`数学顾问开发架构与计划.md` / `项目开发计划.md`)—— 主题是上层"数学顾问"产品立项,跟 MathematicsWeb 项目概念不匹配;用户后续可移到 `_MathematicsLib/` 上层或 `Consultant/14-数学-Mathematics/`
+  - 完成 commit: 待本轮 commit(标 [x] + 决策 + 5 个改动)
 
 ### P1 · 重要
 
@@ -86,6 +91,7 @@
 - 2026-08-24: LLM 默认 mock 兜底,真 key 才接 M3
 - 2026-08-24: v0.6.4 起 AI 上下文接 getLesson 教学要点通道
 - 2026-08-24: 任务系统启用 PLAN.md 单一事实源
+- 2026-08-24: MATH-002 完成 · untracked 文件归宿决策(tools 入仓 + 4 个根目录测试副本+1 个生成产物 gitignore + 2 个上层产品规划留 untracked)
 
 ---
 
