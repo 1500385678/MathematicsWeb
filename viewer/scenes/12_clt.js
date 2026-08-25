@@ -202,6 +202,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'clt',
     getFormula() { return '(X₁+...+Xₙ)/n → N(μ, σ²/n)'; },
+    // v0.6.17: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { n: params.n, batch: params.batch }; },
     setState(s) {
       if (!s) return;

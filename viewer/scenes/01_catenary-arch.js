@@ -225,6 +225,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'catenary-arch',
     getFormula() { return 'y = a · cosh(x / a)'; },
+    // v0.6.17: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { a: params.a, span: params.span, flipped: params.flipped }; },
     setState(s) {
       if (!s) return;

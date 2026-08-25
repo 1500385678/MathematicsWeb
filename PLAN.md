@@ -39,16 +39,18 @@
   - 验收: 每个 scene 文件导出 `getLesson()`,`_buildSceneContext` 拼进 prompt
   - 创建: 2026-08-24
   - 依赖: v0.6.4 getLesson 框架(已落地)
-  - 进度(2026-08-25 v0.6.9 → v0.6.10 → v0.6.16): 6/19 — 04/06/11/14/15/18/20 已加 getLesson
+  - 进度(2026-08-25 v0.6.9 → v0.6.10 → v0.6.16 → v0.6.17): 8/19 — 01/04/06/11/12/14/15/18/20 已加 getLesson
   - 优先级子项(教学价值排序,✅ = 已加):
+    - ✅ 01_catenary-arch · 悬链线 cosh 倒置成拱(本轮 v0.6.17)
     - ✅ 04_population-dynamics · Lotka-Volterra 双物种
     - ✅ 06_simple-harmonic · 阻尼振动 + 受迫(原版 v0.6.4)
     - ✅ 11_lissajous · 频率比 + 相位
+    - ✅ 12_clt · 中心极限定理(本轮 v0.6.17)
     - ✅ 14_bayesian · Beta-Binomial 共轭(本轮 v0.6.16)
     - ✅ 15_lsystem · 字符串重写 + turtle(本轮 v0.6.16)
     - ✅ 18_lagrange · 切点几何(第三批 v0.6.10)
     - ✅ 20_neural-net · 决策边界演化(第三批 v0.6.10)
-    - 剩余 13 个按用户反馈优先级,下一批 12_clt + 01_catenary
+    - 剩余 11 个按用户反馈优先级,下一批 09_double-pendulum + 03_fourier-synth
 
 - [ ] **MATH-004** · 确认 3D 场景在低 WebGL 环境的友好降级
   - 描述: CHANGELOG v0.1.0 已知问题 #1。是否要加 feature detection + 2D fallback?
