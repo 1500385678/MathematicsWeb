@@ -296,6 +296,27 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+// ---------- v0.6.35 WebGL feature detection ----------
+// 3D 场景依赖 three.js → WebGL;在低 GPU / 旧浏览器 / 软件渲染 / Headless 旧版里可能失败。
+// 提前检测,失败时渲染降级卡片,避免 silent 报错或黑屏。
+let _webglAvailable = null;
+function checkWebGL() {
+  if (_webglAvailable !== null) return _webglAvailable;
+  // v0.6.35:支持 ?forcewebglfail=1 URL 参数(测试 / 截图 / 教学演示)
+  if (typeof location !== 'undefined' && new URLSearchParams(location.search).get('forcewebglfail') === '1') {
+    _webglAvailable = false;
+    return false;
+  }
+  try {
+    const c = document.createElement('canvas');
+    const gl = c.getContext('webgl2') || c.getContext('webgl') || c.getContext('experimental-webgl');
+    _webglAvailable = !!gl;
+  } catch (_) {
+    _webglAvailable = false;
+  }
+  return _webglAvailable;
+}
+
 export function initViewer(container, config = {}) {
   if (!container) throw new Error('initViewer: container 必填');
   const cfg = {
@@ -465,8 +486,69 @@ export function initViewer(container, config = {}) {
     });
     statusBar.querySelector('[data-scene-name]').textContent = scene.title + ' · ' + scene.domain;
 
+    // v0.6.35:3D 场景 WebGL 不可用时渲染降级卡片(场景信息 + 教学要点 + 浏览器升级建议)
+    async function renderWebGLFallback(scene) {
+      let lessonText = '';
+      let formulaText = '';
+      // 尝试创建 instance 拿 getLesson/getFormula。WebGL 真不可用时 factory 可能 throw,
+      // 用临时 host 隔离 + try-catch 吃掉,避免污染降级卡片。
+      try {
+        const mod = await scene.loader();
+        const factory = mod.default || mod.createScene || mod.initScene;
+        if (typeof factory === 'function') {
+          const tmpHost = document.createElement('div');
+          const tmpInstance = factory(tmpHost, { aiPanel });
+          if (tmpInstance) {
+            try { lessonText = tmpInstance.getLesson ? tmpInstance.getLesson() : ''; } catch (_) {}
+            try { formulaText = tmpInstance.getFormula ? tmpInstance.getFormula() : ''; } catch (_) {}
+            try { tmpInstance.destroy && tmpInstance.destroy(); } catch (_) {}
+          }
+        }
+      } catch (_) {
+        // factory 内部 three.js init 失败被 catch(可能 console.error),不影响降级
+      }
+      const ua = navigator.userAgent || '未知浏览器';
+      canvasHost.innerHTML = `
+        <div class="mathw-webgl-fallback">
+          <div class="mathw-webgl-fallback-icon">${scene.icon || '🎲'}</div>
+          <h2>${escapeHtml(scene.title)}</h2>
+          <p class="mathw-domain">${escapeHtml(scene.domain)} · 3D</p>
+          <p class="mathw-desc">${escapeHtml(scene.description)}</p>
+          <div class="mathw-webgl-fallback-warn">
+            <strong>⚠️ 当前环境不支持 WebGL</strong>
+            <p>3D 场景需要浏览器开启硬件加速。请用现代浏览器访问:</p>
+            <ul>
+              <li>Chrome 88+ / Edge 88+ / Firefox 85+ / Safari 15+</li>
+            </ul>
+            <p class="mathw-ua">UA: ${escapeHtml(ua)}</p>
+          </div>
+          ${formulaText ? `<div class="mathw-webgl-fallback-formula"><h3>∑ 核心公式</h3><pre>${escapeHtml(formulaText)}</pre></div>` : ''}
+          ${lessonText ? `<div class="mathw-webgl-fallback-lesson"><h3>📚 教学要点</h3><pre>${escapeHtml(lessonText)}</pre></div>` : ''}
+        </div>
+      `;
+      return { lessonText, formulaText };
+    }
+
     // 加载新场景
     try {
+      // v0.6.35:3D 场景先 WebGL feature detection,不可用则降级
+      if (scene.renderer === '3D' && !checkWebGL()) {
+        const { lessonText, formulaText } = await renderWebGLFallback(scene);
+        const fallbackInstance = {
+          sceneId,
+          getLesson: () => lessonText,
+          getFormula: () => formulaText,
+          destroy: () => { canvasHost.innerHTML = ''; },
+        };
+        currentScene = fallbackInstance;
+        currentSceneId = sceneId;
+        if (ws) ws.markVisited(sceneId);
+        if (ws) ws.setLastScene(sceneId);
+        aiPanel.setActiveScene(scene, fallbackInstance);
+        aiPanel.appendSystem(`⚠️「${scene.title}」WebGL 不可用,显示降级卡片(AI 仍可对话)`);
+        cfg.callbacks.onSceneChange && cfg.callbacks.onSceneChange(sceneId);
+        return;
+      }
       const mod = await scene.loader();
       const factory = mod.default || mod.createScene || mod.initScene;
       if (typeof factory !== 'function') {
