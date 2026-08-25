@@ -1,9 +1,26 @@
 {
-  "_comment": "MathematicsWeb v0.6.0 LLM 配置 · 实际 key 放环境变量 M3_API_KEY(优先)或这个文件",
+  "_comment": "MathematicsWeb v0.6.21 LLM 配置 · 实际 key 放环境变量 M3_API_KEY(优先)或这个文件",
+  "_step_by_step": [
+    "1. 去 https://api.minimaxi.com/user-center/basic-information/interface-key 申请 API key (或换 base_url 支持其他 OpenAI 兼容)",
+    "2. 推荐: 设 User-scope 环境变量(永久, 全部进程能读, 不进 git):",
+    "   PowerShell: [Environment]::SetEnvironmentVariable('M3_API_KEY', 'sk-cp-你的key', 'User')",
+    "   macOS/Linux: export M3_API_KEY=sk-cp-你的key  (写到 ~/.bashrc / ~/.zshrc 永久化)",
+    "3. (备选) 不想用 env 变量 → 复制本文件到 _llm_config.json, 填 'api_key' 字段, 删注释行",
+    "4. (可选) 改 base_url / model / system_prompt:",
+    "   - base_url: 默认 https://api.minimaxi.com/v1 (Minimax-M3 endpoint)",
+    "   - model: 默认 'Minimax-M3' (可换其他 OpenAI 兼容模型)",
+    "   - system_prompt: 改 AI 助手的语气 (默认 '你是一位擅长把数学讲活的老师...')",
+    "5. **重启 server.py**(它启动时读 env, 不读热更新):",
+    "   杀掉旧进程 → python server.py 重新启动",
+    "6. 验证: 浏览器打开 http://localhost:8765/api/health → 'm3_enabled': true, 'm3_has_key': true",
+    "7. AI 面板点 '讲讲' 或 '⚡' → 看到真 LLM 回复(非 [mock - 没设 M3_API_KEY])"
+  ],
+  "_env_hint_priority": "M3_API_KEY 环境变量 > _llm_config.json 文件 (env 更安全, 不进 git)",
   "enabled": true,
   "provider": "minimaxi",
   "model": "Minimax-M3",
+  "base_url": "https://api.minimaxi.com/v1",
   "system_prompt": "你是一位擅长把数学讲活的老师。回答要短(100-200 字),用直觉,举生活例子。如果涉及公式,放在 ```formula ... ``` 块里。",
-  "_env_hint": "推荐用环境变量(更安全,不进 git):set M3_API_KEY=sk-cp-...  或  export M3_API_KEY=sk-cp-...",
-  "_override_keys": ["base_url", "api_key", "model", "system_prompt", "timeout_ms"]
+  "_override_keys": ["base_url", "api_key", "model", "system_prompt", "timeout_ms"],
+  "_security_note": "实际 _llm_config.json 已经在 .gitignore, key 不会进 git。绝不把 key 明文发到对话/issue/截图 (GitHub 会秒 revoke)"
 }
