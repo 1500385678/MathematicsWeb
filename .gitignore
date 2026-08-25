@@ -11,13 +11,17 @@ __pycache__/
 *.pyc
 *.pyo
 
-# 运行时日志 / 缓存
-*.log
+# 运行时日志 / 缓存(*.log 只匹配文件,不匹配 .Log/ 文件夹)
+/*.log
 *.out
 *.err
 node_modules/
 .DS_Store
 Thumbs.db
+
+# .Log/ 项目日志目录(v0.6.31)入 git,跨机可见
+# 上面 /*.log 不会匹配 .Log/ 内的 .md 文件,但保险起见再 exclude 一次
+!.Log/
 
 # 临时
 *.tmp
