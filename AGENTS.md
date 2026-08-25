@@ -27,9 +27,9 @@
 
 > agent 启动第一件事看这里:版本/阶段/进度/远端。30 秒建认知。改动后跟 "项目已具备的能力" 段一起 append。
 
-- **版本**:v0.6.13 · **阶段**:Phase 2 完整功能 · **进度**:20/20 场景 + 4/19 教学要点
+- **版本**:v0.6.16 · **阶段**:Phase 2 完整功能 · **进度**:20/20 场景 + 6/19 教学要点
 - **远端**:GitHub `1500385678/MathematicsWeb` + Gitee `architectzy/MathematicsWeb`(镜像) · 端口 8765
-- **当前活跃任务**(从 PLAN.md 拉):MATH-003 [~] 4/19 教学要点继续 · MATH-004/005/006/007 [ ]
+- **当前活跃任务**(从 PLAN.md 拉):MATH-003 [~] 6/19 教学要点继续 · MATH-004/005/006/007/014 [ ]
 - **完整流程**:`AGENTS.md`(本文件)+ `PLAN.md`(任务)→ 这是项目内 2 个动态文件,agent 必读
 - **历史审计**:看 git commit message(本仓库无 CHANGELOG.md,审计在 commit)
 - **项目宏观**:见下面 "## 项目宏观" 段(产品愿景/路线/技术栈/风险)
@@ -136,6 +136,7 @@
 - **场景收藏 + 访问进度 UI**(v0.5.0):场景列表加收藏星标 + 进度计数,过滤按钮(全部/收藏/未访问),状态栏显示 `进度 N/20`
 - **AI 教学要点通道 getLesson**(v0.6.4):每个场景可选实现 `getLesson()` 方法,AI 面板 `_buildSceneContext` 读后拼进 LLM prompt(`[教学要点: ...]`),提升 AI 助手质量。simple-harmonic 已示范
 - **MATH-003 4/19 教学要点通道第三批**(v0.6.10):18_lagrange(切点几何/∇f 平行 ∇g/等周不等式)+ 20_neural-net(2 层全连接 2D 分类/反向传播/决策曲线演化)接 getLesson(),真 LLM 上下文继续扩展。剩余 15 个场景按用户反馈优先级
+- **MATH-003 6/19 教学要点通道第四批**(v0.6.16):15_lsystem(Lindenmayer 1968 字符串重写/产生式 + 迭代 N 次/turtle 解释器 + stack push-pop/4 预设规则 + 迭代数 + 角度看植物形态)+ 14_bayesian(贝叶斯定理 P(θ|data) ∝ P(θ)·P(data|θ)/频率派 vs 信念派/Beta-Binomial 共轭 + MAP 公式/调 αβ 看观测怎么把后验拉向数据)接 getLesson()。剩余 13 个场景按教学价值排序,下一批 12_clt + 01_catenary
 - **MATH-003 2/19 教学要点通道第二批**(v0.6.9):04_population-dynamics(Lotka-Volterra 兔狐捕食)+ 11_lissajous(频率比决定图形/相位旋转移位)接 getLesson(),真 LLM 上下文现在能读到教学要点。剩余 17 个场景按教学价值排序,优先级:18_lagrange / 20_neural-net
 - **20 跨学科场景(2D + 3D 双模)**(v0.6.0):建筑(悬链拱)/ 物理(行星轨道 · 双摆 · 简谐 · 波叠加 · 电场)/ 音乐(傅里叶 · Lissajous)/ 生物(种群 · L-系统)/ 艺术(曼德尔布罗 · 朱利亚 · 黄金螺旋)/ 概率(蒙特卡洛 · 中心极限定理 · 贝叶斯)/ 机器学习(梯度下降 · 神经网络)/ 工程(黎曼和 · 拉格朗日乘子)
 - **2 文件自动化框架 PLAN/AGENTS**(v0.6.13):项目内 2 个动态文件 — AGENTS(铁律+架构+能力库+项目状态速览)+ PLAN(任务)。任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 + AGENTS 状态速览同步 → README 同步(非主要,顺带)。`math-advisor-daily-wake` cron 每日 10:30 触发按 2 文件体系干活
