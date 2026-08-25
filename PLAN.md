@@ -20,6 +20,15 @@ _(无 — MATH-003 + MATH-014 均收尾完成 v0.6.30 / v0.6.25)_
 
 ### P1 · 重要
 
+- [~] **MATH-015** · 接真 M3 LLM(等 user 配 M3_API_KEY)
+  - **预计 commit 数: 3**(example 改详细配置 + AGENTS 能力段 append + README 配置段各 1 commit)
+  - 描述: server.py v0.6.0 已支持 M3 代理(/api/chat endpoint + M3_API_KEY env 优先),但当前 key 未设 → AI 面板走 mock 返回"假"回复。user 反馈"假"自动入队(v0.6.14 对话驱动)
+  - 验收: (1) _llm_config.example.json 改详细 step-by-step 配置指南 ✅ (2) AGENTS.md 能力段 append "M3 真实 LLM 代理" (3) README.md 加 M3 配置段 (4) user 配 M3_API_KEY → server 重启 → AI 面板显示真 LLM 回复(非 mock)
+  - **状态**:agent 部分完成(example/AGENTS/README 改完),**等 user 配 M3_API_KEY**
+  - user 配 key 步骤: PowerShell `[Environment]::SetEnvironmentVariable('M3_API_KEY', 'sk-cp-你的key', 'User')` 永久 User-scope
+  - 依赖: user 配 M3_API_KEY(等 user,8/14 安全规则 agent 不主动要 token)
+  - 发现者: **用户对话**(用户提"AI 假"反馈, v0.6.14 对话驱动自动入队)
+
 - [ ] **MATH-004** · 确认 3D 场景在低 WebGL 环境的友好降级
   - **预计 commit 数: 2**(feature detection + 2D fallback 各 1 commit,每个 10 分钟)
   - 描述: CHANGELOG v0.1.0 已知问题 #1。是否要加 feature detection + 2D fallback?

@@ -152,6 +152,7 @@
 - **20 跨学科场景(2D + 3D 双模)**(v0.6.0):建筑(悬链拱)/ 物理(行星轨道 · 双摆 · 简谐 · 波叠加 · 电场)/ 音乐(傅里叶 · Lissajous)/ 生物(种群 · L-系统)/ 艺术(曼德尔布罗 · 朱利亚 · 黄金螺旋)/ 概率(蒙特卡洛 · 中心极限定理 · 贝叶斯)/ 机器学习(梯度下降 · 神经网络)/ 工程(黎曼和 · 拉格朗日乘子)
 - **2 文件自动化框架 PLAN/AGENTS**(v0.6.13):项目内 2 个动态文件 — AGENTS(铁律+架构+能力库+项目状态速览)+ PLAN(任务)。任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 + AGENTS 状态速览同步 → README 同步(非主要,顺带)。`math-advisor-daily-wake` cron 每日 10:30 触发按 2 文件体系干活
 - **AGENTS 架构自动同步规则**(v0.6.7):agent 改任何涉及文件/目录/模块/依赖的项目,自动增量同步 AGENTS.md 第 2 段(目录结构),不用问。永久规则已写入 User Memory,跨所有有 AGENTS.md 范式的项目适用
+- **M3 真实 LLM 代理**(v0.6.21):server.py v0.6.0 起已支持 M3 后端代理(`/api/chat` endpoint + M3_API_KEY env),优先环境变量,fallback `_llm_config.json`,无 key 时走 mock。**当前 M3_API_KEY 未设 → AI 面板显示 mock 回复**,配 key 后立即生效(server 重启即读 env)。详细 step-by-step 见 `_llm_config.example.json` `_step_by_step` 段
 - **产品开发计划融合进 PLAN**(v0.6.11):`数学顾问开发架构与计划.md` + `项目开发计划.md` 内容去重融合到 PLAN.md"## 产品开发计划"段(8 节,完整开发计划清单)。源文件保留作参考归档。**MathematicsWeb = 上层"数学顾问"产品的 Web App 形态(Phase 1 产物)**,两层文档职责清晰不冲突
 - **精简为 2 文件体系**(v0.6.13):删 `.Core/OVERVIEW.md`(合并到 AGENTS 顶部"项目状态速览"段)、`CHANGELOG.md`(审计靠 git commit message)、`docs/` 整个目录(02-05 + knowledge_graph.json)。README 保留但非主要,跟 AGENTS §0 同步。agent 必读路径:`AGENTS.md` + `PLAN.md`
 - **Phase 0 知识图谱查询 CLI**(v0.6.8):`tools/graph_query.py` 7 子命令(list/get/category/tag/search/stats/paths)读 `docs/knowledge_graph.json`,纯 stdlib 无依赖,为 Phase 1 FastAPI 路由打底
