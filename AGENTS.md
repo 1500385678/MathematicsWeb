@@ -18,12 +18,12 @@
 
 ## 状态速览(动态,agent 自动维护)
 
-- **版本**:v0.6.30 · **进度**:30/30 场景 + 19/19 教学要点
+- **版本**:v0.6.35 · **进度**:30/30 场景 + 19/19 教学要点 + WebGL 降级
 - **远端**:GitHub + Gitee(同步)
 - **当前活跃任务**(见 `PLAN.md`):
   - MATH-015 [~] 接 M3 LLM,等 user 配 M3_API_KEY
   - MATH-016 [ ] 初中几何场景集 8 候选
-  - MATH-004/005/006/007 [ ]
+  - MATH-005/006/007 [ ]
 - **历史能力库**:`.Log/YYYY-MM-DD.md`(每日 append)
 - **历史审计**:git commit message(无 CHANGELOG.md)
 
@@ -100,7 +100,8 @@ MathematicsWeb/
 │   ├── _cdp_test.js            # 单场景控制台错误 + canvas 截图
 │   ├── _shot.js                # 等动画稳定后截屏
 │   ├── _test_all.ps1           # 20 场景批量验证
-│   └── _test_one.ps1           # 单场景验证(简单版)
+│   ├── _test_one.ps1           # 单场景验证(简单版)
+│   └── _test_fallback.js       # WebGL 降级卡片 CDP 验证(Node 24 内置 WS)
 ├── vendor/three/               # three.js r160 本地(从 three.jsWeb 复制,1.2MB,断网)
 └── Output/                     # 本地截图(不入仓,gitignore)
 ```
@@ -223,6 +224,8 @@ MathematicsWeb/
 - 2026-08-25 v0.6.21: M3 真实 LLM 代理(等 user 配 key)
 - 2026-08-25 v0.6.31: 新建 .Log/ 项目日志
 - 2026-08-25 v0.6.33: AGENTS 瘦身保结构
+- 2026-08-25 v0.6.34: AGENTS 整合 3 份参考文档
+- 2026-08-25 v0.6.35: 3D WebGL feature detection + 降级卡片(MATH-004)
 
 ### 6.7 风险(关注)
 
@@ -288,11 +291,11 @@ AI 提问时,`AIPanel._buildSceneContext()` 读 `instance.getFormula()` + `insta
 ## 8. 里程碑
 
 - [x] **v0.6.30 (2026-08-25)**: 30 场景 + 19/19 教学要点 + M3 代理
+- [x] **v0.6.35 (2026-08-25)**: 3D 场景 WebGL feature detection + 降级卡片(MATH-004)
 - [ ] **v1.0**: 全套主题模块 + 教师模式 + 用户账号
 
 ## 9. 已知 TODO
 
-- 3D 场景 WebGL 不可用时降级 2D 静态预览(MATH-004)
 - 真 LLM 端到端测试(MATH-015,等 user 配 M3_API_KEY)
 - GitHub 仓库 + 自动化 release
 
