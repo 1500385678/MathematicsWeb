@@ -252,6 +252,34 @@ export const SCENES = [
     description: '等边三角形每边三等分中段改凸起,N 步后周长 → 无穷大,面积收敛。分数维 log4/log3≈1.26。',
     loader: () => import('./scenes/26_koch-snowflake.js'),
   },
+  // v0.6.24: 几何类 10 场景第三批 3 个
+  {
+    id: 'sierpinski',
+    title: '谢尔宾斯基三角',
+    domain: '数学 × 分形几何',
+    icon: '🔺',
+    renderer: '2D',
+    description: 'Sierpiński 1915:确定性挖中间 + 混沌游戏,两种构造结果一致。分数维 log3/log2≈1.585。',
+    loader: () => import('./scenes/27_sierpinski.js'),
+  },
+  {
+    id: 'great-circle',
+    title: '球面大圆',
+    domain: '数学 × 球面几何',
+    icon: '🌍',
+    renderer: '2D',
+    description: 'haversine 算球面距离 + 10 城市大圆航线 vs 恒向线对比。跨洋航班走大圆省 5-15%。',
+    loader: () => import('./scenes/28_great-circle.js'),
+  },
+  {
+    id: 'mobius-strip',
+    title: '莫比乌斯带',
+    domain: '数学 × 拓扑几何',
+    icon: '🌀',
+    renderer: '3D',
+    description: 'Möbius 1858 单面环。3D 参数曲面 + 蚂蚁走 u∈[0,4π] 才回原面 — 演示非可定向。',
+    loader: () => import('./scenes/29_mobius-strip.js'),
+  },
 ];
 
 function escapeHtml(s) {

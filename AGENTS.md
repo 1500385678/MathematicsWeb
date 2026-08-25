@@ -27,9 +27,9 @@
 
 > agent 启动第一件事看这里:版本/阶段/进度/远端。30 秒建认知。改动后跟 "项目已具备的能力" 段一起 append。
 
-- **版本**:v0.6.23 · **阶段**:Phase 2 完整功能 · **进度**:26/30 场景 + 10/19 教学要点
+- **版本**:v0.6.24 · **阶段**:Phase 2 完整功能 · **进度**:29/30 场景 + 10/19 教学要点
 - **远端**:GitHub `1500385678/MathematicsWeb` + Gitee `architectzy/MathematicsWeb`(镜像) · 端口 8765
-- **当前活跃任务**(从 PLAN.md 拉):MATH-014 [~] 几何类 6/10(21-26 落地)继续 27-30 · MATH-003 [~] 10/19 教学要点 · MATH-004/005/006/007 [ ]
+- **当前活跃任务**(从 PLAN.md 拉):MATH-014 [~] 几何类 9/10(21-29 落地)剩 30_crystal-lattice · MATH-003 [~] 10/19 教学要点 · MATH-004/005/006/007 [ ]
 - **完整流程**:`AGENTS.md`(本文件)+ `PLAN.md`(任务)→ 这是项目内 2 个动态文件,agent 必读
 - **历史审计**:看 git commit message(本仓库无 CHANGELOG.md,审计在 commit)
 - **项目宏观**:见下面 "## 项目宏观" 段(产品愿景/路线/技术栈/风险)
@@ -141,6 +141,7 @@
 - **MATH-003 10/19 教学要点通道第六批**(v0.6.21):09_double-pendulum(Lagrangian L = T − V → Euler-Lagrange → 两个非线性 ODE/无解析解只能用 RK4 数值积分/8 条对照摆初值差 0.001 弧度演示蝴蝶效应/相空间 θ₁-ω₁ 填充)+ 03_fourier-synth(任何波形 = 一堆旋转箭头/方波只有奇数次谐波 bₙ = 4/(nπ)/N 越大越接近原函数 Gibbs 跳变点 9% 过冲/4 波形:方波/锯齿/三角/脉冲)接 getLesson()。剩余 9 个场景按教学价值排序,下一批 02_planetary-orbits + 13_riemann-sum
 - **MATH-014 几何类 10 场景首批 3 个**(v0.6.22):21_voronoi(沃罗诺伊图:N 个种子按最近距离切平面/逐像素暴力 + Delaunay 对偶 /点鼠标加种子 /应用:最近邻查询·医院覆盖区·晶体学)+ 22_delaunay(德劳内三角剖分:Bowyer-Watson 增量法 / 空圆性质 / 拖动点重剖 / 最大化最小角可视化 / 应用:地形 TIN·有限元·3D 重建)+ 23_ellipse-reflection(椭圆 x²/a² + y²/b² = 1 / 从一焦点发光反射必过另一焦点 / 法线 + 入射 + 反射 + 焦点可视化 / 应用:天文望远镜·回声室·冲击波碎石)。viewer.js SCENES 数组加 3 项,场景库 20 → 23。剩余 7 个场景(24_lemniscate / 25_buffon-needle / 26_koch-snowflake / 27_sierpinski / 28_great-circle / 29_mobius-strip / 30_crystal-lattice)按 cron session 节奏继续
 - **MATH-014 几何类 10 场景第二批 3 个**(v0.6.23):24_lemniscate(伯努利 1694 双纽线 r² = a²·cos(2θ)/8 字形 + 极坐标网格 + r(θ) 函数图/调 a 看胖瘦/应用:电偶极子等势线 + 双曲面透镜 + 复分析)+ 25_buffon-needle(布丰 1733 投针:P = 2L/(πd)/实时显示 π 估计 vs 真实 π 误差百分比/投 50/500 演示大数定律/应用:第一个蒙特卡洛方法 + 几何概率奠基 + MCMC 鼻祖)+ 26_koch-snowflake(Koch 1904 雪花:N 步迭代/周长 → 无穷大 + 面积收敛 + Hausdorff 维数 log4/log3 ≈ 1.26/动画生长 + 填充面积/应用:海岸线长度悖论 + 分形几何奠基 + 分数维示例)。viewer.js SCENES 数组加 3 项,场景库 23 → 26。剩余 4 个场景(27_sierpinski / 28_great-circle / 29_mobius-strip / 30_crystal-lattice)按 cron session 节奏继续
+- **MATH-014 几何类 10 场景第三批 3 个**(v0.6.24):27_sierpinski(Sierpiński 1915 双视图:上方混沌游戏任意点跳随机顶点中点 + 下方 N 步确定性挖中间 3ⁿ 三角/Hausdorff 维数 log3/log2 ≈ 1.585/3 顶点 3 色点云累积 + 填色递归 + 3ⁿ 数字统计/应用:递归数据结构 + 分形天线 + Escher 极限版画 + 经典混沌游戏吸引子)+ 28_great-circle(球面大圆:10 城市(PEK/JFK/LHR/HND/SYD/CDG/PVG/LAX/SIN/CPT)/haversine 公式算球面距离 + 大圆航线(绿实线弯向高纬)+ 恒向线对比(黄虚线经纬拼接)/初始航向 + 大圆省 5-15% 数字显示/正交投影经纬网 + 赤道加粗/应用:跨洋航班 + 大圆海图 + GPS 距离 + 卫星轨道)+ 29_mobius-strip(Möbius 1858 单面环:3D three.js 参数曲面 x=(R+v·cos(u/2))·cos(u)/y=v·sin(u/2)/z=(R+v·cos(u/2))·sin(u) + DoubleSide 双面渲染展示"单面"拓扑 + 蚂蚁沿中心走 u∈[0,4π] 才回原面 + 中心参考圆 LineLoop/带宽 w + 半径 R + 走带速度 + 蚂蚁开关/应用:传送带(双面磨损均匀)+ 无感电阻 + 莫比乌斯环书 + 非可定向曲面经典)。viewer.js SCENES 数组加 3 项,场景库 26 → 29。剩 1 个场景(30_crystal-lattice)按 cron session 节奏继续
 - **MATH-003 2/19 教学要点通道第二批**(v0.6.9):04_population-dynamics(Lotka-Volterra 兔狐捕食)+ 11_lissajous(频率比决定图形/相位旋转移位)接 getLesson(),真 LLM 上下文现在能读到教学要点。剩余 17 个场景按教学价值排序,优先级:18_lagrange / 20_neural-net
 - **20 跨学科场景(2D + 3D 双模)**(v0.6.0):建筑(悬链拱)/ 物理(行星轨道 · 双摆 · 简谐 · 波叠加 · 电场)/ 音乐(傅里叶 · Lissajous)/ 生物(种群 · L-系统)/ 艺术(曼德尔布罗 · 朱利亚 · 黄金螺旋)/ 概率(蒙特卡洛 · 中心极限定理 · 贝叶斯)/ 机器学习(梯度下降 · 神经网络)/ 工程(黎曼和 · 拉格朗日乘子)
 - **2 文件自动化框架 PLAN/AGENTS**(v0.6.13):项目内 2 个动态文件 — AGENTS(铁律+架构+能力库+项目状态速览)+ PLAN(任务)。任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 + AGENTS 状态速览同步 → README 同步(非主要,顺带)。`math-advisor-daily-wake` cron 每日 10:30 触发按 2 文件体系干活
@@ -174,7 +175,7 @@ MathematicsWeb/
 │   ├── viewer.js               # 主壳 + 场景切换 + AI 面板宿主
 │   ├── viewer.css              # 全部样式(tokens 体系)
 │   ├── 02_ai-panel.js          # AI 助手 UI(对话/建议/状态,接 getLesson/getFormula 上下文)
-│   └── scenes/                 # 26 个独立场景(2D + 3D 双模)
+│   └── scenes/                 # 29 个独立场景(2D + 3D 双模)
 │       ├── 01_catenary-arch.js         # 悬链拱顶(3D)
 │       ├── 02_planetary-orbits.js      # 行星轨道(3D · 完整 9 大行星 + 月球)
 │       ├── 03_fourier-synth.js         # 傅里叶合成器(2D)
@@ -200,7 +201,10 @@ MathematicsWeb/
 │       ├── 23_ellipse-reflection.js    # 椭圆光学反射(2D · 物理)
 │       ├── 24_lemniscate.js            # 双纽线(2D · 计算几何)
 │       ├── 25_buffon-needle.js         # 布丰投针(2D · 几何概率)
-│       └── 26_koch-snowflake.js        # Koch 雪花(2D · 分形几何)
+│       ├── 26_koch-snowflake.js        # Koch 雪花(2D · 分形几何)
+│       ├── 27_sierpinski.js            # 谢尔宾斯基三角(2D · 分形几何)
+│       ├── 28_great-circle.js          # 球面大圆(2D · 球面几何)
+│       └── 29_mobius-strip.js          # 莫比乌斯带(3D · 拓扑几何)
 ├── kernel/
 │   ├── 01_math-core.js         # 数学原语(Complex/Vec2/Mat2x2/catenary/DFT/Mandelbrot/LV)
 │   ├── 02_animation.js         # rAF 循环 + Canvas 高 DPI 自适应

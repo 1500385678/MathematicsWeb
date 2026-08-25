@@ -27,14 +27,14 @@
     - ✅ 24_lemniscate(双纽线 / 极坐标几何 / 场论)— v0.6.23 第二批
     - ✅ 25_buffon-needle(布丰投针 / 几何概率 / 求 π)— v0.6.23 第二批
     - ✅ 26_koch-snowflake(Koch 雪花 / 分形几何 / 海岸线)— v0.6.23 第二批
-    - [ ] 27_sierpinski(谢尔宾斯基三角 / 分形几何 / 数据结构)
-    - [ ] 28_great-circle(球面大圆 / 球面几何 / GPS)
-    - [ ] 29_mobius-strip(莫比乌斯带 / 拓扑几何 / 3D)
+    - ✅ 27_sierpinski(谢尔宾斯基三角 / 分形几何 / 数据结构 / 混沌游戏)— v0.6.24 第三批
+    - ✅ 28_great-circle(球面大圆 / 球面几何 / GPS / haversine)— v0.6.24 第三批
+    - ✅ 29_mobius-strip(莫比乌斯带 / 拓扑几何 / 3D / 非可定向)— v0.6.24 第三批
     - [ ] 30_crystal-lattice(晶体格 / 材料结构)
   - 创建: 2026-08-25
   - 依赖: 无
   - 发现者: **用户对话**(对话驱动 PLAN 框架首次启用)
-  - 进度(2026-08-25 v0.6.23): 6/10,前两批 21-26 全部落地,viewer.js SCENES 数组加 6 项,AGENTS §0 进度 20→26。剩余 4 个(27-30)按 cron session 节奏 2-3 个/次
+  - 进度(2026-08-25 v0.6.24): 9/10,前三批 21-29 全部落地,viewer.js SCENES 数组加 9 项,AGENTS §0 进度 20→29。剩余 1 个(30_crystal-lattice)按 cron session 节奏
 
 ### P1 · 重要
 
@@ -97,7 +97,7 @@
 
 ## 元数据
 
-- **最后更新**: 2026-08-25 · v0.6.14
+- **最后更新**: 2026-08-25 · v0.6.24
 - **更新者**: math-advisor(对话驱动框架启用)
 - **配套 cron**: math-advisor-daily-wake(每天 10:30)
 - **配套反馈收件箱**: `D:\Mac\Mac\Mac\Consultant\.Shared\feedback_inbox.json`
