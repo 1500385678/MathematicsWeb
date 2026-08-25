@@ -1,6 +1,6 @@
 # AGENTS.md · MathematicsWeb
 
-> 项目铁律 + 架构 + 状态。能力库 / 项目宏观 / 场景规范 → `.Log/`。
+> 项目铁律 + 架构 + 状态 + 项目宏观 + 场景开发规范。能力历史 → `.Log/YYYY-MM-DD.md`(每日 append-only)。
 
 ## 0. 项目是什么
 
@@ -24,14 +24,14 @@
   - MATH-015 [~] 接 M3 LLM,等 user 配 M3_API_KEY
   - MATH-016 [ ] 初中几何场景集 8 候选
   - MATH-004/005/006/007 [ ]
-- **历史能力库**:`.Log/项目宏观.md` + `.Log/YYYY-MM-DD.md`
+- **历史能力库**:`.Log/YYYY-MM-DD.md`(每日 append)
 - **历史审计**:git commit message(无 CHANGELOG.md)
 
 ## 1. 改前必读(顺序)
 
 1. `AGENTS.md` 本文件
 2. `PLAN.md` 任务清单
-3. `.Log/项目宏观.md` + 最近 `.Log/YYYY-MM-DD.md`(按需)
+3. `.Log/YYYY-MM-DD.md` 最近 1-2 个(能力历史,按需)
 4. `viewer/scenes/XX_*.js` 等源码(按需)
 
 ## 2. 架构(目录结构 — 全面)
@@ -43,13 +43,10 @@ MathematicsWeb/
 ├── start.ps1 / start.bat       # 启动脚本(PowerShell / CMD)
 ├── _llm_config.example.json    # LLM 配置模板(7 步 step-by-step)
 ├── _commit_push.ps1            # 自动 commit + push 包装(GitHub + Gitee)
-├── AGENTS.md                   # 本文件(铁律 + 架构 + 状态)
+├── AGENTS.md                   # 本文件(铁律 + 架构 + 状态 + 宏观 + 场景规范)
 ├── PLAN.md                     # 活跃任务队列(完成即删)
 ├── README.md                   # 项目门面(URL 参数 + 30 场景速览)
-├── .Log/                       # 项目日志(v0.6.31)
-│   ├── 00-Index.md
-│   ├── 项目宏观.md
-│   ├── 场景开发规范.md
+├── .Log/                       # 项目日志(每日能力 append,仅此)
 │   └── YYYY-MM-DD.md
 ├── viewer/
 │   ├── viewer.js               # 主壳 + 场景切换 + AI 面板宿主 + SCENES 数组
@@ -108,9 +105,6 @@ MathematicsWeb/
 └── Output/                     # 本地截图(不入仓,gitignore)
 ```
 
-**场景开发规范**:见 `.Log/场景开发规范.md`(createScene / getFormula / getLesson / destroy)
-**完整 30 场景 ID + URL 参数**:见 `README.md`
-
 ## 3. 铁律(改前必看)
 
 1. **零构建** — 不引 webpack/vite/npm
@@ -127,19 +121,19 @@ MathematicsWeb/
 ### 启动(3 步,30 秒)
 1. 读 `AGENTS.md` 本文件
 2. 读 `PLAN.md` 找第一个 `[~]` 或 `[ ]` 任务
-3. (按需) 读 `.Log/项目宏观.md` + 最近 `.Log/YYYY-MM-DD.md`
+3. (按需) 读 `.Log/YYYY-MM-DD.md` 最近 1-2 个
 
 ### 5 步归档(1 个 commit 里)
 1. 改代码
 2. commit + push(msg 含 `vX.Y.Z`)
-3. AGENTS 同步(能力 → `.Log/`,§0 状态,第 2 目录树自动同步)
+3. AGENTS 同步(能力 → `.Log/YYYY-MM-DD.md`,§0 状态,第 2 目录树自动同步)
 4. README 同步(非主要)
 5. PLAN 删条目 + MEMORY 简记
 
 ### 任务来源
 - **user 对话**(v0.6.14)→ agent 自动加 PLAN [ ]
 - **feedback_inbox.json** → P0 催办
-- **AGENTS §7 TODO** → 转 [ ]
+- **AGENTS § 8 TODO** → 转 [ ]
 
 ### 规则
 - 完成任务 → PLAN 删条目(不保留 [x])
@@ -156,18 +150,153 @@ MathematicsWeb/
 # 浏览器:http://localhost:8765
 ```
 
-## 6. 里程碑
+## 6. 项目宏观(产品愿景/形态/模块/路线/风险/哲学)
+
+### 6.1 项目代号 + 愿景
+
+- **代号**:MathAdvisor(内部代号 14-数学-Mathematics)
+- **MathematicsWeb = 上层"数学顾问"产品的 Web App 形态(Phase 1 产物)**
+- **愿景**:让每个学习者身边都有一位"IMO 金牌教练 + 数学系老教授",把已整理的"小学到大学 + 应用数学"完整知识图谱做成**会思考的数学顾问**——既查/练/讲,也对个人进度出题/纠错/推荐
+
+### 6.2 6 产品形态
+
+| 形态 | 状态 |
+|---|---|
+| 飞书 Agent | ✅ 已上线 |
+| **Web App(=MathematicsWeb)** | ⏳ 规划中(Phase 1) |
+| 桌面端(Electron/Tauri) | 📋 远期 |
+| 微信小程序 | 📋 远期 |
+| REST API | 📋 远期 |
+| Mathpix 集成 | 📋 远期 |
+
+### 6.3 5 大核心模块
+
+```
+┌──────────────────────────────────────────────┐
+│            数学顾问 MathAdvisor                │
+├──────────┬──────────┬──────────┬────────┬─────┤
+│ 知识图谱 │ 题目生成 │ 学习管理 │ AI 助教 │ 多端│
+└──────────┴──────────┴──────────┴────────┴─────┘
+```
+
+- **知识图谱**:节点 + 边(覆盖小学→大学→应用)。当前 10 分类目录已入库(`docs/knowledge_graph.json` · 56 章节)
+- **题目生成**:静态题库(5000+)+ 动态生成(模板+参数)+ LLM 出题
+- **学习管理**:进度追踪 / 错题本 / 学习路径 / 成就系统
+- **AI 助教**:解题 / 讲解(多风格) / 对话 / 应用案例
+- **多端 UI**:Web + 飞书 + 小程序 + 桌面端
+
+### 6.4 技术栈(关键选型)
+
+| 层 | 选型 | 理由 |
+|---|---|---|
+| 后端 | FastAPI(Python) | 异步/自动文档/数学生态好 |
+| 前端 | React + TypeScript | 生态成熟 |
+| 数学引擎 | SymPy + MathJax/KaTeX | 公式/符号计算 |
+| 数据库 | PostgreSQL(主)+ SQLite(离线) | 张勇有 SQLite 经验 |
+| LLM | Claude / GPT / Ollama | 解题/讲解 |
+| 部署 | Docker Compose → K8s | 平滑扩容 |
+
+### 6.5 路线图(Phase 0-4)
+
+| 阶段 | 时间 | 关键产物 | 验证 | 当前 |
+|---|---|---|---|---|
+| **Phase 0** 资产盘点 | W1-2 | 知识图谱 + 飞书 Bot | md 入库,Bot 可查/出题 | 🔄 |
+| **Phase 1** MVP | W5-6 | Web MVP | 100 用户内测 ≥ 4.0 | ⏳ |
+| **Phase 2** 完整功能 | W10-12 | 完整学习闭环 | 日活 1000+ | ⏳ |
+| **Phase 3** AI 智能化 | W16-20 | AI Tutor | 解题准确率 ≥ 85% | ⏳ |
+| **Phase 4** 商业化 | W24+ | 商业化 | DAU 1万+ | ⏳ |
+
+### 6.6 关键决策(append-only)
+
+- 2026-08-21: 零构建范式
+- 2026-08-21: three.js 走 vendor/
+- 2026-08-21: LLM 默认 mock
+- 2026-08-25 v0.6.4: AI 上下文接 getLesson 通道
+- 2026-08-25 v0.6.6: 3 文件自动化框架
+- 2026-08-25 v0.6.7: AGENTS 架构自动同步规则
+- 2026-08-25 v0.6.11: 产品开发计划融合
+- 2026-08-25 v0.6.13: 精简 2 文件体系
+- 2026-08-25 v0.6.14: 对话驱动 PLAN
+- 2026-08-25 v0.6.15: PLAN 纯任务清单
+- 2026-08-25 v0.6.19: 自动推进(cron session)
+- 2026-08-25 v0.6.20: PLAN 维护者 + 红线分层
+- 2026-08-25 v0.6.21: M3 真实 LLM 代理(等 user 配 key)
+- 2026-08-25 v0.6.31: 新建 .Log/ 项目日志
+- 2026-08-25 v0.6.33: AGENTS 瘦身保结构
+
+### 6.7 风险(关注)
+
+- 题目质量参差 → 人工审核 + 反馈
+- LLM 成本 → 本地 Ollama / 缓存
+- 知识点图谱构建慢 → 模板化 + 渐进式
+- 飞书生态依赖 → Web / 小程序多端
+
+### 6.8 哲学
+
+> **先做骨架,再长血肉**。Phase 0-1 把"查 + 练"打通,AI 和商业化是后面的事。地基扎实了,上面随便盖。
+
+## 7. 场景开发规范
+
+### 7.1 createScene 返回结构
+
+每个场景文件 `viewer/scenes/XX_*.js` 必须导出 `createScene(host, opts)`,返回:
+
+```js
+{
+  sceneId: '...',           // 唯一 ID(对应 SCENES.id)
+  getFormula(): string,     // 核心公式(给 AI 上下文)
+  getLesson(): string,      // 教学要点(给 AI 上下文,v0.6.4+)
+  destroy(): void,          // 清理:动画停 + DOM 删 + GPU 资源释放
+}
+```
+
+- `host`: canvas 容器(已挂在 viewer 里)
+- `opts.aiPanel`: AI 面板实例
+
+### 7.2 Scene 内部
+
+- 自己创建 canvas/three.js renderer
+- 自己创建教学卡片(`.mathw-lesson`)+ 控件(`.mathw-controls`)
+- 用 `kernel/02_animation.js` 的 `makeLoop` 管理 rAF
+- ResizeObserver 跟 host 尺寸
+
+### 7.3 destroy() 必须配对
+
+- `cancelAnimationFrame` 停动画
+- `removeEventListener` 清事件
+- `geometry.dispose` + `material.dispose` 释放 GPU
+- 全部创建过的 DOM 节点 `remove`
+
+### 7.4 AI 上下文协议
+
+```js
+aiPanel.setActiveScene(scene, instance);  // 传 SCENES 项 + 场景实例
+```
+
+AI 提问时,`AIPanel._buildSceneContext()` 读 `instance.getFormula()` + `instance.getLesson()` 拼上下文 → mock/real LLM。
+
+### 7.5 注册新场景 3 步
+
+1. 创建 `viewer/scenes/XX_xxx.js`
+2. `viewer/viewer.js` SCENES 数组末尾加一项(`{ id, title, desc, create, category }`)
+3. AGENTS §2 目录树自动同步(架构同步规则 v0.6.7)
+
+### 7.6 教学要点 getLesson
+
+每个场景应实现 `getLesson()` 返回纯文本,包括:核心概念 / 历史背景 / 关键参数 / 3-5 个应用。参考 `06_simple-harmonic`。
+
+## 8. 里程碑
 
 - [x] **v0.6.30 (2026-08-25)**: 30 场景 + 19/19 教学要点 + M3 代理
 - [ ] **v1.0**: 全套主题模块 + 教师模式 + 用户账号
 
-## 7. 已知 TODO
+## 9. 已知 TODO
 
 - 3D 场景 WebGL 不可用时降级 2D 静态预览(MATH-004)
 - 真 LLM 端到端测试(MATH-015,等 user 配 M3_API_KEY)
 - GitHub 仓库 + 自动化 release
 
-## 8. 兄弟项目
+## 10. 兄弟项目
 
 | 项目 | 关系 | 沿用 |
 |---|---|---|
@@ -175,7 +304,7 @@ MathematicsWeb/
 | canvasweb | 风格母版 | 暗色 · AI 面板 · tokens.css |
 | OrangeSu | 工作区血缘 | 同在 `_Lib` 体系 |
 
-## 9. 跨项目偏好(user memory 沿用)
+## 11. 跨项目偏好(user memory 沿用)
 
 - 文档 .md 文件名用中文,禁乱码
 - 数字前缀宽度一致(01/02/.../09/10/11)
