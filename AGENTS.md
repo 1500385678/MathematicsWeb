@@ -291,7 +291,9 @@ AI 提问时,`AIPanel._buildSceneContext()` 会读 `instance.getFormula()` 拼�
 - **AGENTS 能力段 / 状态速览 append**(新能力落地自动加)
 - **不写 CHANGELOG.md**(本项目已删,审计在 git commit message)
 - **MEMORY.md 不入仓**(在 agent 数据目录 `C:\Users\yongzhang\.minimax\agents\math-advisor\`,跨项目)
-- **对话驱动 PLAN**(v0.6.14):用户说"加/做/改"项目内容 → agent 自动加 PLAN [ ];agent **不加**"等用户说做"才实施的"自动"——这叫"擅自实施"
+- **对话驱动 PLAN**(v0.6.14):用户说"加/做/改"项目内容 → agent 自动加 PLAN [ ]
+- **自动推进**(v0.6.19 修正):**cron session 自动**做 P0/P1/P2 任务(从 [ ] → [~] → 实施 → 5 步归档),**不需 user 显式说"做 X"**。PLAN 入队即开工。
+- **基础架构红线**(v0.6.19 保留):**改 AGENTS.md / 改 PLAN.md 框架 / 删整目录 / 改 git remote / 改 cron prompt** 等"项目基础架构"动作仍需 user 显式确认(防"擅自破坏"基础)。代码层(场景/工具/UI)agent 可自动做。
 
 ## 4. 跑起来
 
