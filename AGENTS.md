@@ -27,9 +27,9 @@
 
 > agent 启动第一件事看这里:版本/阶段/进度/远端。30 秒建认知。改动后跟 "项目已具备的能力" 段一起 append。
 
-- **版本**:v0.6.27 · **阶段**:Phase 2 完整功能 · **进度**:30/30 场景 + 13/19 教学要点
+- **版本**:v0.6.28 · **阶段**:Phase 2 完整功能 · **进度**:30/30 场景 + 15/19 教学要点
 - **远端**:GitHub `1500385678/MathematicsWeb` + Gitee `architectzy/MathematicsWeb`(镜像) · 端口 8765
-- **当前活跃任务**(从 PLAN.md 拉):MATH-014 ✅ 收尾(10/10 全部落地)· MATH-003 [~] 13/19 教学要点,第八批 05 + 16 已加,剩 4 场景按教学价值排序(07/08) · MATH-004/005/006/007 [ ]
+- **当前活跃任务**(从 PLAN.md 拉):MATH-014 ✅ 收尾(10/10 全部落地)· MATH-003 [~] 15/19 教学要点,第九批 07 + 08 已加,剩 4 场景按教学价值排序(10/17/19) · MATH-004/005/006/007 [ ]
 - **完整流程**:`AGENTS.md`(本文件)+ `PLAN.md`(任务)→ 这是项目内 2 个动态文件,agent 必读
 - **历史审计**:看 git commit message(本仓库无 CHANGELOG.md,审计在 commit)
 - **项目宏观**:见下面 "## 项目宏观" 段(产品愿景/路线/技术栈/风险)
@@ -145,6 +145,7 @@
 - **MATH-014 几何类 10 场景收尾 1 个**(v0.6.25):30_crystal-lattice(晶体格 3D:4 种 Bravais 晶系 SC/BCC/FCC/HCP 对比/配位数 6→8→12/APF 0.5236→0.6802→0.7405/晶格常数 a + 原子半径 r 滑块看原子接触转变/晶胞线框 + 邻居 27 晶胞展示周期性/HCP 用六方棱柱 c/a=√8/3 ≈ 1.633/例子面板:α-Po(SC)· α-Fe/Cr/Mo/W(BCC)· Cu/Au/Ag/Al/γ-Fe/NaCl(FCC)· Mg/Zn/Ti/Co(HCP)/应用:半导体晶圆 + 金属相变 α↔γ 铁 + X 射线衍射)。viewer.js SCENES 数组加 1 项,场景库 29 → 30。**MATH-014 完成,10/10 全部落地**
 - **MATH-003 12/19 教学要点通道第七批**(v0.6.26):02_planetary-orbits(开普勒第三定律 T² ∝ a³ / 椭圆 r=a(1-e²)/(1+e·cosθ) / 9 大行星 + 月球绕地球 / a 用 log 压缩(冥王 40 AU vs 木星 5.2 真实差 8 倍,画不下)/ 调时间倍率外圈明显慢,直观体验 T∝a^1.5)+ 13_riemann-sum(∫ 算不出来就用矩形 / 梯形 / 抛物线堆 / 4 函数(sin/x²/e^(-x²)/1/(1+x²)) + 5 方法(左/右/中/梯形/Simpson) / 收敛阶对比:左/右 O(1/N) 慢 / 梯形 O(1/N²) / Simpson 抛物线 O(1/N⁴) 精度爆炸)接 getLesson(),真 LLM 上下文继续扩展。剩余 7 个场景按教学价值排序,下一批候选:05_mandelbrot / 07_golden-spiral / 16_wave-interference
 - **MATH-003 13/19 教学要点通道第八批**(v0.6.27):05_mandelbrot(复动力系统 z_{n+1}=z_n²+c / M 集连通但边界 fractal(Douady-Hubbard 1982)/Hausdorff 维数猜想 2 / 1984 发现 M 集附近藏缩小副本 / 4 配色(海洋/火焰/灰度/彩虹)+ 迭代数 20-200 + 缩放演示 seahorse valley)+ 16_wave-interference(线性叠加原理 P=ΣAᵢcos(k·rᵢ−ωt)/建设性(同相) + 破坏性(反相)干涉 / 1801 Young 双缝实验 Δy=λL/d / 关键参数:λ 波长(条纹疏密)+ 源距 D(条纹方向)+ 分辨率 80-240)接 getLesson(),真 LLM 上下文继续扩展。剩余 4 个场景按教学价值排序,下一批候选:07_golden-spiral / 08_monte-carlo(数学+概率)
+- **MATH-003 15/19 教学要点通道第九批**(v0.6.28):07_golden-spiral(欧几里得《几何原本》"中外比" = φ / 费波那契 1202 兔子问题 / F(n)/F(n-1) → φ 极限 / 黄金矩形自相似切 + 对数螺旋 r(θ)=a·e^(bθ) / 黄金角 137.5°=360°/φ² Vogel 1979 向日葵种子 / 欧几里得-达芬奇-帕特农神庙-米罗的维纳斯历史 / DNA 双螺旋 34Å/21Å ≈ φ / 股市斐波那契回调 0.382/0.618 = 1/φ)+ 08_monte-carlo(Ulam 1946 玩纸牌想到 / von Neumann 在曼哈顿计划 ENIAC 实现命名 Monte Carlo(摩纳哥赌场)/ 收敛 O(1/√N) 慢但与维度无关(黎曼和高维爆维数灾难)/ Metropolis-Hastings 1953 MCMC 鼻祖 / 4 大应用:Black-Scholes 期权 7 维积分 + 粒子输运 MCNP + 贝叶斯 MCMC + 量子蒙特卡洛 VASP / 路径追踪电影特效 / AlphaGo MCTS)接 getLesson(),真 LLM 上下文继续扩展。剩余 4 个场景按教学价值排序,下一批候选:10_gradient-descent / 17_julia / 19_electric-field
 - **MATH-003 2/19 教学要点通道第二批**(v0.6.9):04_population-dynamics(Lotka-Volterra 兔狐捕食)+ 11_lissajous(频率比决定图形/相位旋转移位)接 getLesson(),真 LLM 上下文现在能读到教学要点。剩余 17 个场景按教学价值排序,优先级:18_lagrange / 20_neural-net
 - **20 跨学科场景(2D + 3D 双模)**(v0.6.0):建筑(悬链拱)/ 物理(行星轨道 · 双摆 · 简谐 · 波叠加 · 电场)/ 音乐(傅里叶 · Lissajous)/ 生物(种群 · L-系统)/ 艺术(曼德尔布罗 · 朱利亚 · 黄金螺旋)/ 概率(蒙特卡洛 · 中心极限定理 · 贝叶斯)/ 机器学习(梯度下降 · 神经网络)/ 工程(黎曼和 · 拉格朗日乘子)
 - **2 文件自动化框架 PLAN/AGENTS**(v0.6.13):项目内 2 个动态文件 — AGENTS(铁律+架构+能力库+项目状态速览)+ PLAN(任务)。任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 + AGENTS 状态速览同步 → README 同步(非主要,顺带)。`math-advisor-daily-wake` cron 每日 10:30 触发按 2 文件体系干活

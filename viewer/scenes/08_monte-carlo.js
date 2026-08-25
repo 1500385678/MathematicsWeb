@@ -36,13 +36,17 @@ export function createScene(host, opts = {}) {
     <button class="mathw-lesson-toggle" data-toggle>−</button>
     <div class="mathw-lesson-title">数学 × 概率 · 蒙特卡洛</div>
     <div class="mathw-lesson-content">
-      <div class="mathw-lesson-headline">随机投点 → 算 π、算积分</div>
-      <div class="mathw-lesson-formula">π ≈ 4 × (圆内 / 总数)   ∫f(x)dx ≈ (b-a)·<f(x)></div>
+      <div class="mathw-lesson-headline">随机投点 → 算 π、算积分 · 收敛 O(1/√N) · 与维度无关</div>
+      <div class="mathw-lesson-formula">π ≈ 4 × (圆内 / 总数)   ∫f(x)dx ≈ (b-a)·<f(x)>   误差 ~ 1/√N</div>
       <div class="mathw-lesson-text">
-        在 1×1 正方形里<strong>随机投点</strong>,落在 1/4 圆内的比例 × 4 ≈ π。
-        这是 1777 年 Buffon 伯爵的几何概率思路。<br>
-        <strong>积分</strong>:取 N 个随机 x,平均 f(x) × 区间长度 = 积分。<br>
-        投得越多越准 — <strong>大数定律</strong>。算 100 万次能到 0.001 精度。
+        <strong>π 估算原理</strong>:1×1 正方形面积 = 1,内接 1/4 单位圆面积 = π/4,随机投点落在圆内比例 ≈ 面积比 = π/4,所以 <strong>π ≈ 4 × (圆内 / 总数)</strong>。这是 1777 年 Buffon 伯爵的几何概率思路,跟场景 25 布丰投针同一思想。<br>
+        <strong>蒙特卡洛积分</strong>:对 ∫ₐᵇ f(x) dx,取 N 个均匀随机 xᵢ ∈ [a, b],<strong>∫f ≈ (b-a) × (1/N) × Σf(xᵢ)</strong> = 矩形面积 × f 平均值。本场景演示 ∫₀^π sin(x) dx = 2,真实值红线,估算曲线随 N 收敛。<br>
+        <strong>大数定律</strong>:N → ∞ 时估算必 → 真值;但收敛速度只有 <strong>O(1/√N)</strong>(误差 ~ σ/√N)— 想精度 10 倍要投 100 倍点,比确定性方法(黎曼和/梯形/Simpson,O(1/N²) 到 O(1/N⁴))慢得多。<br>
+        <strong>关键优势:与维度无关</strong>。确定性方法(黎曼和)高维 d 维时 Nᵈ 个点指数爆(维数灾难);蒙特卡洛 N 个点无论 d 多大,误差公式还是 σ/√N。这是为什么 1950 年代核武器/航天/金融全用蒙特卡洛。<br>
+        <strong>历史</strong>:Stanislaw Ulam 1946 玩单人纸牌时想到,John von Neumann 在曼哈顿计划 ENIAC 上实现并命名 Monte Carlo(摩纳哥赌场);Metropolis 1949 发表首篇论文,1953 年 Metropolis-Hastings 算法成为 MCMC 鼻祖。<br>
+        <strong>关键参数</strong>:批量/帧(每帧投 10-2000 点,投越多越准,动画实时累计)+ 显示模式(算 π / 算 sin 积分)+ 重置按钮。<br>
+        <strong>方差缩减技术</strong>:重要性采样(在被积函数大的地方多采)、对偶变量(f(x)+f(b+a-x) 抵消)、控制变量(用已知期望的相关变量校正)— 可把方差降 10-100 倍,弥补 O(1/√N) 慢收敛。<br>
+        <strong>应用</strong>:Black-Scholes 期权定价(7 维积分)、粒子输运模拟(MCNP 中子跟踪)、贝叶斯统计 MCMC(Metropolis-Hastings / Hamiltonian MC)、LIGO 引力波信号注入检测、量子蒙特卡洛(电子结构 VASP)、气候模型集合预报、流行病传播(SEIR 模型参数估计)、自动驾驶感知激光雷达点云、电影特效全局光照(路径追踪)、围棋 AI AlphaGo 蒙特卡洛树搜索(MCTS)。
       </div>
     </div>
   `;
@@ -303,7 +307,13 @@ export function createScene(host, opts = {}) {
 
   return {
     sceneId: 'monte-carlo',
-    getFormula() { return 'π ≈ 4N内/N总   ∫f ≈ (b-a)·<f>'; },
+    getFormula() { return 'π ≈ 4N内/N总   ∫f ≈ (b-a)·<f>   误差 ~ 1/√N'; },
+    // v0.6.28: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { batch: params.batch, mode: params.mode }; },
     setState(s) {
       if (!s) return;

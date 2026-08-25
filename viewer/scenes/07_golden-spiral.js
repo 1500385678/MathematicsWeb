@@ -30,13 +30,16 @@ export function createScene(host, opts = {}) {
     <button class="mathw-lesson-toggle" data-toggle>−</button>
     <div class="mathw-lesson-title">数学 × 艺术 · 黄金螺旋</div>
     <div class="mathw-lesson-content">
-      <div class="mathw-lesson-headline">φ = (1+√5)/2 ≈ 1.618</div>
-      <div class="mathw-lesson-formula">φ² = φ + 1   F(n+2) = F(n+1) + F(n)</div>
+      <div class="mathw-lesson-headline">φ = (1+√5)/2 ≈ 1.618 · 自相似 + 黄金角 137.5°</div>
+      <div class="mathw-lesson-formula">φ² = φ + 1   F(n+2) = F(n+1) + F(n)   r(θ) = a·e^(bθ)</div>
       <div class="mathw-lesson-text">
-        黄金比例 = 一条线段,长段/短段 = 全长/长段。解出来是 <strong>φ ≈ 1.618</strong>。
-        费波那契数列相邻两项之比越来越接近 φ。<br>
-        把矩形按 φ 切,切出来的方块角上的弧连成<strong>对数螺旋</strong>。
-        自然里到处都是:鹦鹉螺、向日葵、松果、银河系旋臂、飓风、文艺复兴建筑(帕特农神庙)立面比例。
+        <strong>黄金比例</strong> = 一条线段被一点分成两段,长段/短段 = 全长/长段。解二次方程 x² = x + 1 得 <strong>φ ≈ 1.618</strong>(无理数)。<br>
+        <strong>费波那契</strong>(F₁=1, F₂=1, Fₙ₊₂ = Fₙ₊₁ + Fₙ):1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144… 相邻两项之比 Fₙ/Fₙ₋₁ 越来越接近 φ(1/1=1, 2/1=2, 3/2=1.5, …, 144/89 ≈ 1.6180),数学归纳可证 lim = φ。<br>
+        <strong>黄金矩形</strong>:把矩形按 φ 切掉一个正方形,剩下的还是黄金矩形(自相似);在每个正方形内画 1/4 圆弧,弧线连起来 = <strong>对数螺旋</strong> r(θ) = a·e^(bθ)(每转 90° 半径变 φ 倍)。<br>
+        <strong>自然里的黄金角</strong>(137.5° = 360°/φ²):向日葵花盘松果的种子按这个角度螺旋排列,保证每颗种子获得最大生长空间且不重叠(Vogel 1979 公式);鹦鹉贝/鹦鹉螺切面近似对数螺旋;银河系旋臂也接近这个曲线。<br>
+        <strong>历史</strong>:欧几里得《几何原本》定义"中外比" = φ;卢卡斯 1202《算术宝鉴》兔子问题引出 F 数列;达·芬奇《维特鲁威人》人体比例、帕特农神庙立面、文艺复兴油画构图三分法都用 φ。<br>
+        <strong>关键参数</strong>:层数 N(3-15,越大越细密螺旋圈数多)+ 90° 旋转(看 4 种螺旋方向)+ 自动展开动画(逐层拼出过程)。<br>
+        <strong>应用</strong>:摄影构图三分法、UI 设计的黄金分割比例、DNA 双螺旋每 34 Å 长度出现 21 Å 宽(34/21 ≈ φ)、股市分析的斐波那契回调(0.382/0.618 = 1/φ)、建筑立面比例(高迪圣家族大教堂、米罗的维纳斯雕塑)。
       </div>
     </div>
   `;
@@ -300,7 +303,13 @@ export function createScene(host, opts = {}) {
 
   return {
     sceneId: 'golden-spiral',
-    getFormula() { return 'φ = (1+√5)/2 ≈ 1.618'; },
+    getFormula() { return 'φ = (1+√5)/2 ≈ 1.618   r(θ) = a·e^(bθ)'; },
+    // v0.6.28: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { n: params.n, flip: params.flip }; },
     setState(s) {
       if (!s) return;
