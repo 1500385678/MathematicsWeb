@@ -21,17 +21,18 @@ _(无 — MATH-014 收尾完成 v0.6.25)_
 ### P1 · 重要
 
 - [~] **MATH-003** · 19 个场景补 `getLesson()` 教学要点
-  - **预计 commit 数: 7**(剩 7 个场景,每批 2 场景 1 commit,每批 10-20 分钟)
+  - **预计 commit 数: 6**(剩 6 个场景,每批 2 场景 1 commit,每批 10-20 分钟)
   - 描述: v0.6.4 已示范 1 个(simple-harmonic),剩 19 个。教学要点喂给 LLM,提升 AI 助手质量
   - 验收: 每个 scene 文件导出 `getLesson()`,`_buildSceneContext` 拼进 prompt
   - 创建: 2026-08-24
   - 依赖: v0.6.4 getLesson 框架(已落地)
-  - 进度(2026-08-25 v0.6.9 → v0.6.10 → v0.6.16 → v0.6.17 → v0.6.21 → v0.6.25 → v0.6.26): 12/19 — 01/02/03/04/06/09/11/12/13/14/15/18/20 已加 getLesson
+  - 进度(2026-08-25 v0.6.9 → v0.6.10 → v0.6.16 → v0.6.17 → v0.6.21 → v0.6.25 → v0.6.26 → v0.6.27): 13/19 — 01/02/03/04/05/06/09/11/12/13/14/15/16/18/20 已加 getLesson
   - 优先级子项(教学价值排序,✅ = 已加):
     - ✅ 01_catenary-arch · 悬链线 cosh 倒置成拱(第五批 v0.6.17)
     - ✅ 02_planetary-orbits · 开普勒第三定律 T²∝a³(第七批 v0.6.26)
     - ✅ 03_fourier-synth · 傅里叶箭头 + Gibbs 现象(第六批 v0.6.21)
     - ✅ 04_population-dynamics · Lotka-Volterra 双物种(第二批 v0.6.9)
+    - ✅ 05_mandelbrot · z²+c 复动力 + M 集边界 fractal + 自相似 + Julia 集族(第八批 v0.6.27)
     - ✅ 06_simple-harmonic · 阻尼振动 + 受迫(原版 v0.6.4)
     - ✅ 09_double-pendulum · Lagrangian + 蝴蝶效应(第六批 v0.6.21)
     - ✅ 11_lissajous · 频率比 + 相位(第二批 v0.6.9)
@@ -39,9 +40,10 @@ _(无 — MATH-014 收尾完成 v0.6.25)_
     - ✅ 13_riemann-sum · 左/右/中/梯形/Simpson 收敛阶(第七批 v0.6.26)
     - ✅ 14_bayesian · Beta-Binomial 共轭(第四批 v0.6.16)
     - ✅ 15_lsystem · 字符串重写 + turtle(第四批 v0.6.16)
+    - ✅ 16_wave-interference · 线性叠加 + 建设/破坏性干涉 + 双缝 Δy=λL/d(第八批 v0.6.27)
     - ✅ 18_lagrange · 切点几何(第三批 v0.6.10)
     - ✅ 20_neural-net · 决策边界演化(第三批 v0.6.10)
-    - 剩余 7 个按教学价值排序,下一批 05_mandelbrot + 16_wave-interference(数学+物理)
+    - 剩余 4 个按教学价值排序,下一批 07_golden-spiral + 08_monte-carlo(数学+概率)
 
 - [ ] **MATH-004** · 确认 3D 场景在低 WebGL 环境的友好降级
   - **预计 commit 数: 2**(feature detection + 2D fallback 各 1 commit,每个 10 分钟)
@@ -81,7 +83,7 @@ _(无 — MATH-014 收尾完成 v0.6.25)_
 
 ## 元数据
 
-- **最后更新**: 2026-08-25 · v0.6.25
+- **最后更新**: 2026-08-25 · v0.6.27
 - **更新者**: math-advisor(对话驱动框架启用)
 - **配套 cron**: math-advisor-daily-wake(每天 10:30)
 - **配套反馈收件箱**: `D:\Mac\Mac\Mac\Consultant\.Shared\feedback_inbox.json`

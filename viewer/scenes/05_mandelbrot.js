@@ -34,11 +34,14 @@ export function createScene(host, opts = {}) {
       <div class="mathw-lesson-headline">最简单的迭代,最复杂的边界</div>
       <div class="mathw-lesson-formula">z_{n+1} = z_n² + c,  z₀ = 0</div>
       <div class="mathw-lesson-text">
-        对每个复数 <strong>c</strong>,从 z=0 反复做 z²+c。
-        如果 |z| 永远不超 2 → 涂黑(属于 Mandelbrot 集);
-        否则看第几步逃逸 → 上色。
-        <strong>滚轮</strong>缩放,<strong>拖动</strong>平移。
-        放大会发现无限自相似:每次放大都看到新的分形细节。
+        对每个复数 <strong>c</strong>(= 实部 + 虚部,对应画布上一个像素),从 z=0 反复做 z²+c。
+        如果 |z| 永远不超 2 → 涂黑(属于 Mandelbrot 集,简称 <strong>M 集</strong>);
+        否则看第几步逃逸(归一化) → 调色板着色 — 逃逸越快越亮,收敛越慢越深。<br>
+        <strong>M 集连通</strong>(Douady-Hubbard 1982),但<strong>边界是分形</strong>:
+        每放大一处都看到新的自相似细节,边长 = ∞ 但面积有限。
+        Hausdorff 维数猜想 = 2(未证),<strong>1984 发现</strong>边界附近藏着缩小的 M 集副本。<br>
+        <strong>关键参数</strong>:迭代次数(20-200,越大越精细) + 4 套配色(海洋/火焰/灰度/彩虹) + 缩放演示按钮(自动螺旋到 seahorse valley 看分形细节)。<br>
+        <strong>应用</strong>:复动力系统核心对象(对每个 c 派生一个 Julia 集族)、海岸线/云朵/星系等自然分形基准、计算机图形学噪声与 L-system、芯片天线分形设计。
       </div>
     </div>
   `;
@@ -270,6 +273,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'mandelbrot',
     getFormula() { return 'z_{n+1} = z_n² + c,  z₀ = 0'; },
+    // v0.6.27: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { iter: params.iter, palette: params.palette, view: { ...view } }; },
     setState(s) {
       if (!s) return;

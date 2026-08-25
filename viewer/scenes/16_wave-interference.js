@@ -32,10 +32,13 @@ export function createScene(host, opts = {}) {
       <div class="mathw-lesson-headline">两列波相遇 → 建设性 + 破坏性干涉</div>
       <div class="mathw-lesson-formula">P(x,y,t) = Σ Aᵢ·cos(k·rᵢ − ω·t)</div>
       <div class="mathw-lesson-text">
-        线性叠加原理:任意点的总扰动 = 各列波的代数和。<br>
-        <strong>建设性</strong>(亮带):两列波<strong>同相</strong>相遇,振幅相加。<br>
-        <strong>破坏性</strong>(暗带):两列波<strong>反相</strong>相遇,振幅相消。<br>
-        移动源 + 改频率,看干涉条纹移动 / 间距变。
+        <strong>线性叠加原理</strong>:任意点的总扰动 = 各列波的代数和。
+        <strong>建设性</strong>(亮带):两列波<strong>同相</strong>相遇,振幅相加(峰对峰);
+        <strong>破坏性</strong>(暗带):两列波<strong>反相</strong>相遇,振幅相消(峰对谷)。<br>
+        <strong>双缝实验</strong>(1801 Young):屏幕到缝距离 L、缝距 d,条纹间距 Δy = λL/d —
+        波长越短条纹越密,缝距越宽条纹越稀。验证了光的<strong>波动说</strong>。<br>
+        <strong>关键参数</strong>:波长 λ(0.02-0.30,改 λ 看条纹疏密)+ 源 1/源 2 x 位置(改 D 看条纹方向)+ 分辨率(80-240)。<br>
+        <strong>应用</strong>:光学干涉仪(Michelson 测光速 / 激光干涉引力波 LIGO)/ 声学驻波(乐器共鸣腔)/ 量子力学双缝实验(波粒二象性基础)/ 全息摄影。
       </div>
     </div>
   `;
@@ -171,6 +174,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'wave-interference',
     getFormula() { return 'P = Σ Aᵢ·cos(k·rᵢ − ωt)'; },
+    // v0.6.27: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { ...params }; },
     setState(s) {
       if (!s) return;
