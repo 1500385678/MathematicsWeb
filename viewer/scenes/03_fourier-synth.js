@@ -290,6 +290,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'fourier-synth',
     getFormula() { return 'f(t) = Σ aₙ·sin(nωt + φₙ)'; },
+    // v0.6.21: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { wave: params.wave, n: params.n, freq: params.freq }; },
     setState(s) {
       if (!s) return;

@@ -425,6 +425,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'double-pendulum',
     getFormula() { return 'θ¨ = f(θ₁, θ₂, ω₁, ω₂)  (无解析解)'; },
+    // v0.6.21: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { theta1: params.theta1, theta2: params.theta2, speed: params.speed }; },
     setState(s) {
       if (!s) return;
