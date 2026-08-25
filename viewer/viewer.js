@@ -280,6 +280,16 @@ export const SCENES = [
     description: 'Möbius 1858 单面环。3D 参数曲面 + 蚂蚁走 u∈[0,4π] 才回原面 — 演示非可定向。',
     loader: () => import('./scenes/29_mobius-strip.js'),
   },
+  // v0.6.25: 几何类 10 场景收尾 1 个
+  {
+    id: 'crystal-lattice',
+    title: '晶体格 / Bravais',
+    domain: '数学 × 材料科学',
+    icon: '💎',
+    renderer: '3D',
+    description: '4 种 Bravais 晶系(SC/BCC/FCC/HCP)对比。配位数 6→8→12,APF 0.52→0.74,调 r 看原子接触转变。',
+    loader: () => import('./scenes/30_crystal-lattice.js'),
+  },
 ];
 
 function escapeHtml(s) {
