@@ -1,7 +1,7 @@
-# AGENTS.md · MathematicsWeb v0.1.0 · 跨学科数学可视化
+# AGENTS.md · MathematicsWeb · 跨学科数学可视化(项目铁律 + 架构 + 能力库)
 
-> 任何 AI 改这个项目前,先读完本文件 + `docs/` 下的架构/清单。
-> 这是项目元数据 + 操作约束的单一事实源。
+> 任何 AI 改这个项目前,先读完本文件。**项目内 2 个动态文件**:AGENTS.md(本文件)+ PLAN.md(任务)。
+> 这是项目元数据 + 操作约束 + 项目状态 + 能力库 的单一事实源。
 
 ---
 
@@ -23,9 +23,19 @@
 
 > 沿用 **three.jsWeb** 的范式:动态 import + 顶层 await + window version + ?v= 串号防缓存。沿用 **canvasweb** 的"AI 助手是标配"思想。两者都做到**断网能跑**(three.js 走 vendor,LLM 默认 mock)。
 
+## 项目状态速览(动态,agent 自动维护)
+
+> agent 启动第一件事看这里:版本/阶段/进度/远端。30 秒建认知。改动后跟 "项目已具备的能力" 段一起 append。
+
+- **版本**:v0.6.13 · **阶段**:Phase 2 完整功能 · **进度**:20/20 场景 + 4/19 教学要点
+- **远端**:GitHub `1500385678/MathematicsWeb` + Gitee `architectzy/MathematicsWeb`(镜像) · 端口 8765
+- **当前活跃任务**(从 PLAN.md 拉):MATH-003 [~] 4/19 教学要点继续 · MATH-004/005/006/007 [ ]
+- **完整流程**:`AGENTS.md`(本文件)+ `PLAN.md`(任务)→ 这是项目内 2 个动态文件,agent 必读
+- **历史审计**:看 git commit message(本仓库无 CHANGELOG.md,审计在 commit)
+
 ## 项目已具备的能力(append-only)
 
-> 任务从 PLAN 完成 → append 到这里。CHANGELOG 是版本历史(改了什么),这里是"项目能干啥"(现状)。
+> 任务从 PLAN 完成 → append 到这里。
 > 规则:append-only,只加不删改,每条标版本号 + 简短描述,让 agent 启动一读就懂。
 
 - **场景参数序列化**(v0.5.0):每个场景的 a/ω/N 等参数存 IndexedDB,刷新自动恢复。Workspace + IDB + viewer 三层 save/restore 链路已通
@@ -34,18 +44,18 @@
 - **MATH-003 4/19 教学要点通道第三批**(v0.6.10):18_lagrange(切点几何/∇f 平行 ∇g/等周不等式)+ 20_neural-net(2 层全连接 2D 分类/反向传播/决策曲线演化)接 getLesson(),真 LLM 上下文继续扩展。剩余 15 个场景按用户反馈优先级
 - **MATH-003 2/19 教学要点通道第二批**(v0.6.9):04_population-dynamics(Lotka-Volterra 兔狐捕食)+ 11_lissajous(频率比决定图形/相位旋转移位)接 getLesson(),真 LLM 上下文现在能读到教学要点。剩余 17 个场景按教学价值排序,优先级:18_lagrange / 20_neural-net
 - **20 跨学科场景(2D + 3D 双模)**(v0.6.0):建筑(悬链拱)/ 物理(行星轨道 · 双摆 · 简谐 · 波叠加 · 电场)/ 音乐(傅里叶 · Lissajous)/ 生物(种群 · L-系统)/ 艺术(曼德尔布罗 · 朱利亚 · 黄金螺旋)/ 概率(蒙特卡洛 · 中心极限定理 · 贝叶斯)/ 机器学习(梯度下降 · 神经网络)/ 工程(黎曼和 · 拉格朗日乘子)
-- **3 文件自动化框架 PLAN/AGENTS/MEMORY**(v0.6.6):任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 → CHANGELOG 留审计。`math-advisor-daily-wake` cron 每日 10:30 触发按此框架干活
+- **2 文件自动化框架 PLAN/AGENTS**(v0.6.13):项目内 2 个动态文件 — AGENTS(铁律+架构+能力库+项目状态速览)+ PLAN(任务)。任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 + AGENTS 状态速览同步 → README 同步(非主要,顺带)。`math-advisor-daily-wake` cron 每日 10:30 触发按 2 文件体系干活
 - **AGENTS 架构自动同步规则**(v0.6.7):agent 改任何涉及文件/目录/模块/依赖的项目,自动增量同步 AGENTS.md 第 2 段(目录结构),不用问。永久规则已写入 User Memory,跨所有有 AGENTS.md 范式的项目适用
 - **产品开发计划融合进 PLAN**(v0.6.11):`数学顾问开发架构与计划.md` + `项目开发计划.md` 内容去重融合到 PLAN.md"## 产品开发计划"段(8 节,完整开发计划清单)。源文件保留作参考归档。**MathematicsWeb = 上层"数学顾问"产品的 Web App 形态(Phase 1 产物)**,两层文档职责清晰不冲突
-- **.Core/OVERVIEW.md 项目全局一览**(v0.6.12):4208 字节 / 7 节,Agent 启动第一件事,30 秒建认知(版本/阶段/3 文件职责/下一步/关键链接/关键决策/操作入口)。`AGENTS.md` 第 2 段自动加 `.Core/` 目录(架构自动同步规则),`cron math-advisor-daily-wake` prompt 加 0.5 步"读 OVERVIEW"作为快速入口
+- **精简为 2 文件体系**(v0.6.13):删 `.Core/OVERVIEW.md`(合并到 AGENTS 顶部"项目状态速览"段)、`CHANGELOG.md`(审计靠 git commit message)、`docs/` 整个目录(02-05 + knowledge_graph.json)。README 保留但非主要,跟 AGENTS §0 同步。agent 必读路径:`AGENTS.md` + `PLAN.md`
 - **Phase 0 知识图谱查询 CLI**(v0.6.8):`tools/graph_query.py` 7 子命令(list/get/category/tag/search/stats/paths)读 `docs/knowledge_graph.json`,纯 stdlib 无依赖,为 Phase 1 FastAPI 路由打底
 
 ## 1. 改前必读(顺序)
 
-1. **本文件** · 架构 + 约束 + 跟兄弟项目的关系
-2. `docs/02_项目架构.md` · 模块依赖、数据流、范式细节
-3. `docs/03_场景清单.md` · 6 个场景的数学原理 + 实现要点
-4. `docs/04_开发纪要.md` · 踩过的坑(本批)
+1. **本文件**(`AGENTS.md`)· 铁律 + 架构 + 能力库 + 项目状态速览
+2. **`PLAN.md`** · 任务清单 + 上层产品开发计划(找第一个 [~]/[ ] 任务)
+3. **`README.md`**(非主要,顺带看)· 项目门面
+4. 完整文件流:`viewer/scenes/XX_*.js` / `kernel/01_math-core.js` / `mock/01_llm-mock.js` 等源码 — 按需查
 
 ## 2. 架构
 
@@ -58,8 +68,9 @@ MathematicsWeb/
 ├── start.ps1 / start.bat       # 启动脚本
 ├── _llm_config.example.json    # LLM 配置模板
 ├── _commit_push.ps1            # 自动 commit + push 包装
-├── .Core/                      # 项目级 agent 配置目录(高频读入口)
-│   └── OVERVIEW.md             # 项目全局一览(30 秒读懂全貌)
+├── AGENTS.md                   # 项目铁律 + 架构 + 能力库 + 项目状态速览(动态,本文件)
+├── PLAN.md                     # 活跃任务队列(动态,完成即删)
+├── README.md                   # 项目门面(跟 AGENTS §0 同步更新,非主要)
 ├── viewer/
 │   ├── viewer.js               # 主壳 + 场景切换 + AI 面板宿主
 │   ├── viewer.css              # 全部样式(tokens 体系)
@@ -103,17 +114,10 @@ MathematicsWeb/
 │   ├── _test_all.ps1           # 20 场景批量验证
 │   └── _test_one.ps1           # 单场景验证(简单版)
 ├── vendor/three/               # three.js r160 本地(从 three.jsWeb 复制,1.2MB)
-├── docs/                       # 项目文档
-│   ├── 02_项目架构.md            # 模块依赖、数据流、范式细节
-│   ├── 03_场景清单.md            # 20 场景数学原理 + 实现要点
-│   ├── 04_开发纪要.md            # 踩过的坑
-│   ├── 05_接真LLM指南.md         # LLM 接入说明
-│   └── knowledge_graph.json    # 知识图谱数据(85KB,md_to_json.py 生成)
 ├── Output/                     # 本地截图(不入仓,gitignore)
-├── AGENTS.md                   # 项目铁律 + 项目能力知识库(本文件)
-├── CHANGELOG.md                # 版本历史(append-only)
+├── AGENTS.md                   # 项目铁律 + 架构 + 能力库 + 项目状态速览(本文件)
 ├── PLAN.md                     # 活跃任务队列(完成即删,不保留 [x])
-├── README.md                   # 用户文档
+├── README.md                   # 项目门面(跟 AGENTS §0 同步更新)
 └── .gitignore                  # 忽略规则(见 §3)
 ```
 
@@ -156,6 +160,31 @@ AI 提问时,`AIPanel._buildSceneContext()` 会读 `instance.getFormula()` 拼�
 6. **AI 兜底** — 永远默认 mock,真 LLM 通过 `_llm_config.json` 启用,ping 失败降级 mock。
 7. **中文文件名** — 文档/场景描述用中文,代码注释用中文(对齐 canvasweb / three.jsWeb)。
 8. **不主动 rebase / force-push / amend**(项目推 GitHub 后启用,目前还没开仓库)。
+
+## agent 工作流(5 步归档,v0.6.13 启用)
+
+> 每个任务一个完整循环(全部在 1 个 commit 里)。项目内 2 动态文件驱动,新 agent 启动 30 秒看懂。
+
+### 启动(0-2 步)
+
+1. 读 `AGENTS.md` 本文件(30 秒建认知:看"项目状态速览"段)
+2. 读 `PLAN.md` 找第一个 `[~]` 或 `[ ]` 任务
+
+### 5 步归档(干活中)
+
+1. **改代码**(改 `viewer/scenes/XX_*.js` / `kernel/01_math-core.js` / `mock/01_llm-mock.js` 等)
+2. **commit + push**(commit message 必含 `vX.Y.Z` + 关键改动;失败由 push-retry cron 处理)
+3. **AGENTS.md 同步**(能力 append + §0 状态速览更新 + 第 2 段目录树自动同步)
+4. **README.md 同步**(跟 AGENTS §0 / 能力段派生;**非主要,顺带更新**)
+5. **PLAN.md 删条目 + MEMORY.md 简记**(agent 数据目录,不入仓)
+
+### 规则
+
+- **完成任务 → PLAN 删条目**(不保留 [x],保持短小)
+- **架构变化**(加/删文件/目录/模块/依赖)→ AGENTS.md 第 2 段自动同步(架构自动同步规则,不用问)
+- **AGENTS 能力段 / 状态速览 append**(新能力落地自动加)
+- **不写 CHANGELOG.md**(本项目已删,审计在 git commit message)
+- **MEMORY.md 不入仓**(在 agent 数据目录 `C:\Users\yongzhang\.minimax\agents\math-advisor\`,跨项目)
 
 ## 4. 跑起来
 
