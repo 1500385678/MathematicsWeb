@@ -15,6 +15,7 @@
 ### P0 · 阻塞/紧急
 
 - [ ] **MATH-014** · 加 10 个几何类场景(21-30)
+  - **预计 commit 数: 10**(每场景 1 commit,每个 10 分钟)
   - 描述: 用户对话提需求"再加 10 个不同应用场景,最好都是几何类"。演示对话驱动 PLAN 框架(v0.6.14 首次启用)
   - 验收: (1) 10 个场景文件 viewer/scenes/21-30.js (2) viewer.js SCENES 数组加 10 项 (3) AGENTS §0 进度 20→30 (4) AGENTS 能力段 append (5) README 场景速览表加 10 个,跨学科统计更新 (6) 5 步归档
   - 场景清单(按 ID):
@@ -35,6 +36,7 @@
 ### P1 · 重要
 
 - [~] **MATH-003** · 19 个场景补 `getLesson()` 教学要点
+  - **预计 commit 数: 11**(剩 11 个场景,每个 1 commit,每个 10 分钟)
   - 描述: v0.6.4 已示范 1 个(simple-harmonic),剩 19 个。教学要点喂给 LLM,提升 AI 助手质量
   - 验收: 每个 scene 文件导出 `getLesson()`,`_buildSceneContext` 拼进 prompt
   - 创建: 2026-08-24
@@ -53,6 +55,7 @@
     - 剩余 11 个按用户反馈优先级,下一批 09_double-pendulum + 03_fourier-synth
 
 - [ ] **MATH-004** · 确认 3D 场景在低 WebGL 环境的友好降级
+  - **预计 commit 数: 2**(feature detection + 2D fallback 各 1 commit,每个 10 分钟)
   - 描述: CHANGELOG v0.1.0 已知问题 #1。是否要加 feature detection + 2D fallback?
   - 验收: 无 GPU / 旧 WebGL 时显示"请用现代浏览器"提示,而非 silent 报错
   - 创建: 2026-08-24
@@ -61,18 +64,21 @@
 ### P2 · 优化
 
 - [ ] **MATH-005** · 整理 `_test/` 散落文件
+  - **预计 commit 数: 1**(单次整理,10 分钟)
   - 描述: `_test/_cdp_test.js` `_test/_shot.js` `_test/_test_all.ps1` `_test/_test_one.ps1` 在 _test 下,工具类应该归 tools/ 或类似
   - 验收: 单一来源,命名一致
   - 创建: 2026-08-24
   - 依赖: MATH-002
 
 - [ ] **MATH-006** · 优化首屏加载
+  - **预计 commit 数: 2**(拆分场景代码 + 加懒加载各 1 commit,每个 10 分钟)
   - 描述: 1000 颗星空 + three.js 1.2MB + 20 场景,首次加载可能慢。考虑分场景懒加载
   - 验收: 首屏 < 2s (本地 8765)
   - 创建: 2026-08-24
   - 依赖: 无
 
 - [ ] **MATH-007** · 移动端 scene 卡片可读性
+  - **预计 commit 数: 2**(CSS 响应式 + 控件触控适配各 1 commit,每个 10 分钟)
   - 描述: 教学卡片文字在手机屏可能溢出,需要响应式
   - 验收: 375px 宽屏下文字不溢出、控件可点
   - 创建: 2026-08-24
