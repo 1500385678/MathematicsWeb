@@ -315,6 +315,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'population-dynamics',
     getFormula() { return 'dx/dt = αx − βxy;  dy/dt = δxy − γy'; },
+    // v0.6.9: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { alpha: params.alpha, beta: params.beta, delta: params.delta, gamma: params.gamma }; },
     setState(s) {
       if (!s) return;

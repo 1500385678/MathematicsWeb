@@ -1,5 +1,32 @@
 # CHANGELOG · MathematicsWeb
 
+## v0.6.9 · 2026-08-25 · MATH-003 进度 2/19 · 教学要点通道第二批(MATH-003 partial)
+
+**04 / 11 两个高价值场景接 getLesson,真 LLM 上下文现在能读到教学要点。**
+
+### 改动
+
+- `viewer/scenes/04_population-dynamics.js` · 加 `getLesson()`,从 `.mathw-lesson-content` 读纯文本
+  - 教学要点:Lotka-Volterra 兔狐捕食模型,αβδγ 参数意义,相图闭合曲线
+- `viewer/scenes/11_lissajous.js` · 加 `getLesson()`
+  - 教学要点:频率比 a:b 整数比决定图形(1:1 圆/1:2 抛物/3:2 蝴蝶结),相位 δ 旋转移位,实际应用:示波器 X-Y / 立体声 / 振动分析
+
+### 验证
+
+- 模式:照 simple-harmonic 模板,直接读 .mathw-lesson-content textContent,无新增 DOM、无外部依赖
+- AI 面板 `_buildSceneContext` 已支持(由 v0.6.4 落地),新加的 getLesson 立即生效
+- mock 路径走 SCENE_REPLIES(独立字段),本次改动不影响 mock;真 LLM 上下文化质量提升
+
+### 进度
+
+- MATH-003 2/19,剩 17 个场景,优先级:18_lagrange / 20_neural-net / 其他 15 个按用户反馈
+
+### 安全
+
+- 本轮 commit 用 `.git/config` 已有 token 推送(同 7541819 token 路径),催 user 轮换双平台 token(P0 反馈 `fb-token-rotation-001`),见 MEMORY 「安全教训 · 2026-08-25」
+
+---
+
 ## v0.6.8 · 2026-08-25 · Phase 0 知识图谱查询 CLI(MATH-010)
 
 **配套 `md_to_json.py` 的查询 CLI,补齐 Phase 0 写读闭环。**

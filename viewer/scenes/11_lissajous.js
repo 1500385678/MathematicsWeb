@@ -163,6 +163,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'lissajous',
     getFormula() { return 'x = A·sin(at + δ)   y = B·sin(bt)'; },
+    // v0.6.9: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { ...params }; },
     setState(s) {
       if (!s) return;
