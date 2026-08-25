@@ -27,9 +27,9 @@
 
 > agent 启动第一件事看这里:版本/阶段/进度/远端。30 秒建认知。改动后跟 "项目已具备的能力" 段一起 append。
 
-- **版本**:v0.6.21 · **阶段**:Phase 2 完整功能 · **进度**:20/20 场景 + 10/19 教学要点
+- **版本**:v0.6.22 · **阶段**:Phase 2 完整功能 · **进度**:23/30 场景 + 10/19 教学要点
 - **远端**:GitHub `1500385678/MathematicsWeb` + Gitee `architectzy/MathematicsWeb`(镜像) · 端口 8765
-- **当前活跃任务**(从 PLAN.md 拉):MATH-003 [~] 10/19 教学要点继续 · MATH-004/005/006/007/014 [ ]
+- **当前活跃任务**(从 PLAN.md 拉):MATH-014 [~] 几何类场景首批 3/10(21-23 落地)继续 24-30 · MATH-003 [~] 10/19 教学要点 · MATH-004/005/006/007 [ ]
 - **完整流程**:`AGENTS.md`(本文件)+ `PLAN.md`(任务)→ 这是项目内 2 个动态文件,agent 必读
 - **历史审计**:看 git commit message(本仓库无 CHANGELOG.md,审计在 commit)
 - **项目宏观**:见下面 "## 项目宏观" 段(产品愿景/路线/技术栈/风险)
@@ -139,6 +139,7 @@
 - **MATH-003 6/19 教学要点通道第四批**(v0.6.16):15_lsystem(Lindenmayer 1968 字符串重写/产生式 + 迭代 N 次/turtle 解释器 + stack push-pop/4 预设规则 + 迭代数 + 角度看植物形态)+ 14_bayesian(贝叶斯定理 P(θ|data) ∝ P(θ)·P(data|θ)/频率派 vs 信念派/Beta-Binomial 共轭 + MAP 公式/调 αβ 看观测怎么把后验拉向数据)接 getLesson()。剩余 13 个场景按教学价值排序,下一批 12_clt + 01_catenary
 - **MATH-003 8/19 教学要点通道第五批**(v0.6.17):12_clt(中心极限定理:独立同分布随机变量之和 → 正态分布/N=1 均匀/N=2 三角/N≥30 几乎一样/调 N 看分布收敛 + 叠加理论正态曲线对比)+ 01_catenary-arch(悬链线 y = a·cosh(x/a) 倒置成拱/高迪圣家族大教堂 + 罗马万神殿/拖 a 看胖瘦 + 跨度 + 翻转/古代无钢筋混凝土大跨度方法)接 getLesson()。剩余 11 个场景按教学价值排序,下一批 09_double-pendulum + 03_fourier-synth
 - **MATH-003 10/19 教学要点通道第六批**(v0.6.21):09_double-pendulum(Lagrangian L = T − V → Euler-Lagrange → 两个非线性 ODE/无解析解只能用 RK4 数值积分/8 条对照摆初值差 0.001 弧度演示蝴蝶效应/相空间 θ₁-ω₁ 填充)+ 03_fourier-synth(任何波形 = 一堆旋转箭头/方波只有奇数次谐波 bₙ = 4/(nπ)/N 越大越接近原函数 Gibbs 跳变点 9% 过冲/4 波形:方波/锯齿/三角/脉冲)接 getLesson()。剩余 9 个场景按教学价值排序,下一批 02_planetary-orbits + 13_riemann-sum
+- **MATH-014 几何类 10 场景首批 3 个**(v0.6.22):21_voronoi(沃罗诺伊图:N 个种子按最近距离切平面/逐像素暴力 + Delaunay 对偶 /点鼠标加种子 /应用:最近邻查询·医院覆盖区·晶体学)+ 22_delaunay(德劳内三角剖分:Bowyer-Watson 增量法 / 空圆性质 / 拖动点重剖 / 最大化最小角可视化 / 应用:地形 TIN·有限元·3D 重建)+ 23_ellipse-reflection(椭圆 x²/a² + y²/b² = 1 / 从一焦点发光反射必过另一焦点 / 法线 + 入射 + 反射 + 焦点可视化 / 应用:天文望远镜·回声室·冲击波碎石)。viewer.js SCENES 数组加 3 项,场景库 20 → 23。剩余 7 个场景(24_lemniscate / 25_buffon-needle / 26_koch-snowflake / 27_sierpinski / 28_great-circle / 29_mobius-strip / 30_crystal-lattice)按 cron session 节奏继续
 - **MATH-003 2/19 教学要点通道第二批**(v0.6.9):04_population-dynamics(Lotka-Volterra 兔狐捕食)+ 11_lissajous(频率比决定图形/相位旋转移位)接 getLesson(),真 LLM 上下文现在能读到教学要点。剩余 17 个场景按教学价值排序,优先级:18_lagrange / 20_neural-net
 - **20 跨学科场景(2D + 3D 双模)**(v0.6.0):建筑(悬链拱)/ 物理(行星轨道 · 双摆 · 简谐 · 波叠加 · 电场)/ 音乐(傅里叶 · Lissajous)/ 生物(种群 · L-系统)/ 艺术(曼德尔布罗 · 朱利亚 · 黄金螺旋)/ 概率(蒙特卡洛 · 中心极限定理 · 贝叶斯)/ 机器学习(梯度下降 · 神经网络)/ 工程(黎曼和 · 拉格朗日乘子)
 - **2 文件自动化框架 PLAN/AGENTS**(v0.6.13):项目内 2 个动态文件 — AGENTS(铁律+架构+能力库+项目状态速览)+ PLAN(任务)。任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 + AGENTS 状态速览同步 → README 同步(非主要,顺带)。`math-advisor-daily-wake` cron 每日 10:30 触发按 2 文件体系干活

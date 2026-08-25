@@ -16,24 +16,25 @@
 
 ### P0 · 阻塞/紧急
 
-- [ ] **MATH-014** · 加 10 个几何类场景(21-30)
-  - **预计 commit 数: 10**(每场景 1 commit,每个 10 分钟)
+- [~] **MATH-014** · 加 10 个几何类场景(21-30)
+  - **预计 commit 数: 10**(每场景 1 commit,本 session 首批 3 场景 1 commit v0.6.22)
   - 描述: 用户对话提需求"再加 10 个不同应用场景,最好都是几何类"。演示对话驱动 PLAN 框架(v0.6.14 首次启用)
   - 验收: (1) 10 个场景文件 viewer/scenes/21-30.js (2) viewer.js SCENES 数组加 10 项 (3) AGENTS §0 进度 20→30 (4) AGENTS 能力段 append (5) README 场景速览表加 10 个,跨学科统计更新 (6) 5 步归档
   - 场景清单(按 ID):
-    - 21_voronoi(沃罗诺伊图 / 计算几何 / 地图分区)
-    - 22_delaunay(德劳内三角剖分 / 计算几何 / 地形建模)
-    - 23_ellipse-reflection(椭圆光学反射 / 应用物理 / 天文望远镜)
-    - 24_lemniscate(双纽线 / 极坐标几何 / 场论)
-    - 25_buffon-needle(布丰投针 / 几何概率 / 求 π)
-    - 26_koch-snowflake(Koch 雪花 / 分形几何 / 海岸线)
-    - 27_sierpinski(谢尔宾斯基三角 / 分形几何 / 数据结构)
-    - 28_great-circle(球面大圆 / 球面几何 / GPS)
-    - 29_mobius-strip(莫比乌斯带 / 拓扑几何 / 3D)
-    - 30_crystal-lattice(晶体格 / 材料结构)
+    - ✅ 21_voronoi(沃罗诺伊图 / 计算几何 / 地图分区)— v0.6.22 本轮
+    - ✅ 22_delaunay(德劳内三角剖分 / 计算几何 / 地形建模)— v0.6.22 本轮
+    - ✅ 23_ellipse-reflection(椭圆光学反射 / 应用物理 / 天文望远镜)— v0.6.22 本轮
+    - [ ] 24_lemniscate(双纽线 / 极坐标几何 / 场论)
+    - [ ] 25_buffon-needle(布丰投针 / 几何概率 / 求 π)
+    - [ ] 26_koch-snowflake(Koch 雪花 / 分形几何 / 海岸线)
+    - [ ] 27_sierpinski(谢尔宾斯基三角 / 分形几何 / 数据结构)
+    - [ ] 28_great-circle(球面大圆 / 球面几何 / GPS)
+    - [ ] 29_mobius-strip(莫比乌斯带 / 拓扑几何 / 3D)
+    - [ ] 30_crystal-lattice(晶体格 / 材料结构)
   - 创建: 2026-08-25
   - 依赖: 无
   - 发现者: **用户对话**(对话驱动 PLAN 框架首次启用)
+  - 进度(2026-08-25 v0.6.22): 3/10,本 session 实施 21-23 三个场景,viewer.js SCENES 数组加 3 项,AGENTS §0 进度 20→23。剩余 7 个按 cron session 节奏 2-3 个/次
 
 ### P1 · 重要
 

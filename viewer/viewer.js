@@ -196,6 +196,34 @@ export const SCENES = [
     description: '2 层 NN(2 → 8 → 2)做 2D 分类。反向传播 + SGD,看决策边界如何学出来。',
     loader: () => import('./scenes/20_neural-net.js'),
   },
+  // v0.6.22: 几何类 10 场景首批 3 个
+  {
+    id: 'voronoi',
+    title: '沃罗诺伊图',
+    domain: '数学 × 计算几何',
+    icon: '🗺️',
+    renderer: '2D',
+    description: '把画布按"最近种子"切成 N 个区域,下半屏画 Voronoi 对偶 Delaunay 三角剖分。最近邻查询、地图分区。',
+    loader: () => import('./scenes/21_voronoi.js'),
+  },
+  {
+    id: 'delaunay',
+    title: '德劳内三角剖分',
+    domain: '数学 × 计算几何',
+    icon: '🔺',
+    renderer: '2D',
+    description: '散点切成最胖的三角(最大化最小角)。空圆性质可视化。拖动点重新剖分。地形建模、有限元。',
+    loader: () => import('./scenes/22_delaunay.js'),
+  },
+  {
+    id: 'ellipse-reflection',
+    title: '椭圆光学反射',
+    domain: '数学 × 物理',
+    icon: '🔭',
+    renderer: '2D',
+    description: '椭圆 x²/a² + y²/b² = 1,从一焦点发光反射后必过另一焦点。天文望远镜、回声室、碎石术。',
+    loader: () => import('./scenes/23_ellipse-reflection.js'),
+  },
 ];
 
 function escapeHtml(s) {
