@@ -36,6 +36,25 @@ _(无 — MATH-003 + MATH-014 均收尾完成 v0.6.30 / v0.6.25)_
   - 创建: 2026-08-24
   - 依赖: 无
 
+- [ ] **MATH-016** · 初中几何场景集(8 场景)
+  - **预计 commit 数: 5**(首批 3 + 第二批 3 + 第三批 2 + 目录/AGENTS 同步 + README 各 1 commit,每 10 分钟 1 场景)
+  - 描述: 对位人教版初中数学 7-9 年级,8 个核心几何场景。沿 MATH-014 节奏分批做
+  - 候选清单(8 场景,user 可调):
+    - [ ] 31 `triangle-congruence` · 三角形全等判定 SSS/SAS/ASA/AAS(7 年级)
+    - [ ] 32 `pythagorean-theorem` · 勾股定理 + 7 种证法(8 年级,王炸)
+    - [ ] 33 `inscribed-angle` · 圆周角定理 = 1/2 圆心角(8 年级)
+    - [ ] 34 `similar-triangles` · 相似三角形 + 平行线分线段(8 年级)
+    - [ ] 35 `polygon-interior-angles` · 多边形内角和 = (N-2)×180°(7 年级)
+    - [ ] 36 `quadrilateral-family` · 四边形家族韦恩图(7 年级)
+    - [ ] 37 `three-views-3d` · 立体几何三视图 3D(9 年级,唯一 3D)
+    - [ ] 38 `power-of-point` · 圆幂定理 PT² = PA·PB(8 年级)
+  - 验收: (1) 8 场景文件落地 `viewer/scenes/31-38_*.js` (2) viewer.js SCENES 加 8 项(20+8=28 → 实际 30+8=38 总场景) (3) 每个场景含 getFormula + getLesson (4) AGENTS §0 进度 30/30→38/38 + 能力段分批 append (5) README 速览表加 8 行(对位 7/8/9 年级分组)
+  - 创建: 2026-08-25
+  - 依赖: 无(纯新增,不改现有 30 场景)
+  - 发现者: **用户对话**(user 主动提"初中几何知识场景节点"需求, v0.6.14 对话驱动自动入队)
+  - 优先级: 内容扩展(user 直接提需求,优先 MATH-015 接通后启动)
+  - 备注: 与 MATH-014(高中/竞赛几何)互补,本任务覆盖初中课标 7-9 年级
+
 ### P2 · 优化
 
 - [ ] **MATH-005** · 整理 `_test/` 散落文件
@@ -69,5 +88,6 @@ _(无 — MATH-003 + MATH-014 均收尾完成 v0.6.30 / v0.6.25)_
 
 - **最后更新**: 2026-08-25 · v0.6.30
 - **更新者**: math-advisor(对话驱动框架启用)
+- **本轮改动**: 加 [ ] MATH-016 初中几何场景集(8 候选,user 可调)
 - **配套 cron**: math-advisor-daily-wake(每天 10:30)
 - **配套反馈收件箱**: `D:\Mac\Mac\Mac\Consultant\.Shared\feedback_inbox.json`
