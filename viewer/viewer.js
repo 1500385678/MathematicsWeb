@@ -224,6 +224,34 @@ export const SCENES = [
     description: '椭圆 x²/a² + y²/b² = 1,从一焦点发光反射后必过另一焦点。天文望远镜、回声室、碎石术。',
     loader: () => import('./scenes/23_ellipse-reflection.js'),
   },
+  // v0.6.23: 几何类 10 场景第二批 3 个
+  {
+    id: 'lemniscate',
+    title: '双纽线',
+    domain: '数学 × 计算几何',
+    icon: '∞',
+    renderer: '2D',
+    description: '伯努利 1694 年发现的 8 字形:r² = a²·cos(2θ)。电偶极子等势线同形,调 a 看 8 字胖瘦。',
+    loader: () => import('./scenes/24_lemniscate.js'),
+  },
+  {
+    id: 'buffon-needle',
+    title: '布丰投针',
+    domain: '数学 × 几何概率',
+    icon: '🪡',
+    renderer: '2D',
+    description: '蒙特卡洛祖师爷:平行线 + 随机投针,统计穿线次数 → π ≈ 2LN/(k·d)。投得越多越准。',
+    loader: () => import('./scenes/25_buffon-needle.js'),
+  },
+  {
+    id: 'koch-snowflake',
+    title: 'Koch 雪花',
+    domain: '数学 × 分形几何',
+    icon: '❄️',
+    renderer: '2D',
+    description: '等边三角形每边三等分中段改凸起,N 步后周长 → 无穷大,面积收敛。分数维 log4/log3≈1.26。',
+    loader: () => import('./scenes/26_koch-snowflake.js'),
+  },
 ];
 
 function escapeHtml(s) {
