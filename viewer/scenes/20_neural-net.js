@@ -346,6 +346,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'neural-net',
     getFormula() { return 'y = softmax(W₂·tanh(W₁x + b₁) + b₂)'; },
+    // v0.6.10: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { lr: params.lr, hidden: params.hidden, training, samples: [...samples] }; },
     setState(s) {
       if (!s) return;

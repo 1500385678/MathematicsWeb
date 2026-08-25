@@ -1,5 +1,29 @@
 # CHANGELOG · MathematicsWeb
 
+## v0.6.10 · 2026-08-25 · MATH-003 进度 4/19 · 教学要点通道第三批(MATH-003 partial)
+
+**18 / 20 两个高价值场景接 getLesson,真 LLM 上下文继续扩展。**
+
+### 改动
+
+- `viewer/scenes/18_lagrange.js` · 加 `getLesson()`,从 `.mathw-lesson-content` 读纯文本
+  - 教学要点:约束优化 min f s.t. g=c 的几何(切点 = 最优);∇f = λ·∇g(梯度平行,反向);经典等周不等式(固定周长 → 圆);调 f 中心 / g 中心 / g 半径看不同形态
+- `viewer/scenes/20_neural-net.js` · 加 `getLesson()`
+  - 教学要点:2 层全连接(2 → hidden → 2)2D 分类;tanh + softmax + cross-entropy;反向传播 + SGD 训练;左键/右键点空白加蓝/红样本,左键拖旧样本移动;调学习率看收敛/震荡,调隐藏神经元数看拟合能力
+
+### 验证
+
+- 模式:照 04/11 模板(简洁 v0.6.9 注释版),读 .mathw-lesson-content textContent,无新增 DOM、无外部依赖
+- AI 面板 `_buildSceneContext` 已支持(由 v0.6.4 落地),新加的 getLesson 立即生效
+- mock 路径走 SCENE_REPLIES(独立字段),本次改动不影响 mock;真 LLM 上下文化质量继续提升
+- 7 步归档 dogfooding 完整走完
+
+### 进度
+
+- MATH-003 4/19,剩 15 个场景,优先级:15_lsystem / 14_bayesian / 12_clt / 01_catenary / 02_planetary(按用户反馈)
+
+---
+
 ## v0.6.9 · 2026-08-25 · MATH-003 进度 2/19 · 教学要点通道第二批(MATH-003 partial)
 
 **04 / 11 两个高价值场景接 getLesson,真 LLM 上下文现在能读到教学要点。**

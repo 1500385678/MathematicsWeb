@@ -258,6 +258,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'lagrange',
     getFormula() { return '∇f = λ·∇g  (切点处)'; },
+    // v0.6.10: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { ...params }; },
     setState(s) {
       if (!s) return;

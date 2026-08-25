@@ -30,13 +30,13 @@
   - 验收: 每个 scene 文件导出 `getLesson()`,`_buildSceneContext` 拼进 prompt
   - 创建: 2026-08-24
   - 依赖: v0.6.4 getLesson 框架(已落地)
-  - 进度(2026-08-25 v0.6.9): 2/19 — 04_population-dynamics / 11_lissajous 已加 getLesson(本轮)
+  - 进度(2026-08-25 v0.6.9 → v0.6.10): 4/19 — 04/11/18/20 已加 getLesson
   - 优先级子项(教学价值排序,✅ = 已加):
     - ✅ 04_population-dynamics · Lotka-Volterra 双物种
     - ✅ 11_lissajous · 频率比 + 相位
-    - [ ] 18_lagrange · 切点几何
-    - [ ] 20_neural-net · 决策边界演化
-    - 其他 15 个按用户反馈优先级
+    - ✅ 18_lagrange · 切点几何(本轮 v0.6.10)
+    - ✅ 20_neural-net · 决策边界演化(本轮 v0.6.10)
+    - 剩余 15 个按用户反馈优先级
 
 - [ ] **MATH-004** · 确认 3D 场景在低 WebGL 环境的友好降级
   - 描述: CHANGELOG v0.1.0 已知问题 #1。是否要加 feature detection + 2D fallback?
