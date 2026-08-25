@@ -37,6 +37,7 @@
 - **3 文件自动化框架 PLAN/AGENTS/MEMORY**(v0.6.6):任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 → CHANGELOG 留审计。`math-advisor-daily-wake` cron 每日 10:30 触发按此框架干活
 - **AGENTS 架构自动同步规则**(v0.6.7):agent 改任何涉及文件/目录/模块/依赖的项目,自动增量同步 AGENTS.md 第 2 段(目录结构),不用问。永久规则已写入 User Memory,跨所有有 AGENTS.md 范式的项目适用
 - **产品开发计划融合进 PLAN**(v0.6.11):`数学顾问开发架构与计划.md` + `项目开发计划.md` 内容去重融合到 PLAN.md"## 产品开发计划"段(8 节,完整开发计划清单)。源文件保留作参考归档。**MathematicsWeb = 上层"数学顾问"产品的 Web App 形态(Phase 1 产物)**,两层文档职责清晰不冲突
+- **.Core/OVERVIEW.md 项目全局一览**(v0.6.12):4208 字节 / 7 节,Agent 启动第一件事,30 秒建认知(版本/阶段/3 文件职责/下一步/关键链接/关键决策/操作入口)。`AGENTS.md` 第 2 段自动加 `.Core/` 目录(架构自动同步规则),`cron math-advisor-daily-wake` prompt 加 0.5 步"读 OVERVIEW"作为快速入口
 - **Phase 0 知识图谱查询 CLI**(v0.6.8):`tools/graph_query.py` 7 子命令(list/get/category/tag/search/stats/paths)读 `docs/knowledge_graph.json`,纯 stdlib 无依赖,为 Phase 1 FastAPI 路由打底
 
 ## 1. 改前必读(顺序)
@@ -57,6 +58,8 @@ MathematicsWeb/
 ├── start.ps1 / start.bat       # 启动脚本
 ├── _llm_config.example.json    # LLM 配置模板
 ├── _commit_push.ps1            # 自动 commit + push 包装
+├── .Core/                      # 项目级 agent 配置目录(高频读入口)
+│   └── OVERVIEW.md             # 项目全局一览(30 秒读懂全貌)
 ├── viewer/
 │   ├── viewer.js               # 主壳 + 场景切换 + AI 面板宿主
 │   ├── viewer.css              # 全部样式(tokens 体系)

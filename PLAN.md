@@ -207,13 +207,6 @@
   - 创建: 2026-08-24
   - 依赖: 无
 
-- [~] **MATH-012** · 建 .Core/OVERVIEW.md 项目全局一览(高频读入口)
-  - 描述: agent 启动要"30 秒读懂项目全貌",但当前 4 文件 (PLAN/AGENTS/MEMORY/feedback) 没"索引",agent 要脑内拼装。建 .Core/OVERVIEW.md 当高频读入口 + 同步 AGENTS.md 第 2 段加 .Core/ 目录 + cron prompt 加读 OVERVIEW 步骤
-  - 验收: (1) .Core/OVERVIEW.md 创建,目标 80-100 行 / 3-5 KB,7 节 (2) AGENTS.md 第 2 段自动加 .Core/ 目录 (3) cron math-advisor-daily-wake prompt 加 0.5 步读 OVERVIEW (4) 5 步归档完整
-  - 创建: 2026-08-25
-  - 依赖: 无
-  - 发现者: 用户指令(项目全局入口)
-
 ### 用户反馈
 
 > 等用户首次发反馈后由 01_Owner 写入这里,P0 优先级。
