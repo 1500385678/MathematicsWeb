@@ -33,6 +33,7 @@
 - **AI 教学要点通道 getLesson**(v0.6.4):每个场景可选实现 `getLesson()` 方法,AI 面板 `_buildSceneContext` 读后拼进 LLM prompt(`[教学要点: ...]`),提升 AI 助手质量。simple-harmonic 已示范
 - **20 跨学科场景(2D + 3D 双模)**(v0.6.0):建筑(悬链拱)/ 物理(行星轨道 · 双摆 · 简谐 · 波叠加 · 电场)/ 音乐(傅里叶 · Lissajous)/ 生物(种群 · L-系统)/ 艺术(曼德尔布罗 · 朱利亚 · 黄金螺旋)/ 概率(蒙特卡洛 · 中心极限定理 · 贝叶斯)/ 机器学习(梯度下降 · 神经网络)/ 工程(黎曼和 · 拉格朗日乘子)
 - **3 文件自动化框架 PLAN/AGENTS/MEMORY**(v0.6.6):任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 → CHANGELOG 留审计。`math-advisor-daily-wake` cron 每日 10:30 触发按此框架干活
+- **AGENTS 架构自动同步规则**(v0.6.7):agent 改任何涉及文件/目录/模块/依赖的项目,自动增量同步 AGENTS.md 第 2 段(目录结构),不用问。永久规则已写入 User Memory,跨所有有 AGENTS.md 范式的项目适用
 
 ## 1. 改前必读(顺序)
 
@@ -43,38 +44,70 @@
 
 ## 2. 架构
 
-### 目录结构(v0.1.0 实际)
+### 目录结构(v0.6.6 实际)
 
 ```
 MathematicsWeb/
 ├── index.html                  # 入口 + 动态 import + 水印
+├── server.py                   # v0.6.0 一体化 HTTP 服务器(静态 + M3 代理)
+├── start.ps1 / start.bat       # 启动脚本
+├── _llm_config.example.json    # LLM 配置模板
+├── _commit_push.ps1            # 自动 commit + push 包装
 ├── viewer/
 │   ├── viewer.js               # 主壳 + 场景切换 + AI 面板宿主
 │   ├── viewer.css              # 全部样式(tokens 体系)
-│   ├── 02_ai-panel.js          # AI 助手 UI(对话/建议/状态)
-│   └── scenes/                 # 6 个独立场景
+│   ├── 02_ai-panel.js          # AI 助手 UI(对话/建议/状态,接 getLesson/getFormula 上下文)
+│   └── scenes/                 # 20 个独立场景(2D + 3D 双模)
 │       ├── 01_catenary-arch.js         # 悬链拱顶(3D)
-│       ├── 02_planetary-orbits.js      # 行星轨道(3D)
+│       ├── 02_planetary-orbits.js      # 行星轨道(3D · 完整 9 大行星 + 月球)
 │       ├── 03_fourier-synth.js         # 傅里叶合成器(2D)
 │       ├── 04_population-dynamics.js   # 种群动力学(2D)
 │       ├── 05_mandelbrot.js            # 曼德尔布罗(2D)
-│       └── 06_simple-harmonic.js       # 简谐振动(2D)
+│       ├── 06_simple-harmonic.js       # 简谐振动(2D · 教学要点样板)
+│       ├── 07_golden-spiral.js         # 黄金螺旋(2D)
+│       ├── 08_monte-carlo.js           # 蒙特卡洛(2D)
+│       ├── 09_double-pendulum.js       # 双摆混沌(2D)
+│       ├── 10_gradient-descent.js      # 梯度下降(3D)
+│       ├── 11_lissajous.js             # Lissajous 曲线(2D)
+│       ├── 12_clt.js                   # 中心极限定理(2D)
+│       ├── 13_riemann-sum.js           # 黎曼和(2D)
+│       ├── 14_bayesian.js              # 贝叶斯推断(2D)
+│       ├── 15_lsystem.js               # L-系统植物(2D)
+│       ├── 16_wave-interference.js     # 波叠加/干涉(2D)
+│       ├── 17_julia.js                 # 朱利亚集(2D)
+│       ├── 18_lagrange.js              # 拉格朗日乘子法(2D)
+│       ├── 19_electric-field.js        # 电场可视化(2D)
+│       └── 20_neural-net.js            # 神经网络 2D 分类(2D)
 ├── kernel/
 │   ├── 01_math-core.js         # 数学原语(Complex/Vec2/Mat2x2/catenary/DFT/Mandelbrot/LV)
-│   ├── 02_animation.js         # rAF 循环 + Canvas 尺寸自适应
-│   └── 03_llm-client.js        # LLM API 客户端(OpenAI 兼容)
+│   ├── 02_animation.js         # rAF 循环 + Canvas 高 DPI 自适应
+│   └── 03_llm-client.js        # LLM API 客户端(OpenAI 兼容,接 server.py 代理)
 ├── mock/
-│   └── 01_llm-mock.js          # 本地 mock(无 key 时用)
+│   └── 01_llm-mock.js          # 本地 mock(无 key 时用,接 lesson 字段)
 ├── db/
-│   ├── 01_indexeddb.js         # IndexedDB 封装
-│   └── 02_workspace.js         # 工作区(轻量版,只存 last scene + fav)
-├── vendor/three/               # three.js r160 本地(从 three.jsWeb 复制)
-├── docs/                       # 02_项目架构 / 03_场景清单 / 04_开发纪要
-├── _llm_config.example.json    # LLM 配置模板
-├── start.ps1 / start.bat       # 启动脚本
-├── AGENTS.md                   # 本文件
+│   ├── 01_indexeddb.js         # IndexedDB 封装(2 个 store: meta + sceneParams)
+│   └── 02_workspace.js         # 工作区(轻量版,只存 last scene + fav + visited + sceneParams)
+├── tools/                      # 辅助工具(纯 Python 3 标准库)
+│   ├── md_to_json.py           # 数学知识图谱生成器
+│   └── README.md               # 工具说明
+├── _test/                      # CDP headless 验证脚本(Edge 远程调试)
+│   ├── _cdp_test.js            # 单场景控制台错误 + canvas 截图
+│   ├── _shot.js                # 等动画稳定后截屏
+│   ├── _test_all.ps1           # 20 场景批量验证
+│   └── _test_one.ps1           # 单场景验证(简单版)
+├── vendor/three/               # three.js r160 本地(从 three.jsWeb 复制,1.2MB)
+├── docs/                       # 项目文档
+│   ├── 02_项目架构.md            # 模块依赖、数据流、范式细节
+│   ├── 03_场景清单.md            # 20 场景数学原理 + 实现要点
+│   ├── 04_开发纪要.md            # 踩过的坑
+│   ├── 05_接真LLM指南.md         # LLM 接入说明
+│   └── knowledge_graph.json    # 知识图谱数据(85KB,md_to_json.py 生成)
+├── Output/                     # 本地截图(不入仓,gitignore)
+├── AGENTS.md                   # 项目铁律 + 项目能力知识库(本文件)
+├── CHANGELOG.md                # 版本历史(append-only)
+├── PLAN.md                     # 活跃任务队列(完成即删,不保留 [x])
 ├── README.md                   # 用户文档
-└── CHANGELOG.md                # 变更记录
+└── .gitignore                  # 忽略规则(见 §3)
 ```
 
 ### 场景模块规范

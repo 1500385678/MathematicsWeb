@@ -1,84 +1,50 @@
 # CHANGELOG · MathematicsWeb
 
-## v0.6.6 · 2026-08-24 · 搭建 PLAN/AGENTS/MEMORY 自动化框架(MATH-008)
+## Unreleased · Phase 0 知识图谱工具链
 
-**3 文件职责明确,任务完成自动归档,项目知识累积到 AGENTS**
+**配套 `md_to_json.py` 的查询 CLI,补齐 Phase 0 写读闭环。**
 
-### 改动
+### 新增
 
-- `AGENTS.md`
-  - 新增段 **"项目已具备的能力(append-only)"**(放在"## 0. 项目是什么"之后,无数字编号免重排)
-  - 列出 5 条已具备能力:场景参数序列化(v0.5.0) · 收藏+进度 UI(v0.5.0) · getLesson AI 教学要点(v0.6.4) · 20 跨学科场景(v0.6.0) · 3 文件自动化框架(本版本 v0.6.6)
-  - "## 7. 已知 TODO" 段删 2 条已修:场景参数序列化(已迁能力段)+ 场景收藏/进度 UI(已迁能力段)
-- `PLAN.md`
-  - 顶部说明加 v0.6.6 框架规则:**完成的任务从 PLAN 删除**(不保留 [x]),功能 append 到 AGENTS 能力段,审计留 CHANGELOG
-  - 删除 MATH-008 条目(按新规则)
-- cron `math-advisor-daily-wake`
-  - schedule `0 9 * * *` → `30 10 * * *`(改到 10:30)
-  - prompt 加 5 步归档流程(改代码 → commit + push → CHANGELOG → AGENTS append → PLAN 删除 + MEMORY 简记)
-  - 优先级明确:PLAN.md P0 [~]/[ ] > feedback > PLAN P1/P2 > MEMORY 临时 TODO
-
-### 关闭
-
-- ✅ MATH-008 · 搭建 PLAN/AGENTS/MEMORY 自动化框架(本条按新规则从 PLAN 删除,功能描述已 append 到 AGENTS)
-
----
-
-## v0.6.5 · 2026-08-24 · 仓库清理(MATH-002)
-
-**关闭 8 个 untracked 文件的归宿问题**
+- `tools/graph_query.py`
+  - 7 个子命令:`list` / `get <id>` / `category <name>` / `tag <name>` / `search <keyword>` / `stats` / `paths`
+  - 读 `docs/knowledge_graph.json`(schema_version=1),无第三方依赖
+  - category / tag 大小写不敏感;search 走 title + 章节 + 子节标题
+  - 找不到结果 exit=0(便于管道),参数错误 exit=2
+- `tools/README.md` 新增第 2 节(用法表 + 约定),并在变更记录里追加 2026-08-25 一行
 
 ### 改动
 
-- `.gitignore` 加 5 行 ignore 规则
-  - 根目录 4 个测试脚本副本(`_cdp_test.js`/`_shot.js`/`_test_all.ps1`/`_test_one.ps1`)—— 跟 `_test/` 内文件 SHA256 完全相同,作开发便利副本不入仓
-  - `/docs/knowledge_graph.json` —— `tools/md_to_json.py` 生成产物,可重跑不入仓
-- `tools/` 整个目录纳入 git 跟踪
-  - `md_to_json.py` · 10KB 知识图谱生成器(纯 Python 3 标准库,无依赖)
-  - `README.md` · 工具说明(含 frontmatter 约定 + 容错 + 后续 Phase 路线)
-
-### 未处理(留 untracked)
-
-- 2 个中文 .md 规划(`数学顾问开发架构与计划.md` / `项目开发计划.md`)—— 主题是上层"数学顾问"(MathAdvisor)产品立项方案,跟当前 MathematicsWeb 项目 scope 不匹配;用户后续决定是否移到 `_MathematicsLib/` 上层目录
+- `项目开发计划.md` · Phase 0 checkbox「写图谱查询 CLI」勾选 + 补 2026-08-25 完成说明
 
 ### 验证
 
-- `git status -s` 干净:只剩 `tools/`(M)+ 2 个 .md 留 untracked
-- `git check-ignore` 确认 4 个根目录文件 + `docs/knowledge_graph.json` 都被忽略
-- `_test/` 内 4 个 tracked 文件未受影响(`.gitignore` 不影响 tracked)
+- `list` → 10 节点(01-10)全部列出,字符数 2,603 ~ 3,399
+- `stats` → 节点 10 / 章节 56 / 子节 133 / 总字符 30,873(与 `md_to_json.py` 输出对齐)
+- `tag 数学史` → 命中 3 节点(01 数学起源与演变 / 04 数学故事与传说 / 06 数学大师与学者)
+- `search 欧几里得` → 命中 1 节点(01 数学起源与演变 / 欧几里得与《几何原本》)
+- `get 01_数学起源与演变` → 完整 JSON 输出(中文字段不转义)
+- `get 不存在_id` → 友好提示,exit=0
 
-### 关闭
+## v0.6.7 · 2026-08-25 · AGENTS 架构 + docs/03 场景清单 同步实际项目(MATH-009)
 
-- ✅ MATH-002 · 清理 untracked 文件,决定归宿
-
----
-
-## v0.6.4 · 2026-08-24 · AI 上下文接 getLesson(教学要点通道)
-
-**关闭 CHANGELOG v0.1.0 已知问题 #3:`getLesson` 未用**
+**补完"项目文档"漂移 — AGENTS 第 2 段 + docs/03 重写到 20 场景实际状态**
 
 ### 改动
 
-- `viewer/02_ai-panel.js`
-  - `_buildSceneContext()` 读 `instance.getLesson()`(typeof 守卫,旧场景不实现就跳过)
-  - `_callLLM()` 拼 prompt 时新增 `[教学要点: ...]` 行(只有 lesson 非空才出现)
-- `mock/01_llm-mock.js`
-  - 6 场景 `SCENE_REPLIES` 各加 `lesson` 字段(教学卡片纯文本简化版)
-  - `chat()` 场景命中时多回 `lesson: reply.lesson || ''`
-- `viewer/scenes/06_simple-harmonic.js`
-  - 第一个实现 `getLesson()` 的场景样板:读 `.mathw-lesson-content` textContent
-  - 其他 19 个场景不动 — 留作后续按需补,接口已开通道
+- `AGENTS.md` 第 2 段"目录结构"重写
+  - 从 v0.1.0 的 6 场景 → **v0.6.6 实际的 20 场景**
+  - 补:`server.py` / `tools/` / `_test/` / `_commit_push.ps1` / `Output/` / `docs/05_接真LLM指南.md` / `docs/knowledge_graph.json` / `PLAN.md` / `.gitignore`
+  - 标注每个场景的渲染模式(2D/3D)、关键库(CatmullRomCurve3/RK4 等)、与 v0.6.4 起的接口变化
+- `docs/03_场景清单.md` 完全重写(9096 字节,20 场景全覆盖)
+  - 每场景:数学公式 + 物理/几何意义 + 应用领域 + 实现要点(关键 API 1-2 行)
+  - 末尾加"渲染模式统计"(3D × 3 / 2D × 17)+ "跨学科分布"(物理 5 / 艺术 3 / 概率 3 / 音乐 2 / 生物 2 / ML 2 / 建筑 1 / 工程 1 / 优化 1)
+- `AGENTS.md` 能力段 append 一条**"AGENTS 架构自动同步规则"**(从本轮发现的"严重过期 1-2 年"问题提取,作为永久规则)
+- 永久规则写入 User Memory(跨项目通用,MathematicsWeb / canvasweb / OrangeSu 等所有有 AGENTS.md 范式的项目都适用)
 
-### 验证
+### 关闭
 
-- `node --check` 3 个文件语法全过
-- node 动态 import LLMMock,simple-harmonic prompt 返回 lesson 字段正确
-- `_cdp_test.js simple-harmonic` 0 错误,场景加载 + 教学卡片渲染正常
-
-### 已知问题清理
-
-- ✅ v0.1.0 #3 `AI 上下文未充分利用(getFormula 已实现,getLesson 未用)` — **本版本关闭**
-- ✅ v0.1.0 #1 `场景参数未序列化(刷新后参数重置,v0.5 修)` — **v0.5.0 已落地,本条确认**(Workspace + IDB + viewer 三层已正确 save/restore)
+- ✅ MATH-009 · AGENTS 架构段 + docs/03 场景清单 同步实际项目(本条按新规则从 PLAN 删除)
 
 ---
 
