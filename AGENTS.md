@@ -293,7 +293,8 @@ AI 提问时,`AIPanel._buildSceneContext()` 会读 `instance.getFormula()` 拼�
 - **MEMORY.md 不入仓**(在 agent 数据目录 `C:\Users\yongzhang\.minimax\agents\math-advisor\`,跨项目)
 - **对话驱动 PLAN**(v0.6.14):用户说"加/做/改"项目内容 → agent 自动加 PLAN [ ]
 - **自动推进**(v0.6.19 修正):**cron session 自动**做 P0/P1/P2 任务(从 [ ] → [~] → 实施 → 5 步归档),**不需 user 显式说"做 X"**。PLAN 入队即开工。
-- **基础架构红线**(v0.6.19 保留):**改 AGENTS.md / 改 PLAN.md 框架 / 删整目录 / 改 git remote / 改 cron prompt** 等"项目基础架构"动作仍需 user 显式确认(防"擅自破坏"基础)。代码层(场景/工具/UI)agent 可自动做。
+- **基础架构红线**(v0.6.20 细化):分 2 层 — **改任务条目内容(描述/验收/依赖/预计 commit 数/进度/子项)agent 可自动做**;**改 PLAN 框架/段结构(头部说明/路线图/产品开发计划/元数据) / 改 AGENTS.md / 删整目录 / 改 git remote / 改 cron prompt 仍需 user 显式确认**(防"擅自破坏"基础)。
+- **PLAN 维护者**(v0.6.20 新增):cron session 启动时"读 PLAN"后,主动扫一遍 PLAN 找调整项(过期/已完成未删/估算不准/缺验收/缺依赖/排序乱/重复任务),**自动改任务条目**(微调) — 不改任务/不改 framework,只**优化已有任务的内容质量**。
 
 ## 4. 跑起来
 
