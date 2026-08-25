@@ -27,9 +27,9 @@
 
 > agent 启动第一件事看这里:版本/阶段/进度/远端。30 秒建认知。改动后跟 "项目已具备的能力" 段一起 append。
 
-- **版本**:v0.6.29 · **阶段**:Phase 2 完整功能 · **进度**:30/30 场景 + 17/19 教学要点
+- **版本**:v0.6.30 · **阶段**:Phase 2 完整功能 · **进度**:30/30 场景 + 19/19 教学要点
 - **远端**:GitHub `1500385678/MathematicsWeb` + Gitee `architectzy/MathematicsWeb`(镜像) · 端口 8765
-- **当前活跃任务**(从 PLAN.md 拉):MATH-014 ✅ 收尾(10/10 全部落地)· MATH-003 [~] 17/19 教学要点,第十批 10 + 17 已加,剩 2 场景(19_electric-field · MATH-003 收尾) · MATH-004/005/006/007 [ ]
+- **当前活跃任务**(从 PLAN.md 拉):MATH-014 ✅ 收尾(10/10)· MATH-003 ✅ 收尾(19/19 教学要点 100% 完成 v0.6.30)· MATH-004/005/006/007 [ ]
 - **完整流程**:`AGENTS.md`(本文件)+ `PLAN.md`(任务)→ 这是项目内 2 个动态文件,agent 必读
 - **历史审计**:看 git commit message(本仓库无 CHANGELOG.md,审计在 commit)
 - **项目宏观**:见下面 "## 项目宏观" 段(产品愿景/路线/技术栈/风险)
@@ -148,6 +148,7 @@
 - **MATH-003 15/19 教学要点通道第九批**(v0.6.28):07_golden-spiral(欧几里得《几何原本》"中外比" = φ / 费波那契 1202 兔子问题 / F(n)/F(n-1) → φ 极限 / 黄金矩形自相似切 + 对数螺旋 r(θ)=a·e^(bθ) / 黄金角 137.5°=360°/φ² Vogel 1979 向日葵种子 / 欧几里得-达芬奇-帕特农神庙-米罗的维纳斯历史 / DNA 双螺旋 34Å/21Å ≈ φ / 股市斐波那契回调 0.382/0.618 = 1/φ)+ 08_monte-carlo(Ulam 1946 玩纸牌想到 / von Neumann 在曼哈顿计划 ENIAC 实现命名 Monte Carlo(摩纳哥赌场)/ 收敛 O(1/√N) 慢但与维度无关(黎曼和高维爆维数灾难)/ Metropolis-Hastings 1953 MCMC 鼻祖 / 4 大应用:Black-Scholes 期权 7 维积分 + 粒子输运 MCNP + 贝叶斯 MCMC + 量子蒙特卡洛 VASP / 路径追踪电影特效 / AlphaGo MCTS)接 getLesson(),真 LLM 上下文继续扩展。剩余 4 个场景按教学价值排序,下一批候选:10_gradient-descent / 17_julia / 19_electric-field
 - **MATH-003 17/19 教学要点通道第十批**(v0.6.29):10_gradient-descent(凸优化 + Rosenbrock 1960 香蕉谷 + 鞍面 x²−y² 卡 0 梯度 / 三族优化器 GD 朴素 / Momentum Polyak 1964 v ← βv + g 助爬浅谷 / Adam Kingma & Ba 2014 一阶+二阶矩自适应 / 调 η 太小慢太大震荡 NaN / 应用:神经网络 SGD/AdamW/Lion + 物理仿真 + 投资组合 Markowitz + 有限元)+ 17_julia(复动力系统对偶:曼德尔布罗扫 c / 朱利亚扫 z₀ / 1918 Gaston Julia 一战住院研究 + 1980 Mandelbrot IBM 计算机可视化 / 1982 Douady-Hubbard 证明 M 集连通且内部 c → J 集连通 / 经典 c 值:−0.8+0.156i 螺旋 + −0.4+0.6i 树 + −0.835−0.2321i 谢尔宾斯基镂空 / 调 c 看形态巨变 + 迭代 20-200)接 getLesson(),真 LLM 上下文继续扩展。剩余 2 个场景(19_electric-field),MATH-003 接近收尾
 - **MATH-003 2/19 教学要点通道第二批**(v0.6.9):04_population-dynamics(Lotka-Volterra 兔狐捕食)+ 11_lissajous(频率比决定图形/相位旋转移位)接 getLesson(),真 LLM 上下文现在能读到教学要点。剩余 17 个场景按教学价值排序,优先级:18_lagrange / 20_neural-net
+- **MATH-003 19/19 教学要点通道收尾 v0.6.30**:19_electric-field(1785 库仑扭秤实验 + 矢量场 vs 标量势 + E = -∇V 梯度 + 叠加原理线性 + 电场线密度 ∝ |E| + 等势线 ⊥ 电场线(∇V⊥V=const)+ 偶极子电偶极矩 p = qd + 高斯定律 ∮ E·dA = Q_enc/ε₀ + Poisson 方程 ∇²V = -ρ/ε₀ + 平行板电容 C = ε₀A/d + 介电常数 εᵣ + 8 大应用:范德格拉夫·静电除尘·喷墨打印·X 射线管·法拉第笼·避雷针尖端放电·CRT·STM 扫描隧道显微镜·静电复印)接 getLesson(),**MATH-003 19/19 100% 全部落地**。本任务完成,按 v0.6.6 规则归档
 - **20 跨学科场景(2D + 3D 双模)**(v0.6.0):建筑(悬链拱)/ 物理(行星轨道 · 双摆 · 简谐 · 波叠加 · 电场)/ 音乐(傅里叶 · Lissajous)/ 生物(种群 · L-系统)/ 艺术(曼德尔布罗 · 朱利亚 · 黄金螺旋)/ 概率(蒙特卡洛 · 中心极限定理 · 贝叶斯)/ 机器学习(梯度下降 · 神经网络)/ 工程(黎曼和 · 拉格朗日乘子)
 - **2 文件自动化框架 PLAN/AGENTS**(v0.6.13):项目内 2 个动态文件 — AGENTS(铁律+架构+能力库+项目状态速览)+ PLAN(任务)。任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 + AGENTS 状态速览同步 → README 同步(非主要,顺带)。`math-advisor-daily-wake` cron 每日 10:30 触发按 2 文件体系干活
 - **AGENTS 架构自动同步规则**(v0.6.7):agent 改任何涉及文件/目录/模块/依赖的项目,自动增量同步 AGENTS.md 第 2 段(目录结构),不用问。永久规则已写入 User Memory,跨所有有 AGENTS.md 范式的项目适用

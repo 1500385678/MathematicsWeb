@@ -29,15 +29,34 @@ export function createScene(host, opts = {}) {
   lesson.className = 'mathw-lesson';
   lesson.innerHTML = `
     <button class="mathw-lesson-toggle" data-toggle>−</button>
-    <div class="mathw-lesson-title">数学 × 物理 · 电场可视化</div>
+    <div class="mathw-lesson-title">数学 × 物理 · 电场可视化 · 矢量场 + 标量势</div>
     <div class="mathw-lesson-content">
-      <div class="mathw-lesson-headline">电场线 + 等势线</div>
-      <div class="mathw-lesson-formula">V = Σ qᵢ/rᵢ   E = -∇V</div>
+      <div class="mathw-lesson-headline">1785 库仑扭秤 + 叠加原理 + 等势线与电场线正交</div>
+      <div class="mathw-lesson-formula">V = Σ qᵢ/rᵢ   E = -∇V   ∮ E·dA = Q_enc/ε₀</div>
       <div class="mathw-lesson-text">
-        点电荷电势 <code>V = q/r</code>(简化),电场是电势的负梯度。<br>
-        <strong>左键</strong> 空白处 = 放正电荷 · <strong>右键</strong> = 放负电荷 · <strong>左键拖电荷</strong> = 移动。<br>
-        黄色 = 正电,蓝色 = 负电,亮 = 高电势。<br>
-        调电荷数看电场叠加 — 偶极子、四极子、平行板电容器。
+        <strong>历史</strong>:1745 富兰克林风筝实验引雷(电学起源) → 1750 莱顿瓶(电容雏形) → <strong>1785 库仑</strong>扭秤实验
+        测出静电力 <code>F = kq₁q₂/r²</code>(平方反比) → 1813 Poisson 静电方程 → 1865 麦克斯韦方程组。<br><br>
+        <strong>矢量场 vs 标量势</strong>:E 是矢量(有方向),V 是标量(只有数值)。先算 V(标量叠加简单)再
+        <code>E = -∇V</code> 取负梯度求 E(矢量叠加麻烦)。这是分析静电的经典两步法。<br>
+        <strong>叠加原理</strong>:多点电荷的 V 和 E 都是线性的 — 总 V = 各 V 之和,总 E = 各 E 之矢量和;可拆解。
+        本场景就是直接做这件事:放几个电荷看合场。<br><br>
+        <strong>电场线</strong>:从 + 出发到 -,密度 ∝ |E| 强度。看不见但可视化能"看见"。本场景
+        <span style="color:#ffd76b">黄色箭头</span> 显示局部 E 方向。<br>
+        <strong>等势线</strong>:V 相同的线,<strong>必与电场线正交</strong>(∇V 指向 V 增长最快的方向,与 V=const 切线正交)。
+        等势面上移动电荷不做功(因为 dV=0,W=q·dV=0)。<br>
+        <strong>偶极子</strong>:等量异号电荷对,中点 V=0 但 E≠0(贯穿,反方向);电偶极矩 <code>p = qd</code>,远场
+        E ∝ 1/r³,V ∝ 1/r²,远弱于单电荷。本场景 <em>偶极子预设</em> 直接演示。<br><br>
+        <strong>高斯定律</strong>(积分形式):<code>∮ E·dA = Q_enc/ε₀</code> — 闭合曲面的电通量正比于内含总电荷。
+        推论:均匀带电球壳外 E = Q/(4πε₀r²),内 E = 0;无限大带电平板外 E = σ/(2ε₀) 恒定。<br>
+        <strong>Poisson 方程</strong>(微分形式):<code>∇²V = -ρ/ε₀</code> — V 的二阶导正比于电荷密度 ρ。
+        无源区(ρ=0)退化为 Laplace 方程 ∇²V=0。<br>
+        <strong>平行板电容器</strong>:<code>C = ε₀A/d</code>,插入介电常数 εᵣ 介质 → C 倍增 εᵣ 倍,均匀场
+        E = σ/ε₀ 极板间,极板外近似 0。本场景 <em>平行板预设</em>(两个 +/一对,大距离近似)演示。<br><br>
+        <strong>操作</strong>:<strong>左键</strong> 空白 = 放正电荷 · <strong>右键</strong> = 放负电荷 · <strong>左键拖电荷</strong> = 移动。
+        黄色 = 正电,蓝色 = 负电,亮度 = 高电势。<br>
+        <strong>应用</strong>:范德格拉夫起电机(高压) · 静电除尘(工厂烟囱) · 喷墨打印机(电场偏转墨滴) ·
+        X 射线管(阴极电子轰击阳极靶) · 法拉第笼(避雷) · 避雷针尖端放电(曲率大→场强集中) · 阴极射线管 CRT(老电视) ·
+        扫描隧道显微镜 STM(针尖电场量子隧穿) · 静电复印(光导鼓 + 电荷成像)。
       </div>
     </div>
   `;
@@ -276,6 +295,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'electric-field',
     getFormula() { return 'V = Σ qᵢ/rᵢ   E = -∇V'; },
+    // v0.6.30: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { levels: params.levels, charges: [...charges] }; },
     setState(s) {
       if (!s) return;
