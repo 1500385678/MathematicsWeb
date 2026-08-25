@@ -1,6 +1,6 @@
 # CHANGELOG · MathematicsWeb
 
-## Unreleased · Phase 0 知识图谱工具链
+## v0.6.8 · 2026-08-25 · Phase 0 知识图谱查询 CLI(MATH-010)
 
 **配套 `md_to_json.py` 的查询 CLI,补齐 Phase 0 写读闭环。**
 
@@ -23,8 +23,12 @@
 - `stats` → 节点 10 / 章节 56 / 子节 133 / 总字符 30,873(与 `md_to_json.py` 输出对齐)
 - `tag 数学史` → 命中 3 节点(01 数学起源与演变 / 04 数学故事与传说 / 06 数学大师与学者)
 - `search 欧几里得` → 命中 1 节点(01 数学起源与演变 / 欧几里得与《几何原本》)
-- `get 01_数学起源与演变` → 完整 JSON 输出(中文字段不转义)
+- `get 01_数学起源与演变` → 完整 JSON 输出(中文字段不转义,Python `ensure_ascii=False`)
 - `get 不存在_id` → 友好提示,exit=0
+
+### 关闭
+
+- ✅ MATH-010 · Phase 0 知识图谱查询 CLI 归档(本条按框架规则从 PLAN 删除)
 
 ## v0.6.7 · 2026-08-25 · AGENTS 架构 + docs/03 场景清单 同步实际项目(MATH-009)
 

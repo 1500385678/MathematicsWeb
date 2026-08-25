@@ -21,12 +21,12 @@
 
 ### P0 · 阻塞/紧急
 
-- [~] **MATH-001** · 推送 v0.6.4 commit `ec6b4b2` 到 GitHub + Gitee
-  - 描述: 5 分钟重试 cron 已挂,网络恢复后自动推。手动推也行。
-  - 验收: 远程 main HEAD = `ec6b4b2`
-  - 创建: 2026-08-24
-  - 依赖: 网络通
-  - 发现者: bootstrap
+- [~] **MATH-010** · Phase 0 知识图谱查询 CLI 归档(graph_query.py)
+  - 描述: user 已写完 3 个文件待入仓(`tools/graph_query.py` 7 子命令 + `tools/README.md` 第 2 节 + `项目开发计划.md` checkbox 勾选),CHANGELOG Unreleased 段已写但没 commit,等 daily-wake 走完 5 步归档。`数学顾问开发架构与计划.md` 留 untracked(MATH-002 决策)
+  - 验收: graph_query.py 7 子命令全跑通(已验证) · commit 落地 + push 双平台 · CHANGELOG 转正 v0.6.8 · AGENTS append 一条 · PLAN 删本条目
+  - 创建: 2026-08-25
+  - 依赖: 无
+  - 发现者: math-advisor (daily-wake 扫 working-tree 发现)
 
 ### P1 · 重要
 
