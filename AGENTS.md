@@ -178,6 +178,16 @@ AI 提问时,`AIPanel._buildSceneContext()` 会读 `instance.getFormula()` 拼�
 4. **README.md 同步**(跟 AGENTS §0 / 能力段派生;**非主要,顺带更新**)
 5. **PLAN.md 删条目 + MEMORY.md 简记**(agent 数据目录,不入仓)
 
+### 任务来源(3 个,自动加 PLAN 条目)
+
+| 来源 | 触发 | 何时加 |
+|---|---|---|
+| **user 对话**(v0.6.14) | 用户说"做 / 加 / 改 / 修 / 实现"等 + 实际项目内容 | agent 识别后**自动**在 PLAN 加 `[ ]` 条目,不需用户专门说 |
+| **feedback_inbox.json** | 跨 agent P0 催办(open + target=math-advisor) | agent 读 inbox 加 `[ ]` |
+| **AGENTS 已知 TODO**(§7) | 见 §7 段 | agent 启动时扫一次,转 `[ ]` |
+
+**对话驱动识别规则**:涉及"做 / 加 / 实现 / 修 / 改"实际项目内容 = 任务;闲聊/查询/讨论 = 不是任务。
+
 ### 规则
 
 - **完成任务 → PLAN 删条目**(不保留 [x],保持短小)
@@ -185,6 +195,7 @@ AI 提问时,`AIPanel._buildSceneContext()` 会读 `instance.getFormula()` 拼�
 - **AGENTS 能力段 / 状态速览 append**(新能力落地自动加)
 - **不写 CHANGELOG.md**(本项目已删,审计在 git commit message)
 - **MEMORY.md 不入仓**(在 agent 数据目录 `C:\Users\yongzhang\.minimax\agents\math-advisor\`,跨项目)
+- **对话驱动 PLAN**(v0.6.14):用户说"加/做/改"项目内容 → agent 自动加 PLAN [ ];agent **不加**"等用户说做"才实施的"自动"——这叫"擅自实施"
 
 ## 4. 跑起来
 
