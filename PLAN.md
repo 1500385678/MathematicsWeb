@@ -207,6 +207,13 @@
   - 创建: 2026-08-24
   - 依赖: 无
 
+- [~] **MATH-013** · 精简为 2 文件体系(AGENTS + PLAN),删冗余
+  - 描述: 用户理想状态是项目内 2 文件动态更新: AGENTS(铁律+架构+能力+状态速览)+ PLAN(任务+路线图)。删 .Core/OVERVIEW.md(合并到 AGENTS 顶部)、CHANGELOG.md(审计靠 git commit)、docs/ 整个目录;README 留着但跟 AGENTS 同步(非主要文件)
+  - 验收: (1) AGENTS.md 顶部加"项目状态速览"段 (2) README.md 重写,跟 AGENTS §0 同步 (3) 删 .Core/OVERVIEW.md / CHANGELOG.md / docs/ (4) AGENTS.md 第 2 段目录树自动同步(架构自动同步规则) (5) cron prompt 删 0 步读 OVERVIEW (6) 5 步归档规则更新(无 CHANGELOG,commit message 必含版本号) (7) README 同步规则文档化
+  - 创建: 2026-08-25
+  - 依赖: 无
+  - 发现者: 用户指令(2 文件体系)
+
 ### 用户反馈
 
 > 等用户首次发反馈后由 01_Owner 写入这里,P0 优先级。
