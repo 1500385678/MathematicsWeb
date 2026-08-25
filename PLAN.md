@@ -86,9 +86,9 @@ _(无 — MATH-003 + MATH-014 均收尾完成 v0.6.30 / v0.6.25)_
 
 ## 元数据
 
-- **最后更新**: 2026-08-25 · v0.6.31
+- **最后更新**: 2026-08-25 · v0.6.32
 - **更新者**: math-advisor(对话驱动框架启用)
-- **本轮改动**: (1) 加 [ ] MATH-016 初中几何场景集(8 候选,user 可调) (2) AGENTS 瘦身 371→201 行 + 新建 .Log/ 项目日志目录(00-Index + 项目宏观 + 2 个日期文件)(3) 5 步归档规则更新:能力 append → `.Log/YYYY-MM-DD.md`,不在 AGENTS 段
+- **本轮改动**: (1) 加 [ ] MATH-016 初中几何场景集(8 候选,user 可调) (2) AGENTS 瘦身 v0.6.31:371→201 行 + 新建 .Log/ (3) AGENTS 再瘦身 v0.6.32:201→101 行 + 场景规范搬 `.Log/场景开发规范.md`(4) 5 步归档规则更新:能力 append → `.Log/YYYY-MM-DD.md`,不在 AGENTS 段
 - **配套 cron**: math-advisor-daily-wake(每天 10:30)
 - **配套反馈收件箱**: `D:\Mac\Mac\Mac\Consultant\.Shared\feedback_inbox.json`
-- **2026-08-25 重大重构**:AGENTS.md 拆分为 3 文件体系(AGENTS 本体 + PLAN 任务 + .Log/ 能力库/项目宏观)
+- **2026-08-25 重大重构**:AGENTS.md 拆分为 3 文件体系(AGENTS 本体 + PLAN 任务 + .Log/ 能力库/项目宏观/规范),AGENTS 从 371 行瘦身到 101 行(-73%,省 token)
