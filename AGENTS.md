@@ -1,6 +1,6 @@
 # AGENTS.md · MathematicsWeb
 
-> 项目铁律 + 架构 + 状态。能力库 / 项目宏观 / 历史 / 场景规范 → `.Log/`。
+> 项目铁律 + 架构 + 状态。能力库 / 项目宏观 / 场景规范 → `.Log/`。
 
 ## 0. 项目是什么
 
@@ -32,24 +32,80 @@
 1. `AGENTS.md` 本文件
 2. `PLAN.md` 任务清单
 3. `.Log/项目宏观.md` + 最近 `.Log/YYYY-MM-DD.md`(按需)
-4. `README.md` + `viewer/scenes/XX_*.js` 等源码(按需)
+4. `viewer/scenes/XX_*.js` 等源码(按需)
 
-## 2. 架构(目录)
+## 2. 架构(目录结构 — 全面)
 
 ```
 MathematicsWeb/
-├── index.html / server.py / start.ps1
-├── AGENTS.md / PLAN.md / README.md
-├── .Log/                              # 项目日志(能力/宏观/规范)
+├── index.html                  # 入口 + 动态 import + 水印
+├── server.py                   # v0.6.0 一体化 HTTP 服务器(静态 + M3 代理 /api/chat)
+├── start.ps1 / start.bat       # 启动脚本(PowerShell / CMD)
+├── _llm_config.example.json    # LLM 配置模板(7 步 step-by-step)
+├── _commit_push.ps1            # 自动 commit + push 包装(GitHub + Gitee)
+├── AGENTS.md                   # 本文件(铁律 + 架构 + 状态)
+├── PLAN.md                     # 活跃任务队列(完成即删)
+├── README.md                   # 项目门面(URL 参数 + 30 场景速览)
+├── .Log/                       # 项目日志(v0.6.31)
+│   ├── 00-Index.md
+│   ├── 项目宏观.md
+│   ├── 场景开发规范.md
+│   └── YYYY-MM-DD.md
 ├── viewer/
-│   ├── viewer.js / viewer.css / 02_ai-panel.js
-│   └── scenes/ 01-30_*.js             # 30 场景
-├── kernel/ 01_math / 02_animation / 03_llm-client
-├── mock/01_llm-mock.js
-├── db/ 01_indexeddb / 02_workspace
-├── tools/ graph_query.py / md_to_json.py
-├── _test/ CDP headless
-└── vendor/three/                      # r160,1.2MB
+│   ├── viewer.js               # 主壳 + 场景切换 + AI 面板宿主 + SCENES 数组
+│   ├── viewer.css              # 全部样式(mathw- tokens 体系)
+│   ├── 02_ai-panel.js          # AI 助手 UI(对话/建议/状态,接 getLesson/getFormula 上下文)
+│   └── scenes/                 # 30 个独立场景(2D + 3D 双模)
+│       ├── 01_catenary-arch.js         # 悬链拱顶(3D · 建筑)
+│       ├── 02_planetary-orbits.js      # 行星轨道(3D · 完整 9 大行星 + 月球)
+│       ├── 03_fourier-synth.js         # 傅里叶合成器(2D · 音乐)
+│       ├── 04_population-dynamics.js   # 种群动力学(2D · 生物)
+│       ├── 05_mandelbrot.js            # 曼德尔布罗(2D · 艺术)
+│       ├── 06_simple-harmonic.js       # 简谐振动(2D · 教学要点样板)
+│       ├── 07_golden-spiral.js         # 黄金螺旋(2D · 艺术)
+│       ├── 08_monte-carlo.js           # 蒙特卡洛(2D · 概率)
+│       ├── 09_double-pendulum.js       # 双摆混沌(2D · 物理)
+│       ├── 10_gradient-descent.js      # 梯度下降(3D · 机器学习)
+│       ├── 11_lissajous.js             # Lissajous 曲线(2D · 音乐)
+│       ├── 12_clt.js                   # 中心极限定理(2D · 概率)
+│       ├── 13_riemann-sum.js           # 黎曼和(2D · 工程)
+│       ├── 14_bayesian.js              # 贝叶斯推断(2D · 概率)
+│       ├── 15_lsystem.js               # L-系统植物(2D · 生物)
+│       ├── 16_wave-interference.js     # 波叠加/干涉(2D · 物理)
+│       ├── 17_julia.js                 # 朱利亚集(2D · 艺术)
+│       ├── 18_lagrange.js              # 拉格朗日乘子法(2D · 工程)
+│       ├── 19_electric-field.js        # 电场可视化(2D · 物理)
+│       ├── 20_neural-net.js            # 神经网络 2D 分类(2D · 机器学习)
+│       ├── 21_voronoi.js               # 沃罗诺伊图(2D · 计算几何)
+│       ├── 22_delaunay.js              # 德劳内三角剖分(2D · 计算几何)
+│       ├── 23_ellipse-reflection.js    # 椭圆光学反射(2D · 物理)
+│       ├── 24_lemniscate.js            # 双纽线(2D · 计算几何)
+│       ├── 25_buffon-needle.js         # 布丰投针(2D · 几何概率)
+│       ├── 26_koch-snowflake.js        # Koch 雪花(2D · 分形几何)
+│       ├── 27_sierpinski.js            # 谢尔宾斯基三角(2D · 分形几何)
+│       ├── 28_great-circle.js          # 球面大圆(2D · 球面几何)
+│       ├── 29_mobius-strip.js          # 莫比乌斯带(3D · 拓扑几何)
+│       └── 30_crystal-lattice.js       # 晶体格 / Bravais(3D · 材料科学)
+├── kernel/                     # 数学/动画/LLM 客户端
+│   ├── 01_math-core.js         # 数学原语(Complex/Vec2/Mat2x2/catenary/DFT/Mandelbrot/LV)
+│   ├── 02_animation.js         # rAF 循环 + Canvas 高 DPI 自适应
+│   └── 03_llm-client.js        # LLM API 客户端(OpenAI 兼容,接 server.py 代理)
+├── mock/
+│   └── 01_llm-mock.js          # 本地 mock(无 key 时用,接 lesson 字段)
+├── db/
+│   ├── 01_indexeddb.js         # IndexedDB 封装(2 个 store: meta + sceneParams)
+│   └── 02_workspace.js         # 工作区(轻量版,只存 last scene + fav + visited + sceneParams)
+├── tools/                      # 辅助工具(纯 Python 3 标准库)
+│   ├── graph_query.py          # 知识图谱查询 CLI(7 子命令)
+│   ├── md_to_json.py           # 知识图谱生成器
+│   └── README.md
+├── _test/                      # CDP headless 验证脚本(Edge 远程调试)
+│   ├── _cdp_test.js            # 单场景控制台错误 + canvas 截图
+│   ├── _shot.js                # 等动画稳定后截屏
+│   ├── _test_all.ps1           # 20 场景批量验证
+│   └── _test_one.ps1           # 单场景验证(简单版)
+├── vendor/three/               # three.js r160 本地(从 three.jsWeb 复制,1.2MB,断网)
+└── Output/                     # 本地截图(不入仓,gitignore)
 ```
 
 **场景开发规范**:见 `.Log/场景开发规范.md`(createScene / getFormula / getLesson / destroy)
