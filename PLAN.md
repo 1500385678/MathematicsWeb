@@ -25,16 +25,17 @@
 
 ### P1 · 重要
 
-- [ ] **MATH-003** · 19 个场景补 `getLesson()` 教学要点
+- [~] **MATH-003** · 19 个场景补 `getLesson()` 教学要点
   - 描述: v0.6.4 已示范 1 个(simple-harmonic),剩 19 个。教学要点喂给 LLM,提升 AI 助手质量
   - 验收: 每个 scene 文件导出 `getLesson()`,`_buildSceneContext` 拼进 prompt
   - 创建: 2026-08-24
   - 依赖: v0.6.4 getLesson 框架(已落地)
-  - 优先级子项(教学价值排序):
-    - 04_population-dynamics · Lotka-Volterra 双物种
-    - 11_lissajous · 频率比 + 相位
-    - 18_lagrange · 切点几何
-    - 20_neural-net · 决策边界演化
+  - 进度(2026-08-25 v0.6.9): 2/19 — 04_population-dynamics / 11_lissajous 已加 getLesson(本轮)
+  - 优先级子项(教学价值排序,✅ = 已加):
+    - ✅ 04_population-dynamics · Lotka-Volterra 双物种
+    - ✅ 11_lissajous · 频率比 + 相位
+    - [ ] 18_lagrange · 切点几何
+    - [ ] 20_neural-net · 决策边界演化
     - 其他 15 个按用户反馈优先级
 
 - [ ] **MATH-004** · 确认 3D 场景在低 WebGL 环境的友好降级
