@@ -271,6 +271,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'riemann-sum',
     getFormula() { return '∫ₐᵇ f(x)dx ≈ Σ f(xᵢ)·Δx'; },
+    // v0.6.26: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { fn: fnKind, method, n: params.n }; },
     setState(s) {
       if (!s) return;

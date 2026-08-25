@@ -27,9 +27,9 @@
 
 > agent 启动第一件事看这里:版本/阶段/进度/远端。30 秒建认知。改动后跟 "项目已具备的能力" 段一起 append。
 
-- **版本**:v0.6.25 · **阶段**:Phase 2 完整功能 · **进度**:30/30 场景 + 10/19 教学要点
+- **版本**:v0.6.26 · **阶段**:Phase 2 完整功能 · **进度**:30/30 场景 + 12/19 教学要点
 - **远端**:GitHub `1500385678/MathematicsWeb` + Gitee `architectzy/MathematicsWeb`(镜像) · 端口 8765
-- **当前活跃任务**(从 PLAN.md 拉):MATH-014 ✅ 收尾 30_crystal-lattice(10/10)· MATH-003 [~] 10/19 教学要点,下一批 02_planetary-orbits + 13_riemann-sum · MATH-004/005/006/007 [ ]
+- **当前活跃任务**(从 PLAN.md 拉):MATH-014 ✅ 收尾(10/10 全部落地)· MATH-003 [~] 12/19 教学要点,下一批 02 + 13 已加,剩 7 场景按教学价值排序 · MATH-004/005/006/007 [ ]
 - **完整流程**:`AGENTS.md`(本文件)+ `PLAN.md`(任务)→ 这是项目内 2 个动态文件,agent 必读
 - **历史审计**:看 git commit message(本仓库无 CHANGELOG.md,审计在 commit)
 - **项目宏观**:见下面 "## 项目宏观" 段(产品愿景/路线/技术栈/风险)
@@ -143,6 +143,7 @@
 - **MATH-014 几何类 10 场景第二批 3 个**(v0.6.23):24_lemniscate(伯努利 1694 双纽线 r² = a²·cos(2θ)/8 字形 + 极坐标网格 + r(θ) 函数图/调 a 看胖瘦/应用:电偶极子等势线 + 双曲面透镜 + 复分析)+ 25_buffon-needle(布丰 1733 投针:P = 2L/(πd)/实时显示 π 估计 vs 真实 π 误差百分比/投 50/500 演示大数定律/应用:第一个蒙特卡洛方法 + 几何概率奠基 + MCMC 鼻祖)+ 26_koch-snowflake(Koch 1904 雪花:N 步迭代/周长 → 无穷大 + 面积收敛 + Hausdorff 维数 log4/log3 ≈ 1.26/动画生长 + 填充面积/应用:海岸线长度悖论 + 分形几何奠基 + 分数维示例)。viewer.js SCENES 数组加 3 项,场景库 23 → 26。剩余 4 个场景(27_sierpinski / 28_great-circle / 29_mobius-strip / 30_crystal-lattice)按 cron session 节奏继续
 - **MATH-014 几何类 10 场景第三批 3 个**(v0.6.24):27_sierpinski(Sierpiński 1915 双视图:上方混沌游戏任意点跳随机顶点中点 + 下方 N 步确定性挖中间 3ⁿ 三角/Hausdorff 维数 log3/log2 ≈ 1.585/3 顶点 3 色点云累积 + 填色递归 + 3ⁿ 数字统计/应用:递归数据结构 + 分形天线 + Escher 极限版画 + 经典混沌游戏吸引子)+ 28_great-circle(球面大圆:10 城市(PEK/JFK/LHR/HND/SYD/CDG/PVG/LAX/SIN/CPT)/haversine 公式算球面距离 + 大圆航线(绿实线弯向高纬)+ 恒向线对比(黄虚线经纬拼接)/初始航向 + 大圆省 5-15% 数字显示/正交投影经纬网 + 赤道加粗/应用:跨洋航班 + 大圆海图 + GPS 距离 + 卫星轨道)+ 29_mobius-strip(Möbius 1858 单面环:3D three.js 参数曲面 x=(R+v·cos(u/2))·cos(u)/y=v·sin(u/2)/z=(R+v·cos(u/2))·sin(u) + DoubleSide 双面渲染展示"单面"拓扑 + 蚂蚁沿中心走 u∈[0,4π] 才回原面 + 中心参考圆 LineLoop/带宽 w + 半径 R + 走带速度 + 蚂蚁开关/应用:传送带(双面磨损均匀)+ 无感电阻 + 莫比乌斯环书 + 非可定向曲面经典)。viewer.js SCENES 数组加 3 项,场景库 26 → 29。剩 1 个场景(30_crystal-lattice)按 cron session 节奏继续
 - **MATH-014 几何类 10 场景收尾 1 个**(v0.6.25):30_crystal-lattice(晶体格 3D:4 种 Bravais 晶系 SC/BCC/FCC/HCP 对比/配位数 6→8→12/APF 0.5236→0.6802→0.7405/晶格常数 a + 原子半径 r 滑块看原子接触转变/晶胞线框 + 邻居 27 晶胞展示周期性/HCP 用六方棱柱 c/a=√8/3 ≈ 1.633/例子面板:α-Po(SC)· α-Fe/Cr/Mo/W(BCC)· Cu/Au/Ag/Al/γ-Fe/NaCl(FCC)· Mg/Zn/Ti/Co(HCP)/应用:半导体晶圆 + 金属相变 α↔γ 铁 + X 射线衍射)。viewer.js SCENES 数组加 1 项,场景库 29 → 30。**MATH-014 完成,10/10 全部落地**
+- **MATH-003 12/19 教学要点通道第七批**(v0.6.26):02_planetary-orbits(开普勒第三定律 T² ∝ a³ / 椭圆 r=a(1-e²)/(1+e·cosθ) / 9 大行星 + 月球绕地球 / a 用 log 压缩(冥王 40 AU vs 木星 5.2 真实差 8 倍,画不下)/ 调时间倍率外圈明显慢,直观体验 T∝a^1.5)+ 13_riemann-sum(∫ 算不出来就用矩形 / 梯形 / 抛物线堆 / 4 函数(sin/x²/e^(-x²)/1/(1+x²)) + 5 方法(左/右/中/梯形/Simpson) / 收敛阶对比:左/右 O(1/N) 慢 / 梯形 O(1/N²) / Simpson 抛物线 O(1/N⁴) 精度爆炸)接 getLesson(),真 LLM 上下文继续扩展。剩余 7 个场景按教学价值排序,下一批候选:05_mandelbrot / 07_golden-spiral / 16_wave-interference
 - **MATH-003 2/19 教学要点通道第二批**(v0.6.9):04_population-dynamics(Lotka-Volterra 兔狐捕食)+ 11_lissajous(频率比决定图形/相位旋转移位)接 getLesson(),真 LLM 上下文现在能读到教学要点。剩余 17 个场景按教学价值排序,优先级:18_lagrange / 20_neural-net
 - **20 跨学科场景(2D + 3D 双模)**(v0.6.0):建筑(悬链拱)/ 物理(行星轨道 · 双摆 · 简谐 · 波叠加 · 电场)/ 音乐(傅里叶 · Lissajous)/ 生物(种群 · L-系统)/ 艺术(曼德尔布罗 · 朱利亚 · 黄金螺旋)/ 概率(蒙特卡洛 · 中心极限定理 · 贝叶斯)/ 机器学习(梯度下降 · 神经网络)/ 工程(黎曼和 · 拉格朗日乘子)
 - **2 文件自动化框架 PLAN/AGENTS**(v0.6.13):项目内 2 个动态文件 — AGENTS(铁律+架构+能力库+项目状态速览)+ PLAN(任务)。任务从 PLAN 完成 → 删 PLAN 条目 → append AGENTS 能力段 + AGENTS 状态速览同步 → README 同步(非主要,顺带)。`math-advisor-daily-wake` cron 每日 10:30 触发按 2 文件体系干活

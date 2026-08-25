@@ -412,6 +412,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'planetary-orbits',
     getFormula() { return 'T² ∝ a³   (开普勒)'; },
+    // v0.6.26: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { speed: params.speed, paused: params.paused }; },
     setState(s) {
       if (!s) return;
