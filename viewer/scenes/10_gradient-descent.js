@@ -33,15 +33,23 @@ export function createScene(host, opts = {}) {
   lesson.className = 'mathw-lesson';
   lesson.innerHTML = `
     <button class="mathw-lesson-toggle" data-toggle>−</button>
-    <div class="mathw-lesson-title">数学 × 机器学习 · 梯度下降</div>
+    <div class="mathw-lesson-title">数学 × 机器学习 · 梯度下降 · 凸优化与鞍点</div>
     <div class="mathw-lesson-content">
       <div class="mathw-lesson-headline">θ ← θ − η·∇f(θ)</div>
-      <div class="mathw-lesson-formula">x_{k+1} = x_k − η · ∂f/∂x</div>
+      <div class="mathw-lesson-formula">x_{k+1} = x_k − η · ∇f(x_k)</div>
       <div class="mathw-lesson-text">
         神经网络训练的核心算法 — 沿<strong>负梯度方向</strong>走一步,步长 = <strong>学习率 η</strong>。
-        简单 bowl:沿直线走到原点。Rosenbrock 香蕉谷:经典陷阱,卡在曲折谷底走不快。
-        <strong>η 太小</strong>:慢。<strong>η 太大</strong>:震荡/发散。
-        调 η 看不同步长效果。
+        <strong>凸函数</strong>(bowl):∇f 单调,沿直线走到全局最优点。
+        <strong>Rosenbrock 香蕉谷</strong>:非凸经典,1960 提出,极小值在 (1,1) 狭窄弯曲山谷,梯度常垂直于谷底走 Z 字,卡住不动。
+        <strong>马鞍面</strong>(saddle):x²−y²,一个方向极大一个方向极小,纯 GD 会被 0 梯度"骗停",但仍非最优点。
+        <strong>η 太小</strong>:收敛慢、卡鞍点。<strong>η 太大</strong>:震荡/发散/NaN。
+        <br><br>
+        <strong>三族优化器</strong>:<br>
+        · <strong>GD 朴素</strong>:纯沿当前梯度,简单但慢、易震荡<br>
+        · <strong>Momentum(动量)</strong>:Polyak 1964,加惯性 v ← βv + g,β=0.9,助爬出浅谷<br>
+        · <strong>Adam</strong>:Kingma &amp; Ba 2014,一阶矩 m(动量)+ 二阶矩 v(自适应学习率),深度学习默认
+        <br><br>
+        <strong>应用</strong>:神经网络训练(SGD/AdamW/Lion)· 物理仿真(刚体动力学)· 投资组合 Markowitz · 任何求最小值问题(线性/非线性规划、有限元)。
       </div>
     </div>
   `;
@@ -330,6 +338,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'gradient-descent',
     getFormula() { return 'θ ← θ − η·∇f(θ)'; },
+    // v0.6.29: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { lr: params.lr, opt: params.opt, fn: fnKind }; },
     setState(s) {
       if (!s) return;

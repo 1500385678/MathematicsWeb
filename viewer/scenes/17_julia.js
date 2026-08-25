@@ -25,15 +25,26 @@ export function createScene(host, opts = {}) {
   lesson.className = 'mathw-lesson';
   lesson.innerHTML = `
     <button class="mathw-lesson-toggle" data-toggle>−</button>
-    <div class="mathw-lesson-title">数学 × 艺术 · 朱利亚集</div>
+    <div class="mathw-lesson-title">数学 × 艺术 · 朱利亚集 · 复动力系统的"另一面"</div>
     <div class="mathw-lesson-content">
       <div class="mathw-lesson-headline">跟曼德尔布罗同公式,不同视角</div>
-      <div class="mathw-lesson-formula">z = z² + c   (c 固定,扫 z₀)</div>
+      <div class="mathw-lesson-formula">z_{n+1} = z_n² + c   (c 固定,扫 z₀)</div>
       <div class="mathw-lesson-text">
-        曼德尔布罗:<strong>每个 c 一像素,扫所有 c</strong>。<br>
-        朱利亚集:<strong>固定 c,每个像素一个 z₀</strong>。<br>
-        每个 c 值生成一个独特的分形 — 调实部/虚部滑块,看形态巨变。<br>
-        经典 c = −0.8 + 0.156i(螺旋) / −0.4 + 0.6i(树)。
+        <strong>曼德尔布罗</strong>(M 集):每个 c 一像素,扫所有 c 看哪些 c 让 z₀=0 收敛 — 给出"参数空间"地图。
+        <strong>朱利亚集</strong>(J 集):固定 c,每个像素一个 z₀,看哪些起点逃逸到 ∞ — 给出"相空间"边界。
+        两者对偶:<strong>c 在 M 集内 ↔ 对应 J 集连通</strong>;c 在 M 集外 ↔ J 集是康托尘埃。
+        <br><br>
+        <strong>历史</strong>:Gaston Julia 1918 在一战受伤住院时研究复迭代,获法兰西科学院大奖;
+        当时无法可视化,1980 年代 <strong>Mandelbrot</strong> 用 IBM 计算机画出震撼图像,引发分形热潮。
+        <strong>1982 Douady-Hubbard</strong> 证明 M 集连通且内部每点 c 都对应连通 J 集。
+        <br><br>
+        <strong>经典 c 值</strong>:<br>
+        · c = −0.8 + 0.156i · 螺旋盘绕收敛(默认)<br>
+        · c = −0.4 + 0.6i · 树状对称分形<br>
+        · c = −0.835 − 0.2321i · 谢尔宾斯基镂空相似(连接 M 集和谢尔宾斯基)
+        <br><br>
+        <strong>调 c 看形态巨变</strong>:实部/虚部滑块微调,集从连通 → 粉状 → 全黑;迭代数 20-200 控制细节。
+        <strong>应用</strong>:复动力系统 + M 集可视化 + 图形学分形噪声 + 加密伪随机 + 艺术生成(Aaron、DeepDream 早期思想)。
       </div>
     </div>
   `;
@@ -195,6 +206,12 @@ export function createScene(host, opts = {}) {
   return {
     sceneId: 'julia',
     getFormula() { return 'z = z² + c   (c 固定)'; },
+    // v0.6.29: 教学要点(给 AI 上下文用)—— 读 .mathw-lesson 卡片纯文本
+    getLesson() {
+      const content = lesson.querySelector('.mathw-lesson-content');
+      if (!content) return '';
+      return content.textContent.replace(/\s+/g, ' ').trim();
+    },
     getState() { return { ...params, view: { ...view } }; },
     setState(s) {
       if (!s) return;
