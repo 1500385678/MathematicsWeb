@@ -328,6 +328,25 @@ export const SCENES = [
     description: '对应角相等 + 对应边成比例 k。3 视图:自由缩放/平行线分线段(Thales 比例)/面积比 k²。',
     loader: () => import('./scenes/34_similar-triangles.js'),
   },
+  // v0.6.38: 初中几何场景集第三批 2 个(MATH-016 6/8,7 年级)
+  {
+    id: 'polygon-interior-angles',
+    title: '多边形内角和',
+    domain: '数学 × 初中几何',
+    icon: '⬡',
+    renderer: '2D',
+    description: '内角和 = (N-2)×180°。4 视图:正 N 边形/自由多边形(可拖凹形)/三角形分解/外角和 360°。',
+    loader: () => import('./scenes/35_polygon-interior-angles.js'),
+  },
+  {
+    id: 'quadrilateral-family',
+    title: '四边形家族',
+    domain: '数学 × 初中几何',
+    icon: '▱',
+    renderer: '2D',
+    description: '8 种四边形分类。3 视图:韦恩图(平行/矩/菱/方 + 梯/等腰/直角)/变形演示/8 形状画廊。',
+    loader: () => import('./scenes/36_quadrilateral-family.js'),
+  },
 ];
 
 function escapeHtml(s) {

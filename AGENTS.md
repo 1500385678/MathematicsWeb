@@ -4,7 +4,7 @@
 
 ## 0. 项目是什么
 
-跨学科数学可视化教学平台,32 场景(2D+3D 双模)覆盖建筑/物理/音乐/生物/艺术/概率/机器学习/工程/初中几何 9 大领域。
+跨学科数学可视化教学平台,36 场景(2D+3D 双模)覆盖建筑/物理/音乐/生物/艺术/概率/机器学习/工程/初中几何 9 大领域。
 
 | 维度 | 值 |
 |---|---|
@@ -18,11 +18,11 @@
 
 ## 状态速览(动态,agent 自动维护)
 
-- **版本**:v0.6.37 · **进度**:34/34 场景 + 23/23 教学要点 + WebGL 降级
+- **版本**:v0.6.38 · **进度**:36/36 场景 + 25/25 教学要点 + WebGL 降级
 - **远端**:GitHub + Gitee(同步)
 - **当前活跃任务**(见 `PLAN.md`):
   - MATH-015 [~] 接 M3 LLM,等 user 配 M3_API_KEY
-  - MATH-016 [~] 初中几何场景集 8 候选(4/8: triangle-congruence ✅ + pythagorean-theorem ✅ + inscribed-angle ✅ + similar-triangles ✅)
+  - MATH-016 [~] 初中几何场景集 8 候选(6/8: triangle-congruence ✅ + pythagorean-theorem ✅ + inscribed-angle ✅ + similar-triangles ✅ + polygon-interior-angles [~] + quadrilateral-family [ ])
   - MATH-005/006/007 [ ]
 - **历史能力库**:`.Log/YYYY-MM-DD.md`(每日 append)
 - **历史审计**:git commit message(无 CHANGELOG.md)
@@ -86,7 +86,9 @@ MathematicsWeb/
 │       ├── 31_triangle-congruence.js   # 三角形全等判定(2D · 初中几何 7 年级)
 │       ├── 32_pythagorean-theorem.js   # 勾股定理(2D · 初中几何 8 年级)
 │       ├── 33_inscribed-angle.js       # 圆周角定理(2D · 初中几何 8 年级)
-│       └── 34_similar-triangles.js     # 相似三角形(2D · 初中几何 8 年级)
+│       ├── 34_similar-triangles.js     # 相似三角形(2D · 初中几何 8 年级)
+│       ├── 35_polygon-interior-angles.js  # 多边形内角和(2D · 初中几何 7 年级)
+│       └── 36_quadrilateral-family.js  # 四边形家族(2D · 初中几何 7 年级)
 ├── kernel/                     # 数学/动画/LLM 客户端
 │   ├── 01_math-core.js         # 数学原语(Complex/Vec2/Mat2x2/catenary/DFT/Mandelbrot/LV)
 │   ├── 02_animation.js         # rAF 循环 + Canvas 高 DPI 自适应
@@ -232,6 +234,7 @@ MathematicsWeb/
 - 2026-08-25 v0.6.35: 3D WebGL feature detection + 降级卡片(MATH-004)
 - 2026-08-26 v0.6.36: 初中几何场景集首批 2 个(MATH-016)· triangle-congruence(SSS/SAS/ASA/AAS/HL 5 判定法 + 拖动 DEF 验证) + pythagorean-theorem(a²+b²=c² + 3 证法视图:3-squares / Garfield 1876 / 赵爽弦图)
 - 2026-08-26 v0.6.37: 初中几何场景集第二批 2 个(MATH-016 4/8)· inscribed-angle(4 视图:同弧一般/Thales 半圆 90°/同弧多点验证/圆内接四边形对角互补) + similar-triangles(3 视图:自由缩放/平行线分线段 Thales 比例/面积比 k²)
+- 2026-08-26 v0.6.38: 初中几何场景集第三批 2 个(MATH-016 6/8)· polygon-interior-angles(4 视图:正 N 边形/自由多边形可拖凹形/三角形分解 N-2 块/外角和 360° 恒成立) + quadrilateral-family(3 视图:韦恩图集合嵌套/变形演示实时判别/8 形状对比画廊)
 
 ### 6.7 风险(关注)
 
@@ -300,6 +303,7 @@ AI 提问时,`AIPanel._buildSceneContext()` 读 `instance.getFormula()` + `insta
 - [x] **v0.6.35 (2026-08-25)**: 3D 场景 WebGL feature detection + 降级卡片(MATH-004)
 - [x] **v0.6.36 (2026-08-26)**: 32 场景 + 21/21 教学要点 + 初中几何 2 场景(MATH-016 首批)
 - [x] **v0.6.37 (2026-08-26)**: 34 场景 + 23/23 教学要点 + 初中几何第二批 2 场景(MATH-016 4/8)
+- [x] **v0.6.38 (2026-08-26)**: 36 场景 + 25/25 教学要点 + 初中几何第三批 2 场景(MATH-016 6/8)
 - [ ] **v1.0**: 全套主题模块 + 教师模式 + 用户账号
 
 ## 9. 已知 TODO
