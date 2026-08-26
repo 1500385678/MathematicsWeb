@@ -309,6 +309,25 @@ export const SCENES = [
     description: 'a² + b² = c²。3 证法视图:3-squares 面积守恒 / Garfield 1876 梯形 / 赵爽弦图。',
     loader: () => import('./scenes/32_pythagorean-theorem.js'),
   },
+  // v0.6.37: 初中几何场景集第二批 2 个(MATH-016 4/8,8 年级)
+  {
+    id: 'inscribed-angle',
+    title: '圆周角定理',
+    domain: '数学 × 初中几何',
+    icon: '⭕',
+    renderer: '2D',
+    description: '同弧圆周角 = 1/2 圆心角。4 视图:同弧一般/Thales 半圆(90°)/同弧多点验证/圆内接四边形。',
+    loader: () => import('./scenes/33_inscribed-angle.js'),
+  },
+  {
+    id: 'similar-triangles',
+    title: '相似三角形',
+    domain: '数学 × 初中几何',
+    icon: '🔻',
+    renderer: '2D',
+    description: '对应角相等 + 对应边成比例 k。3 视图:自由缩放/平行线分线段(Thales 比例)/面积比 k²。',
+    loader: () => import('./scenes/34_similar-triangles.js'),
+  },
 ];
 
 function escapeHtml(s) {

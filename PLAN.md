@@ -30,14 +30,14 @@ _(无 — MATH-003 + MATH-014 均收尾完成 v0.6.30 / v0.6.25)_
   - 发现者: **用户对话**(用户提"AI 假"反馈, v0.6.14 对话驱动自动入队)
 
 - [~] **MATH-016** · 初中几何场景集(8 场景)
-  - **预计 commit 数: 5**(首批 3 + 第二批 3 + 第三批 2 + 目录/AGENTS 同步 + README 各 1 commit,每 10 分钟 1 场景)
+  - **预计 commit 数: 4**(首批 2 + 第二批 1 + 第三批 1 + 目录/AGENTS 同步等已分别合批,每 10 分钟 1 场景)
   - 描述: 对位人教版初中数学 7-9 年级,8 个核心几何场景。沿 MATH-014 节奏分批做
-  - **进度: 2/8**(v0.6.36 完成首批 2 个:31 + 32)
+  - **进度: 4/8**(v0.6.36 完成 2 个 + v0.6.37 完成 2 个:31 + 32 + 33 + 34)
   - 候选清单(8 场景,user 可调):
     - [x] 31 `triangle-congruence` · 三角形全等判定 SSS/SAS/ASA/AAS(7 年级) ✅ v0.6.36
     - [x] 32 `pythagorean-theorem` · 勾股定理 + 7 种证法(8 年级,王炸) ✅ v0.6.36
-    - [ ] 33 `inscribed-angle` · 圆周角定理 = 1/2 圆心角(8 年级)
-    - [ ] 34 `similar-triangles` · 相似三角形 + 平行线分线段(8 年级)
+    - [x] 33 `inscribed-angle` · 圆周角定理 = 1/2 圆心角 + Thales 半圆(8 年级) ✅ v0.6.37
+    - [x] 34 `similar-triangles` · 相似三角形 + 平行线分线段 + 面积比 k²(8 年级) ✅ v0.6.37
     - [ ] 35 `polygon-interior-angles` · 多边形内角和 = (N-2)×180°(7 年级)
     - [ ] 36 `quadrilateral-family` · 四边形家族韦恩图(7 年级)
     - [ ] 37 `three-views-3d` · 立体几何三视图 3D(9 年级,唯一 3D)
@@ -97,9 +97,10 @@ _(无 — MATH-003 + MATH-014 均收尾完成 v0.6.30 / v0.6.25)_
 
 ## 元数据
 
-- **最后更新**: 2026-08-26 · v0.6.36
+- **最后更新**: 2026-08-26 · v0.6.37
 - **更新者**: math-advisor(对话驱动框架启用)
-- **本轮改动**: (1) **MATH-016 首批 2/8 完成 v0.6.36**:31_triangle-congruence(5 判定法 + 拖动验证)+ 32_pythagorean-theorem(3 证法视图:3-squares / Garfield 1876 / 赵爽弦图)(2) viewer.js SCENES 数组加 2 项(30→32)(3) AGENTS §0 v0.6.35→v0.6.36 + 进度 30/30→32/32 + 教学要点 19/19→21/21(4) AGENTS §2 目录树加 31 + 32(5) AGENTS §6.6 决策 append v0.6.36(6) AGENTS §8 里程碑加 v0.6.36(7) README 30→32 场景 + 速览表加"数学 × 初中几何"行(8) PLAN MATH-016 [ ] → [~] + 子项 31 + 32 ✅ + 进度 0/8→2/8
+- **本轮改动**: (1) **MATH-016 第二批 2/8 完成 v0.6.37**:33_inscribed-angle(4 视图:同弧一般/Thales 半圆 90°/同弧多点验证/圆内接四边形对角互补)+ 34_similar-triangles(3 视图:自由缩放/平行线分线段 Thales 比例/面积比 k²)(2) viewer.js SCENES 数组加 2 项(32→34)(3) AGENTS §0 v0.6.36→v0.6.37 + 进度 32/32→34/34 + 教学要点 21/21→23/23(4) AGENTS §2 目录树加 33 + 34(5) AGENTS §6.6 决策 append v0.6.37(6) AGENTS §8 里程碑加 v0.6.37(7) README 32→34 场景 + 速览表加 2 项(8) PLAN MATH-016 进度 2/8→4/8 + 子项 33 + 34 ✅
+- **上轮改动(2026-08-26 v0.6.36)**: (1) **MATH-016 首批 2/8 完成 v0.6.36**:31_triangle-congruence(5 判定法 + 拖动验证)+ 32_pythagorean-theorem(3 证法视图:3-squares / Garfield 1876 / 赵爽弦图)(2) viewer.js SCENES 数组加 2 项(30→32)(3) AGENTS §0 v0.6.35→v0.6.36 + 进度 30/30→32/32 + 教学要点 19/19→21/21(4) AGENTS §2 目录树加 31 + 32(5) AGENTS §6.6 决策 append v0.6.36(6) AGENTS §8 里程碑加 v0.6.36(7) README 30→32 场景 + 速览表加"数学 × 初中几何"行(8) PLAN MATH-016 [ ] → [~] + 子项 31 + 32 ✅ + 进度 0/8→2/8
 - **配套 cron**: math-advisor-daily-wake(每天 10:30,v0.6.34 规则已嵌入)
 - **配套反馈收件箱**: `D:\Mac\Mac\Mac\Consultant\.Shared\feedback_inbox.json`
 - **2026-08-25 重构总结**:AGENTS.md v0.6.30 371 行 → v0.6.34 233 行(-37%),期间:① 拆 .Log/(v0.6.31)② 压扁结构(翻车 v0.6.32)③ 恢复结构(v0.6.33)④ 整合参考文档(v0.6.34,user 嫌 .Log/ 文件太多,3 份融 AGENTS,只留 .Log/YYYY-MM-DD.md 每日能力);v0.6.35 MATH-004 完成 3D WebGL 降级;v0.6.36 MATH-016 首批 2/8 落地
