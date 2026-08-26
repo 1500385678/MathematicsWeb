@@ -290,6 +290,25 @@ export const SCENES = [
     description: '4 种 Bravais 晶系(SC/BCC/FCC/HCP)对比。配位数 6→8→12,APF 0.52→0.74,调 r 看原子接触转变。',
     loader: () => import('./scenes/30_crystal-lattice.js'),
   },
+  // v0.6.36: 初中几何场景集(MATH-016 首批 2 个,7-8 年级)
+  {
+    id: 'triangle-congruence',
+    title: '三角形全等判定',
+    domain: '数学 × 初中几何',
+    icon: '🔺',
+    renderer: '2D',
+    description: '5 种判定法 SSS/SAS/ASA/AAS/HL。左右两个三角形,拖右侧 DEF 顶点验证全等。',
+    loader: () => import('./scenes/31_triangle-congruence.js'),
+  },
+  {
+    id: 'pythagorean-theorem',
+    title: '勾股定理',
+    domain: '数学 × 初中几何',
+    icon: '📐',
+    renderer: '2D',
+    description: 'a² + b² = c²。3 证法视图:3-squares 面积守恒 / Garfield 1876 梯形 / 赵爽弦图。',
+    loader: () => import('./scenes/32_pythagorean-theorem.js'),
+  },
 ];
 
 function escapeHtml(s) {

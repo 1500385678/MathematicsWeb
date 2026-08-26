@@ -4,7 +4,7 @@
 
 ## 0. 项目是什么
 
-跨学科数学可视化教学平台,30 场景(2D+3D 双模)覆盖建筑/物理/音乐/生物/艺术/概率/机器学习/工程 8 大领域。
+跨学科数学可视化教学平台,32 场景(2D+3D 双模)覆盖建筑/物理/音乐/生物/艺术/概率/机器学习/工程/初中几何 9 大领域。
 
 | 维度 | 值 |
 |---|---|
@@ -18,11 +18,11 @@
 
 ## 状态速览(动态,agent 自动维护)
 
-- **版本**:v0.6.35 · **进度**:30/30 场景 + 19/19 教学要点 + WebGL 降级
+- **版本**:v0.6.36 · **进度**:32/32 场景 + 21/21 教学要点 + WebGL 降级
 - **远端**:GitHub + Gitee(同步)
 - **当前活跃任务**(见 `PLAN.md`):
   - MATH-015 [~] 接 M3 LLM,等 user 配 M3_API_KEY
-  - MATH-016 [ ] 初中几何场景集 8 候选
+  - MATH-016 [~] 初中几何场景集 8 候选(2/8: triangle-congruence ✅ + pythagorean-theorem ✅)
   - MATH-005/006/007 [ ]
 - **历史能力库**:`.Log/YYYY-MM-DD.md`(每日 append)
 - **历史审计**:git commit message(无 CHANGELOG.md)
@@ -82,7 +82,9 @@ MathematicsWeb/
 │       ├── 27_sierpinski.js            # 谢尔宾斯基三角(2D · 分形几何)
 │       ├── 28_great-circle.js          # 球面大圆(2D · 球面几何)
 │       ├── 29_mobius-strip.js          # 莫比乌斯带(3D · 拓扑几何)
-│       └── 30_crystal-lattice.js       # 晶体格 / Bravais(3D · 材料科学)
+│       ├── 30_crystal-lattice.js       # 晶体格 / Bravais(3D · 材料科学)
+│       ├── 31_triangle-congruence.js   # 三角形全等判定(2D · 初中几何 7 年级)
+│       └── 32_pythagorean-theorem.js   # 勾股定理(2D · 初中几何 8 年级)
 ├── kernel/                     # 数学/动画/LLM 客户端
 │   ├── 01_math-core.js         # 数学原语(Complex/Vec2/Mat2x2/catenary/DFT/Mandelbrot/LV)
 │   ├── 02_animation.js         # rAF 循环 + Canvas 高 DPI 自适应
@@ -226,6 +228,7 @@ MathematicsWeb/
 - 2026-08-25 v0.6.33: AGENTS 瘦身保结构
 - 2026-08-25 v0.6.34: AGENTS 整合 3 份参考文档
 - 2026-08-25 v0.6.35: 3D WebGL feature detection + 降级卡片(MATH-004)
+- 2026-08-26 v0.6.36: 初中几何场景集首批 2 个(MATH-016)· triangle-congruence(SSS/SAS/ASA/AAS/HL 5 判定法 + 拖动 DEF 验证) + pythagorean-theorem(a²+b²=c² + 3 证法视图:3-squares / Garfield 1876 / 赵爽弦图)
 
 ### 6.7 风险(关注)
 
@@ -292,6 +295,7 @@ AI 提问时,`AIPanel._buildSceneContext()` 读 `instance.getFormula()` + `insta
 
 - [x] **v0.6.30 (2026-08-25)**: 30 场景 + 19/19 教学要点 + M3 代理
 - [x] **v0.6.35 (2026-08-25)**: 3D 场景 WebGL feature detection + 降级卡片(MATH-004)
+- [x] **v0.6.36 (2026-08-26)**: 32 场景 + 21/21 教学要点 + 初中几何 2 场景(MATH-016 首批)
 - [ ] **v1.0**: 全套主题模块 + 教师模式 + 用户账号
 
 ## 9. 已知 TODO
