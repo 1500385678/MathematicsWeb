@@ -18,11 +18,11 @@
 
 ## 状态速览(动态,agent 自动维护)
 
-- **版本**:v0.6.39 · **进度**:37/37 场景 + 26/26 教学要点 + WebGL 降级
+- **版本**:v0.6.40 · **进度**:38/38 场景 + 27/27 教学要点 + WebGL 降级
 - **远端**:GitHub + Gitee(同步)
 - **当前活跃任务**(见 `PLAN.md`):
   - MATH-015 [~] 接 M3 LLM,等 user 配 M3_API_KEY
-  - MATH-016 [~] 初中几何场景集 8 候选(7/8: triangle-congruence ✅ + pythagorean-theorem ✅ + inscribed-angle ✅ + similar-triangles ✅ + polygon-interior-angles ✅ + quadrilateral-family ✅ + three-views-3d [~] + power-of-point [ ])
+  - MATH-016 ✅ 完成 8/8(triangle-congruence + pythagorean-theorem + inscribed-angle + similar-triangles + polygon-interior-angles + quadrilateral-family + three-views-3d + power-of-point)
   - MATH-005/006/007 [ ]
 - **历史能力库**:`.Log/YYYY-MM-DD.md`(每日 append)
 - **历史审计**:git commit message(无 CHANGELOG.md)
@@ -89,7 +89,7 @@ MathematicsWeb/
 │       ├── 34_similar-triangles.js     # 相似三角形(2D · 初中几何 8 年级)
 │       ├── 35_polygon-interior-angles.js  # 多边形内角和(2D · 初中几何 7 年级)
 │       ├── 36_quadrilateral-family.js  # 四边形家族(2D · 初中几何 7 年级)
-│       └── 37_three-views-3d.js        # 立体几何三视图(3D · 初中几何 9 年级 · 唯一 3D)
+│       └── 38_power-of-point.js       # 圆幂定理 PT² = PA·PB(2D · 初中几何 8 年级)
 ├── kernel/                     # 数学/动画/LLM 客户端
 │   ├── 01_math-core.js         # 数学原语(Complex/Vec2/Mat2x2/catenary/DFT/Mandelbrot/LV)
 │   ├── 02_animation.js         # rAF 循环 + Canvas 高 DPI 自适应
@@ -236,7 +236,7 @@ MathematicsWeb/
 - 2026-08-26 v0.6.36: 初中几何场景集首批 2 个(MATH-016)· triangle-congruence(SSS/SAS/ASA/AAS/HL 5 判定法 + 拖动 DEF 验证) + pythagorean-theorem(a²+b²=c² + 3 证法视图:3-squares / Garfield 1876 / 赵爽弦图)
 - 2026-08-26 v0.6.37: 初中几何场景集第二批 2 个(MATH-016 4/8)· inscribed-angle(4 视图:同弧一般/Thales 半圆 90°/同弧多点验证/圆内接四边形对角互补) + similar-triangles(3 视图:自由缩放/平行线分线段 Thales 比例/面积比 k²)
 - 2026-08-26 v0.6.38: 初中几何场景集第三批 2 个(MATH-016 6/8)· polygon-interior-angles(4 视图:正 N 边形/自由多边形可拖凹形/三角形分解 N-2 块/外角和 360° 恒成立) + quadrilateral-family(3 视图:韦恩图集合嵌套/变形演示实时判别/8 形状对比画廊)
-- 2026-08-26 v0.6.39: 初中几何场景集第四批 1 个(MATH-016 7/8)· three-views-3d(3D 唯一:正交投影三视图/中国第一角/4 形状:长方/圆柱/四棱锥/L 形组合 + 主 V/俯 H/左 W 实时同步)
+- 2026-08-26 v0.6.40: 初中几何场景集收官 1 个(MATH-016 8/8 全部完成)· power-of-point(圆幂定理:PT²=PA·PB+双割线等积+相交弦+径向扫描 4 视图 + Apollonius ~200BC)
 
 ### 6.7 风险(关注)
 
@@ -307,6 +307,7 @@ AI 提问时,`AIPanel._buildSceneContext()` 读 `instance.getFormula()` + `insta
 - [x] **v0.6.37 (2026-08-26)**: 34 场景 + 23/23 教学要点 + 初中几何第二批 2 场景(MATH-016 4/8)
 - [x] **v0.6.38 (2026-08-26)**: 36 场景 + 25/25 教学要点 + 初中几何第三批 2 场景(MATH-016 6/8)
 - [x] **v0.6.39 (2026-08-26)**: 37 场景 + 26/26 教学要点 + 初中几何第四批 1 场景(MATH-016 7/8 · 3D 唯一)
+- [x] **v0.6.40 (2026-08-26)**: 38 场景 + 27/27 教学要点 + 初中几何 8 场景全部完成(MATH-016 8/8)· 收官场景 power-of-point(圆幂定理)
 - [ ] **v1.0**: 全套主题模块 + 教师模式 + 用户账号
 
 ## 9. 已知 TODO

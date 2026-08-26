@@ -356,6 +356,15 @@ export const SCENES = [
     description: '正交投影三视图(主 V / 俯 H / 左 W,中国第一角)。4 形状:长方/圆柱/四棱锥/L 形组合。',
     loader: () => import('./scenes/37_three-views-3d.js'),
   },
+  {
+    id: 'power-of-point',
+    title: '圆幂定理',
+    domain: '数学 × 初中几何',
+    icon: '⊕',
+    renderer: '2D',
+    description: 'PT² = PA·PB · 圆外切线² = 割线积。4 视图:切线+割线/双割线/相交弦/径向扫描。',
+    loader: () => import('./scenes/38_power-of-point.js'),
+  },
 ];
 
 function escapeHtml(s) {
