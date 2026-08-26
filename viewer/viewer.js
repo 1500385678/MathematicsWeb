@@ -347,6 +347,15 @@ export const SCENES = [
     description: '8 种四边形分类。3 视图:韦恩图(平行/矩/菱/方 + 梯/等腰/直角)/变形演示/8 形状画廊。',
     loader: () => import('./scenes/36_quadrilateral-family.js'),
   },
+  {
+    id: 'three-views-3d',
+    title: '立体几何三视图',
+    domain: '数学 × 初中几何',
+    icon: '🧊',
+    renderer: '3D',
+    description: '正交投影三视图(主 V / 俯 H / 左 W,中国第一角)。4 形状:长方/圆柱/四棱锥/L 形组合。',
+    loader: () => import('./scenes/37_three-views-3d.js'),
+  },
 ];
 
 function escapeHtml(s) {
