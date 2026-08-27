@@ -18,9 +18,10 @@
 
 ## 状态速览(动态,agent 自动维护)
 
-- **版本**:v0.6.40 · **进度**:38/38 场景 + 27/27 教学要点 + WebGL 降级
+- **版本**:v0.6.41 · **进度**:38/38 场景 + 27/27 教学要点 + WebGL 降级 + MATH-017 启动
 - **远端**:GitHub + Gitee(同步)
 - **当前活跃任务**(见 `PLAN.md`):
+  - MATH-017 [~] **🚀 2026-08-27 启动**:高中解析几何场景集(6 场景:conic-unified + ellipse-analytic + hyperbola-analytic + parabola-analytic + parametric-curves + polar-rose,人教版选择性必修第一册,沿 MATH-016 节奏分批做)
   - MATH-015 [~] 接 M3 LLM,等 user 配 M3_API_KEY
   - MATH-016 ✅ 完成 8/8(triangle-congruence + pythagorean-theorem + inscribed-angle + similar-triangles + polygon-interior-angles + quadrilateral-family + three-views-3d + power-of-point)
   - MATH-005/006/007 [ ]
