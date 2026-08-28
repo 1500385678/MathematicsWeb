@@ -18,11 +18,12 @@
 
 ## 状态速览(动态,agent 自动维护)
 
-- **版本**:v0.6.42 · **进度**:40/40 场景 + 29/29 教学要点 + WebGL 降级 + MATH-017 首批 2/6 落地
-- **远端**:GitHub + Gitee(同步)
+- **版本**:v0.6.43 · **进度**:40/40 场景 + 40/40 教学要点 + WebGL 降级 + MATH-017 首批 2/6 落地 + 2026-08-28 daily wake 巡检(0 feature,2 commit log)
+- **远端**:GitHub + Gitee(同步,`7e74033` v0.6.43-prep + `0837499` v0.6.43 二次唤醒)
 - **当前活跃任务**(见 `PLAN.md`):
-  - MATH-017 [~] **🚀 2026-08-27 启动 · 2/6 落地**:高中解析几何场景集(conic-unified ✅ + ellipse-analytic ✅ + hyperbola-analytic + parabola-analytic + parametric-curves + polar-rose,人教版选择性必修第一册,沿 MATH-016 节奏分批做)
+  - MATH-017 [~] **🚀 2026-08-27 启动 · 2/6 落地**:高中解析几何场景集(conic-unified ✅ + ellipse-analytic ✅ + hyperbola-analytic + parabola-analytic + parametric-curves + polar-rose,人教版选择性必修第一册,沿 MATH-016 节奏分批做)· 下一批:41 + 42(v0.6.44 预备)
   - MATH-015 [~] 接 M3 LLM,等 user 配 M3_API_KEY
+  - MATH-018 [ ] 天文数学 10 场景(P1,等 MATH-017 收官)
   - MATH-016 ✅ 完成 8/8(triangle-congruence + pythagorean-theorem + inscribed-angle + similar-triangles + polygon-interior-angles + quadrilateral-family + three-views-3d + power-of-point)
   - MATH-005/006/007 [ ]
 - **历史能力库**:`.Log/YYYY-MM-DD.md`(每日 append)
@@ -242,6 +243,7 @@ MathematicsWeb/
 - 2026-08-26 v0.6.40: 初中几何场景集收官 1 个(MATH-016 8/8 全部完成)· power-of-point(圆幂定理:PT²=PA·PB+双割线等积+相交弦+径向扫描 4 视图 + Apollonius ~200BC)
 - 2026-08-27 v0.6.41: **MATH-017 高中解析几何场景集启动**(6 场景,人教版选择性必修第一册)· 候选 39 conic-unified(王炸 R=ed) + 40 ellipse-analytic + 41 hyperbola-analytic + 42 parabola-analytic + 43 parametric-curves + 44 polar-rose · 沿 MATH-016 节奏分 3 批做(每批 2 场景:42/43/44)· **0 场景落地**(纯启动,代码层场景留给 T1-T5)· P0 任务切换:MATH-016(8/8 收官)→ MATH-017
 - 2026-08-27 v0.6.42: **MATH-017 首批 2/6 落地**· 39_conic-unified(25638 字节,2D 王炸:r(θ)=ed/(1+e·cos θ) + 4 视图:e 滑块动态演示/3 曲线并列/锥体切片/几何性质表)· 40_ellipse-analytic(24851 字节,2D:x²/a²+y²/b²=1 + 4 视图:标准方程/焦半径 r1+r2=2a 王炸/光学反射 F1↔F2/参数方程)· viewer.js SCENES 加 2 项(38→40)· **CDP 测试 2 场景全过** ✓(no exception,canvas 渲染,sceneTitle 正确)
+- 2026-08-28 v0.6.43: **daily wake 巡检 + 二次唤醒**(非 feature commit)· (1) `7e74033` v0.6.43-prep:上午 10:29 早轮 daily wake · 恢复 39_conic-unified.js(被 PowerShell FileSystem provider "另存副本"机制误删,走 `cmd /c "git show HEAD:<path> > <path>"` 还原 25638 字节 LF)+ trash 9 个 .commit-msg-*.txt 残留 + add + commit 2 个 .Log/ 巡检 26/27(4594+5921 字节)· 走 `_commit_push.ps1 -NoBump` 模式 (2) `0837499` v0.6.43 二次唤醒:11:21 cron 延迟触发 · 刷新 `.Shared/status_board.json`(8/24 过期 3 天 → v0.6.42/40 场景/8 维度全量)+ .Log/2026-08-28.md append 二次唤醒段(21 行)· 双平台 push 成功 (3) 教学要点 29/29 → 40/40 校正(40 场景全部实现 getLesson,旧值 29 是 v0.6.35 时统计)
 
 ### 6.7 风险(关注)
 
@@ -315,6 +317,7 @@ AI 提问时,`AIPanel._buildSceneContext()` 读 `instance.getFormula()` + `insta
 - [x] **v0.6.40 (2026-08-26)**: 38 场景 + 27/27 教学要点 + 初中几何 8 场景全部完成(MATH-016 8/8)· 收官场景 power-of-point(圆幂定理)
 - [~] **v0.6.41 (2026-08-27)**: **MATH-017 高中解析几何场景集启动**(6 场景,人教版选择性必修第一册)· P0 任务切换 MATH-016→MATH-017 · 0 场景落地(纯启动,代码层场景留给后续 3 批 v0.6.42/.43/.44)
 - [~] **v0.6.42 (2026-08-27)**: **MATH-017 首批 2/6 落地**· 39_conic-unified(R=ed 4 视图)+ 40_ellipse-analytic(r1+r2=2a 4 视图)· viewer.js SCENES 38→40 + CDP 测试全过
+- [x] **v0.6.43 (2026-08-28)**: **daily wake 巡检 + 二次唤醒**(非 feature,补丁级)· 早轮 7e74033 恢复 39 场景 + trash 9 个 .commit-msg 残留 + 归档 2 个 .Log 巡检;二次唤醒 0837499 刷新 .Shared/status_board.json(过期 3 天 → v0.6.42/40 场景) + .Log/2026-08-28.md append 21 行· 双平台 push 成功· 教学要点 29/29 校正 → 40/40
 - [ ] **v1.0**: 全套主题模块 + 教师模式 + 用户账号
 
 ## 9. 已知 TODO
